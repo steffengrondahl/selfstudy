@@ -1,0 +1,49 @@
+package nu.steffengrondahl.selfstudy.persist;
+
+/**
+ * Created by Steffen on 29-10-2016.
+ */
+public class QuerySpecification {
+
+    private Integer minPriority = 0;
+    private Integer maxPriority = 0;
+    private Integer minStatus = 0;
+    private Integer maxStatus = 0;
+
+    public QuerySpecification() {
+
+    }
+
+    public void setMinPriority(Integer minPriority) {
+        this.minPriority = minPriority;
+    }
+
+    public Integer getMinPriority() {
+        return minPriority;
+    }
+
+    public void setMaxPriority(Integer maxPriority) {
+        this.maxPriority = maxPriority;
+    }
+
+    public Integer getMaxPriority() {
+        return maxPriority;
+    }
+
+    public void setMinStatus(Integer minStatus) {
+        this.minStatus = minStatus;
+    }
+
+    public Integer getMinStatus() {
+        return minStatus;
+    }
+
+    public void setMaxStatus(Integer maxStatus) {
+        this.maxStatus = maxStatus;
+    }
+
+    public Integer getMaxStatus() {
+        return maxStatus;
+    }
+
+}

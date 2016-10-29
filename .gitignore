@@ -1,0 +1,8 @@
+*.class
+*.jar
+*.war
+*.iml
+target/
+selfstudy-persist/target
+selfstudy-rest/target
+.idea

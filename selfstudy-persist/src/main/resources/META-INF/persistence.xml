@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+    <persistence-unit name="nu.steffengrondahl.project.persist"
+                      transaction-type="RESOURCE_LOCAL">
+        <description>
+            Persistence unit for nu.steffengrondahl.project
+        </description>
+
+        <!-- the provider element doesn't seem to be needed -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- add all entity beans here (not needed if run in EJB container) -->
+        <class>nu.steffengrondahl.project.persist.domain.ProjectEntity</class>
+        <class>nu.steffengrondahl.project.persist.domain.EstimateEntity</class>
+        <class>nu.steffengrondahl.project.persist.domain.PriorityEntity</class>
+        <class>nu.steffengrondahl.project.persist.domain.StatusEntity</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/projectdb" />
+            <property name="javax.persistence.jdbc.user" value="projectman" />
+            <property name="javax.persistence.jdbc.password" value="project41c" />
+
+            <!-- the dialect might not be needed but better use it than depend on
+                default value -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+
+            <property name="hibernate.show_sql" value="true" />
+            <!-- In production environment hibernate.hbm2ddl.auto should be avoided.
+                Table creation, altering and dropping should be left to the DBA, not the
+                application. For development the following options are possible: * create:
+                Drops table initially and then creates tables. Previous data is destroyed.
+                * create-drop: Drops table initially and then creates tables, finally dropping
+                tables again. Previous data is destroyed. * updates: Never drops tables,
+                but might alter tables * validates: validates but makes no changes to the
+                schema In development it might be a good idea starting with create, to have
+                tables created and verify the table column type mapping is correct. When
+                the database schema is clarified, one can change to validate to make data
+                persistent (not destroyed) For production the hibernate.hbm2ddl.auto tag
+                i discarded. -->
+            <!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
+            <!-- consider changing this to <property name="hibernate.hbm2ddl.auto"
+                value="validate" /> -->
+            <property name="hibernate.hbm2ddl.auto" value="validate" />
+
+        </properties>
+
+    </persistence-unit>
+
+</persistence>
+
