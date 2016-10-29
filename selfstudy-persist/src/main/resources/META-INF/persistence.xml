@@ -23,7 +23,7 @@
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/projectdb" />
             <property name="javax.persistence.jdbc.user" value="projectman" />
-            <property name="javax.persistence.jdbc.password" value="<DB.PASSWORD>" />
+            <property name="javax.persistence.jdbc.password" value="project41c" />
 
             <!-- the dialect might not be needed but better use it than depend on
                 default value -->
