@@ -8,7 +8,18 @@ import java.util.List;
 public class TransientProjectDAO implements GenericDAO<ProjectDTO> {
 
     public ProjectDTO read(Integer key) {
-        return null;
+        // fill with dummy data
+        TransientEstimateDAO transientEstimateDAO = new TransientEstimateDAO();
+        TransientPriorityDAO transientPriorityDAO = new TransientPriorityDAO();
+        TransientStatusDAO transientStatusDAO = new TransientStatusDAO();
+        // create dummy project
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(key);
+        projectDTO.setDescription("First project");
+        projectDTO.setEstimateDTO(transientEstimateDAO.read(2));
+        projectDTO.setPriorityDTO(transientPriorityDAO.read(3));
+        projectDTO.setStatusDTO(transientStatusDAO.read(1));
+        return projectDTO;
     }
 
     public List<ProjectDTO> readAll() {

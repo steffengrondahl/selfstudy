@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Steffen on 29-10-2016.
  */
-public class PriorityEntityDAO implements GenericDAO<PriorityEntity> {
+public class PriorityEntityDAO implements GenericEntityDAO<PriorityEntity> {
 
     public PriorityEntityDAO() {
 

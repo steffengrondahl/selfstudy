@@ -1,8 +1,5 @@
 package nu.steffengrondahl.selfstudy.persist;
 
-import nu.steffengrondahl.selfstudy.persist.GenericDAO;
-import nu.steffengrondahl.selfstudy.persist.PersistUtil;
-import nu.steffengrondahl.selfstudy.persist.QuerySpecification;
 import nu.steffengrondahl.selfstudy.persist.domain.StatusEntity;
 
 import javax.persistence.EntityManager;
@@ -12,7 +9,7 @@ import java.util.List;
 /**
  * Created by Steffen on 29-10-2016.
  */
-public class StatusEntityDAO implements GenericDAO<StatusEntity> {
+public class StatusEntityDAO implements GenericEntityDAO<StatusEntity> {
 
     public StatusEntityDAO() {
 

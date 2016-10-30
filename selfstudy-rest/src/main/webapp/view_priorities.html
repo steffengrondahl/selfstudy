@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>View priorities</title>
+        <style>
+	    	table {
+			    border-collapse: collapse;
+		    }
+	    	th, td {
+			    border: 1px solid black;
+			    padding: 4px;
+		    }
+	    </style>
+    </head>
+    <body>
+        <h1>Self study: View priorities</h1>
+        <p>List of priorities fetched with AJAX using GET</p>
+        <table id="datatable">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </table>
+        <p><a href="index.html">Home</a></p>
+        <script>
+			var url = "rest/priorities";
+
+			window.addEventListener("load", init, false);
+
+			function handleRequest(evt) {
+				if (evt.target.readyState == 4 ) {
+					if(evt.target.status==200) {
+						var jsArray = JSON.parse(evt.target.responseText);
+	    		        myFunction(jsArray);
+					}
+					else {
+						alert("Unexpected response status " + evt.target.status);
+					}
+				}
+			}
+
+			function myFunction(jsArray) {
+			    for(i = 0; i < jsArray.length; i++) {
+					var id = jsArray[i].id;
+					var name = jsArray[i].name;
+					var row = document.getElementById("datatable").insertRow(i+1);
+					var cell_id = row.insertCell(0);
+					var cell_name = row.insertCell(1);
+					cell_id.innerHTML = ""+id;
+					cell_name.innerHTML = ""+name;
+			    }
+			}
+
+			function init(evt) {
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET", url, true);
+				xmlhttp.addEventListener("readystatechange",handleRequest,false);
+				xmlhttp.setRequestHeader("Accept", "application/json");
+				xmlhttp.send();
+			}
+		</script>
+    </body>
+</html>

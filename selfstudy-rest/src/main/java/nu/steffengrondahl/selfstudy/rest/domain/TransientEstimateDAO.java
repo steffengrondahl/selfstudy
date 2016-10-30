@@ -17,7 +17,7 @@ public class TransientEstimateDAO implements GenericDAO<EstimateDTO> {
 
     public List<EstimateDTO> readAll() {
         List<EstimateDTO> list = new ArrayList<EstimateDTO>();
-        for(int i=1; i<5;i++) {
+        for (int i = 1; i < 5; i++) {
             EstimateDTO estimateDTO = new EstimateDTO();
             estimateDTO.setId(i);
             estimateDTO.setName(getName(i));
@@ -42,9 +42,9 @@ public class TransientEstimateDAO implements GenericDAO<EstimateDTO> {
         // Not implemented
     }
 
-                                        private String getName(int id) {
-                                            switch(id) {
-                                                case 1:
+    private String getName(int id) {
+        switch (id) {
+            case 1:
                 return "Hours";
             case 2:
                 return "Days";

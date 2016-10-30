@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>View projects</title>
+        <style>
+	    	table {
+			    border-collapse: collapse;
+		    }
+	    	th, td {
+			    border: 1px solid black;
+			    padding: 4px;
+		    }
+	    </style>
+    </head>
+    <body>
+        <h1>Self study: View projects</h1>
+        <p>List of projects fetched with AJAX using GET</p>
+        <table id="datatable">
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+            </tr>
+        </table>
+        <p><a href="index.html">Home</a></p>
+        <script>
+			var url = "rest/projects";
+
+			window.addEventListener("load", init, false);
+
+			function handleRequest(evt) {
+				if (evt.target.readyState == 4 ) {
+					if(evt.target.status==200) {
+						var jsArray = JSON.parse(evt.target.responseText);
+	    		        myFunction(jsArray);
+					}
+					else {
+						alert("Unexpected response status " + evt.target.status);
+					}
+				}
+			}
+
+			function myFunction(jsArray) {
+			    for(i = 0; i < jsArray.length; i++) {
+					var id = jsArray[i].id;
+					var description = jsArray[i].description;
+
+					var row = document.getElementById("datatable").insertRow(i+1);
+					var cell_id = row.insertCell(0);
+					var cell_description = row.insertCell(1);
+					var cell_priority = row.insertCell(2);
+					var cell_status = row.insertCell(3);
+					var cell_view = row.insertCell(4);
+					var cell_edit = row.insertCell(5);
+					var cell_remove = row.insertCell(6);
+					cell_id.innerHTML = ""+id;
+					cell_description.innerHTML = ""+description;
+					cell_priority.innerHTML = "";
+					cell_status.innerHTML = "";
+					cell_view.innerHTML = "";
+					cell_edit.innerHTML = "";
+					cell_remove.innerHTML = "";
+			    }
+			}
+
+			function init(evt) {
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET", url, true);
+				xmlhttp.addEventListener("readystatechange",handleRequest,false);
+				xmlhttp.setRequestHeader("Accept", "application/json");
+				xmlhttp.send();
+			}
+		</script>
+    </body>
+</html>

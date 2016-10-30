@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Steffen on 29-10-2016.
  */
-public class EstimateEntityDAO implements GenericDAO<EstimateEntity> {
+public class EstimateEntityDAO implements GenericEntityDAO<EstimateEntity> {
 
     public EstimateEntityDAO() {
 

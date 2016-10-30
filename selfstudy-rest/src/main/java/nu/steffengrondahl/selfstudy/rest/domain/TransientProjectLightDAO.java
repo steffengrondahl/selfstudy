@@ -36,6 +36,11 @@ public class TransientProjectLightDAO implements GenericDAO<ProjectLightDTO> {
     }
 
 
+    /**
+     * This method should never be called!
+     * @param key
+     * @return
+     */
     public ProjectLightDTO read(Integer key) {
         return map.get(key);
     }
@@ -47,11 +52,17 @@ public class TransientProjectLightDAO implements GenericDAO<ProjectLightDTO> {
     public List<ProjectLightDTO> readSelected(Integer minPriority, Integer maxPriority, Integer minStatus, Integer maxStatus) {
         List<ProjectLightDTO> list = new ArrayList<ProjectLightDTO>(map.values());
         // TODO: Remove from list
-        return list;
+        List<ProjectLightDTO> resultList = new ArrayList<ProjectLightDTO>();
+        for(ProjectLightDTO project : list) {
+            if(project.getPriorityDTO().getId() >= minPriority && project.getPriorityDTO().getId() <= maxPriority && project.getStatusDTO().getId() >= minStatus && project.getStatusDTO().getId() <= maxStatus) {
+                resultList.add(project);
+            }
+        }
+        return resultList;
     }
 
     public void create(ProjectLightDTO projectLightDTO) {
-        // Not implemented (but should perhaps)
+        // Not implemented
     }
 
     public void update(ProjectLightDTO projectLightDTO) {
