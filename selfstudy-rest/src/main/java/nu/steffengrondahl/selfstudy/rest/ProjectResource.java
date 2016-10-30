@@ -1,16 +1,22 @@
 package nu.steffengrondahl.selfstudy.rest;
 
+import nu.steffengrondahl.selfstudy.persist.ProjectEntityDAO;
+import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
+import nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity;
 import nu.steffengrondahl.selfstudy.rest.domain.DAOFactory;
 import nu.steffengrondahl.selfstudy.rest.domain.GenericDAO;
+import nu.steffengrondahl.selfstudy.rest.domain.PriorityDTO;
 import nu.steffengrondahl.selfstudy.rest.domain.ProjectDTO;
 import nu.steffengrondahl.selfstudy.rest.domain.ProjectLightDTO;
 import nu.steffengrondahl.selfstudy.rest.domain.StatusDTO;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,14 +36,63 @@ public class ProjectResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<ProjectLightDTO> readList() {
-        return projectLightDAO.readAll();
+        List<ProjectLightDTO> list = new ArrayList<ProjectLightDTO>();
+
+        try {
+            ProjectEntityDAO dao = new ProjectEntityDAO();
+            List<ProjectEntity> resultList = dao.query(QuerySpecificationFactory.queryAll());
+            for(ProjectEntity pe : resultList) {
+                ProjectLightDTO projectLightDTO = new ProjectLightDTO();
+                projectLightDTO.setId(pe.getId());
+                projectLightDTO.setDescription(pe.getDescription());
+
+                PriorityDTO priorityDTO = new PriorityDTO();
+                priorityDTO.setId(pe.getPriority().getId());
+                priorityDTO.setName(pe.getPriority().getName());
+                projectLightDTO.setPriorityDTO(priorityDTO);
+
+                StatusDTO statusDTO = new StatusDTO();
+                statusDTO.setId(pe.getStatus().getId());
+                statusDTO.setName(pe.getStatus().getName());
+                projectLightDTO.setStatusDTO(statusDTO);
+
+                list.add(projectLightDTO);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();;
+        }
+
+
+        return list; //projectLightDAO.readAll();
     }
 
     @GET
     @Path("{id: \\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public ProjectDTO read(@PathParam("id") int id) {
-        return projectDAO.read(id);
+
+        ProjectDTO projectDTO = new ProjectDTO();
+        ProjectEntityDAO dao = new ProjectEntityDAO();
+        ProjectEntity projectEntity = dao.find(id, false);
+        if(projectEntity == null)
+            throw new NotFoundException();
+
+        projectDTO.setId(projectEntity.getId());
+        projectDTO.setDescription(projectEntity.getDescription());
+
+        PriorityDTO priorityDTO = new PriorityDTO();
+        priorityDTO.setId(projectEntity.getPriority().getId());
+        priorityDTO.setName(projectEntity.getPriority().getName());
+        projectDTO.setPriorityDTO(priorityDTO);
+
+        StatusDTO statusDTO = new StatusDTO();
+        statusDTO.setId(projectEntity.getStatus().getId());
+        statusDTO.setName(projectEntity.getStatus().getName());
+        projectDTO.setStatusDTO(statusDTO);
+
+
+        return projectDTO; //projectDAO.read(id);
     }
 
 

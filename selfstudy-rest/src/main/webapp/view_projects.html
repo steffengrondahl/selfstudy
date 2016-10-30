@@ -46,11 +46,13 @@
 			}
 
 			function myFunction(jsArray) {
+			    alert(JSON.stringify(jsArray));
 			    for(i = 0; i < jsArray.length; i++) {
 					var id = jsArray[i].id;
 					var description = jsArray[i].description;
-
-					var row = document.getElementById("datatable").insertRow(i+1);
+    				var priority = jsArray[i].priorityDTO.name;
+	    			var status = jsArray[i].statusDTO.name;
+        			var row = document.getElementById("datatable").insertRow(i+1);
 					var cell_id = row.insertCell(0);
 					var cell_description = row.insertCell(1);
 					var cell_priority = row.insertCell(2);
@@ -58,10 +60,10 @@
 					var cell_view = row.insertCell(4);
 					var cell_edit = row.insertCell(5);
 					var cell_remove = row.insertCell(6);
-					cell_id.innerHTML = ""+id;
-					cell_description.innerHTML = ""+description;
-					cell_priority.innerHTML = "";
-					cell_status.innerHTML = "";
+					cell_id.innerHTML = "" + id;
+					cell_description.innerHTML = "" + description;
+					cell_priority.innerHTML = "" + priority;
+					cell_status.innerHTML = "" + status;
 					cell_view.innerHTML = "";
 					cell_edit.innerHTML = "";
 					cell_remove.innerHTML = "";

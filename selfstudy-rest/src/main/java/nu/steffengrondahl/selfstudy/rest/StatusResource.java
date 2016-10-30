@@ -1,5 +1,8 @@
 package nu.steffengrondahl.selfstudy.rest;
 
+import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
+import nu.steffengrondahl.selfstudy.persist.StatusEntityDAO;
+import nu.steffengrondahl.selfstudy.persist.domain.StatusEntity;
 import nu.steffengrondahl.selfstudy.rest.domain.DAOFactory;
 import nu.steffengrondahl.selfstudy.rest.domain.GenericDAO;
 import nu.steffengrondahl.selfstudy.rest.domain.PriorityDTO;
@@ -10,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +31,27 @@ public class StatusResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<StatusDTO> readList() {
-        return statusDAO.readAll();
+    //public List<StatusEntity> readList() {
+        List<StatusDTO> list = new ArrayList<StatusDTO>();
+        try {
+            StatusEntityDAO dao = new StatusEntityDAO();
+            List<StatusEntity> resultList = dao.query(QuerySpecificationFactory.queryAll());
+            for(StatusEntity se : resultList) {
+                StatusDTO statusDTO = new StatusDTO();
+                statusDTO.setId(se.getId());
+                statusDTO.setName(se.getName());
+                list.add(statusDTO);
+            }
+            //return resultList;
+        }
+        catch(Throwable e) {
+            e.printStackTrace();
+            if(e instanceof RuntimeException) {
+                throw (RuntimeException)e;
+            }
+            //return null;
+        }
+        return list; //statusDAO.readAll();
     }
 
     @GET

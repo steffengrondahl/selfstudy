@@ -2,7 +2,7 @@
         "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 <web-app>
-    <display-name>selfstudy-rest</display-name>
+    <display-name>SelfstudyWebApp</display-name>
     <servlet>
         <servlet-name>Jersey-Servlet</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
