@@ -11,6 +11,26 @@
 			    border: 1px solid black;
 			    padding: 4px;
 		    }
+		    .red {
+		        background-color: #ff0000;
+		        color: #ffffff;
+		    }
+		    .orange {
+		        background-color: #ffaa00;
+		        color: #000000;
+		    }
+		    .yellow {
+		        background-color: #ffff00;
+		        color: #000000;
+		    }
+		    .green {
+		        background-color: #00ff00;
+		        color: #000000;
+		    }
+		    .blue {
+		        background-color: #0000ff;
+		        color: #ffffff;
+		    }
 	    </style>
     </head>
     <body>
@@ -37,7 +57,7 @@
 				if (evt.target.readyState == 4 ) {
 					if(evt.target.status==200) {
 						var jsArray = JSON.parse(evt.target.responseText);
-	    		        myFunction(jsArray);
+	    		        viewProjects(jsArray);
 					}
 					else {
 						alert("Unexpected response status " + evt.target.status);
@@ -45,13 +65,17 @@
 				}
 			}
 
-			function myFunction(jsArray) {
-			    alert(JSON.stringify(jsArray));
+			function viewProjects(jsArray) {
+			    //alert(JSON.stringify(jsArray));
 			    for(i = 0; i < jsArray.length; i++) {
+			        // fetch variables
 					var id = jsArray[i].id;
 					var description = jsArray[i].description;
-    				var priority = jsArray[i].priorityDTO.name;
-	    			var status = jsArray[i].statusDTO.name;
+    				var priority_id = jsArray[i].priorityDTO.id;
+    				var priority_name = jsArray[i].priorityDTO.name;
+	    			var status_id = jsArray[i].statusDTO.id;
+	    			var status_name = jsArray[i].statusDTO.name;
+	    			// build table elements
         			var row = document.getElementById("datatable").insertRow(i+1);
 					var cell_id = row.insertCell(0);
 					var cell_description = row.insertCell(1);
@@ -60,13 +84,51 @@
 					var cell_view = row.insertCell(4);
 					var cell_edit = row.insertCell(5);
 					var cell_remove = row.insertCell(6);
+					//
 					cell_id.innerHTML = "" + id;
 					cell_description.innerHTML = "" + description;
-					cell_priority.innerHTML = "" + priority;
-					cell_status.innerHTML = "" + status;
-					cell_view.innerHTML = "";
-					cell_edit.innerHTML = "";
-					cell_remove.innerHTML = "";
+					cell_priority.innerHTML = "" + priority_name;
+					if(priority_id == 1) {
+					    cell_priority.className = "blue";
+					}
+					else if(priority_id == 2) {
+					    cell_priority.className = "green";
+					}
+					else if(priority_id == 3) {
+					    cell_priority.className = "yellow";
+					}
+					else if(priority_id == 4) {
+					    cell_priority.className = "orange";
+					}
+					else if(priority_id == 5) {
+					    cell_priority.className = "red";
+					}
+					cell_status.innerHTML = "" + status_name;
+					if(status_id == 1) {
+					    cell_status.className = "red"
+					}
+					else if(status_id == 2) {
+					    cell_status.className = "yellow"
+					}
+					else if(status_id == 3) {
+					    cell_status.className = "green"
+					}
+
+					var view_button = document.createElement("button");
+					view_button.innerHTML="view";
+					view_button.addEventListener("click", view, false);
+					cell_view.appendChild(view_button);
+
+					var edit_button = document.createElement("button");
+					edit_button.innerHTML="edit";
+					edit_button.addEventListener("click", edit, false);
+					cell_edit.appendChild(edit_button);
+
+					var remove_button = document.createElement("button");
+					remove_button.innerHTML="remove";
+					remove_button.addEventListener("click", remove, false);
+					cell_remove.appendChild(remove_button);
+
 			    }
 			}
 
@@ -77,6 +139,59 @@
 				xmlhttp.setRequestHeader("Accept", "application/json");
 				xmlhttp.send();
 			}
+
+			function view(evt) {
+			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("datatable");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[4] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+						sessionStorage.setItem("pid", id);
+						window.location.href = "view_project.html";
+						return;
+					}
+				}
+			}
+
+			function edit(evt) {
+			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("datatable");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[5] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+						sessionStorage.setItem("pid", id);
+						window.location.href = "edit_project.html";
+						return;
+					}
+				}
+			}
+
+			function remove(evt) {
+			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("datatable");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[6] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+						sessionStorage.setItem("pid", id);
+						window.location.href = "remove_project.html";
+						return;
+					}
+				}
+			}
+
+
 		</script>
     </body>
 </html>

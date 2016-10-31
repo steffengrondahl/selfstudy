@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>View project</title>
+        <title>Remove project</title>
         <style>
 			table {
 				border-collapse: collapse;
@@ -18,12 +18,17 @@
 			function initialise(evt) {
 			    var id = sessionStorage.getItem("pid");
 			    sessionStorage.removeItem("pid");
-			    fetchProject(id);
+			    //fetchProject(id);
 			}
         </script>
     </head>
     <body>
-        <h1>Self study: View project</h1>
+        <h1>Self study: Remove project</h1>
+        <p>Project fetched with AJAX using GET</p>
+        <p>Input:</p>
+        <p><input id="id" type="text" size="3" maxlength="3"></p>
+        <p><button id="fetch">Fetch</button></p>
+        <p>Result:</p>
         <table id="datatable">
             <tr>
                 <th>Id</th>
@@ -36,7 +41,11 @@
         <script>
 			var url = "rest/projects";
 
-			function fetchProject(id) {
+			document.getElementById("fetch").addEventListener("click",submitQuery,false);
+
+			function submitQuery(evt) {
+				clearAll();
+				var id = document.getElementById("id").value;
 				var queryUrl = url + "/" + id;
 				var xmlhttp = new XMLHttpRequest();
 				xmlhttp.open("GET", queryUrl, true);
@@ -49,7 +58,7 @@
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
     					var jsObject = JSON.parse(evt.target.responseText);
-    			        viewProject(jsObject);
+    			        myFunction(jsObject);
     				}
     				else if(evt.target.status == 404) {
     					alert("Project does not exist");
@@ -59,13 +68,13 @@
     			}
 			}
 
-			function viewProject(jsObject) {
+			function myFunction(jsObject) {
 				clearAll();
 				var id = jsObject.id;
 				var description = jsObject.description;
 				var priority = jsObject.priorityDTO.name;
 				var status = jsObject.statusDTO.name;
-				//alert(JSON.stringify(jsObject));
+				alert(JSON.stringify(jsObject));
 				var row = document.getElementById("datatable").insertRow(1);
 				var cell_id = row.insertCell(0);
 				var cell_description = row.insertCell(1);
