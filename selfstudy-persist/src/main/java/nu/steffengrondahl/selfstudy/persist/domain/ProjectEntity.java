@@ -35,8 +35,8 @@ public class ProjectEntity {
     private String description;
 
     @Lob
-    @Column(name = "goal")
-    private String goal;
+    @Column(name = "goals")
+    private String goals;
 
     @Lob
     @Column(name = "actions")
@@ -102,12 +102,12 @@ public class ProjectEntity {
         this.description = description;
     }
 
-    public String getGoal() {
-        return goal;
+    public String getGoals() {
+        return goals;
     }
 
-    public void setGoal(String goal) {
-        this.goal = goal;
+    public void setGoals(String goals) {
+        this.goals = goals;
     }
 
     public String getActions() {

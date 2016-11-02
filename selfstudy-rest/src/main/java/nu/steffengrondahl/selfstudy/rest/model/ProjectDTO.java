@@ -1,6 +1,7 @@
 package nu.steffengrondahl.selfstudy.rest.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +19,9 @@ public class ProjectDTO extends ProjectLightDTO {
 
     private EstimateDTO estimate;
 
-    private List<ProjectLightDTO> presupposed;
+    private List<ProjectLightDTO> presupposed = new ArrayList<>();
 
-    private List<ProjectLightDTO> linkable;
+    private List<ProjectLightDTO> linkable = new ArrayList<>();
 
     public ProjectDTO() {
         super();

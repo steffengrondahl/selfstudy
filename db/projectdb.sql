@@ -27,7 +27,7 @@ INSERT INTO priority (id, name) values (4, 'High');
 INSERT INTO priority (id, name) values (5, 'Very high');  
 
 CREATE TABLE project (id INT(11) NOT NULL AUTO_INCREMENT, 
-description VARCHAR(32) NOT NULL, goal LONGTEXT, actions LONGTEXT, 
+description VARCHAR(32) NOT NULL, goals LONGTEXT, actions LONGTEXT,
 start_date DATE DEFAULT NULL, deadline DATE DEFAULT NULL, 
 estimate_fk INT(11) NOT NULL, 
 priority_fk INT(11) NOT NULL, status_fk INT(11) NOT NULL, 

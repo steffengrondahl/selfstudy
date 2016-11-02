@@ -16,7 +16,6 @@
 
 			function initialise(evt) {
 			    var id = sessionStorage.getItem("pid");
-			    //alert("id " + id);
 			    sessionStorage.removeItem("pid");
 			    fetchProject(id);
 			}
@@ -33,17 +32,14 @@
 			function handleRequest(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
-    				    //alert("Got OK from server");
     					var jsObject = JSON.parse(evt.target.responseText);
     			        viewProject(jsObject);
     				}
     				else if(evt.target.status == 404) {
-    					//alert("Project does not exist");
     					sessionStorage.setItem("error", "Project does not exist");
 						window.location.href = "error.html";
     				}
     				else {
-    					//alert("Unexpected response status " + evt.target.status);
     					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
 						window.location.href = "error.html";
 					}
@@ -53,53 +49,120 @@
 			function viewProject(jsObject) {
 				clearAll();
 				document.getElementById("json").innerHTML= JSON.stringify(jsObject, null, 2);
+		        // fetch variables
 				var id = jsObject.id;
 				var description = jsObject.description;
+				var goals = jsObject.goals;
+				if(goals == null) {
+				    goals = "&nbsp;";
+				}
+				var actions = jsObject.actions;
+				if(actions == null) {
+				    actions = "&nbsp;";
+				}
+				var start = jsObject.start;
+				if(start == null) {
+				    start = "&nbsp;";
+				}
+				var deadline = jsObject.deadline;
+				if(deadline == null) {
+				    deadline = "&nbsp;";
+				}
+				var estimate_name = jsObject.estimate.name;
 				var priority_id = jsObject.priority.id;
 				var priority_name = jsObject.priority.name;
 				var status_id = jsObject.status.id;
 				var status_name = jsObject.status.name;
-				var row = document.getElementById("datatable").insertRow(1);
-				var cell_id = row.insertCell(0);
-				var cell_description = row.insertCell(1);
-				var cell_priority = row.insertCell(2);
-				var cell_status = row.insertCell(3);
-				cell_id.innerHTML = "" + id;
-				cell_description.innerHTML = "" + description;
-				cell_priority.innerHTML = "" + priority_name;
-				switch(parseInt(priority_id)) {
+				// set values
+    			document.getElementById("project_id").innerHTML = "<b>" + id + "</b>";
+    			document.getElementById("description").innerHTML = "<b>" + description + "</b>";
+    			document.getElementById("goals").innerHTML = goals;
+    			document.getElementById("actions").innerHTML = actions;
+    			document.getElementById("start").innerHTML = start;
+    			document.getElementById("deadline").innerHTML = deadline;
+    			document.getElementById("estimate").innerHTML = estimate_name;
+    			document.getElementById("priority").innerHTML = priority_name;
+    			document.getElementById("status").innerHTML = status_name;
+    			switch(parseInt(priority_id)) {
 				    case 1:
-				       cell_priority.className = "blue";
+				       document.getElementById("priority").className = "blue";
 				       break;
 				    case 2:
-    				    cell_priority.className = "green";
+    				    document.getElementById("priority").className = "green";
     				    break;
     				case 3:
-    				    cell_priority.className = "yellow";
+    				    document.getElementById("priority").className = "yellow";
     				    break;
     				case 4:
-    				    cell_priority.className = "orange";
+    				    document.getElementById("priority").className = "orange";
     				    break;
     				case 5:
-    				    cell_priority.className = "red";
+    				    document.getElementById("priority").className = "red";
     				    break;
     				default:
     				    break;
 				}
-				cell_status.innerHTML = "" + status_name;
 				switch(parseInt(status_id)) {
 				    case 1:
-				        cell_status.className = "red";
+				        document.getElementById("status").className = "red";
 				        break;
 				    case 2:
-				        cell_status.className = "yellow";
+				        document.getElementById("status").className = "yellow";
 				        break;
 				    case 3:
-				        cell_status.className = "green";
+				        document.getElementById("status").className = "green";
 				        break;
 				    default:
 				        break;
 				}
+
+    			// build table elements
+    			// linkable -> presupposed
+    			for(i=0; i<jsObject.presupposed.length; i++) {
+    			    // create table
+    				var row = document.getElementById("datatable").insertRow(i+1);
+	    			var cell_id = row.insertCell(0);
+		    		var cell_description = row.insertCell(1);
+			    	var cell_priority = row.insertCell(2);
+				    var cell_status = row.insertCell(3);
+				    // fill table
+    				cell_id.innerHTML = "" + jsObject.presupposed[i].id;
+	    			cell_description.innerHTML = "" + jsObject.presupposed[i].description;
+		    		cell_priority.innerHTML = "" + jsObject.presupposed[i].priority.name;
+			    	switch(parseInt(jsObject.presupposed[i].priority.id)) {
+				        case 1:
+				           cell_priority.className = "blue";
+				        break;
+	    			    case 2:
+    	    			    cell_priority.className = "green";
+    		    		    break;
+    			    	case 3:
+    				        cell_priority.className = "yellow";
+    				        break;
+        				case 4:
+        				    cell_priority.className = "orange";
+    	    			    break;
+    		    		case 5:
+    			    	    cell_priority.className = "red";
+    				        break;
+         				default:
+    	    			    break;
+			    	}
+				    cell_status.innerHTML = "" + jsObject.presupposed[i].status.name;
+	    			switch(parseInt(jsObject.presupposed[i].status.id)) {
+		    		    case 1:
+			    	        cell_status.className = "red";
+				            break;
+    				    case 2:
+	    			        cell_status.className = "yellow";
+		    		        break;
+			    	    case 3:
+				            cell_status.className = "green";
+				            break;
+    				    default:
+	    			        break;
+		    		}
+		    	}
 			}
 
 			function clearAll() {
@@ -113,6 +176,45 @@
     </head>
     <body>
         <h1>Self study: View project</h1>
+        <table>
+            <tr>
+                <td id="project_id">&nbsp;</td>
+                <td id="description">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Goals</b></td>
+            </tr>
+            <tr>
+                <td colspan="2" id="goals">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Actions</b></td>
+            </tr>
+            <tr>
+                <td colspan="2" id="actions">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Start</b></td>
+                <td id="start">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Deadline</b></td>
+                <td id="deadline">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Estimate</b></td>
+                <td id="estimate">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Priority</b></td>
+                <td id="priority">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Status</b></td>
+                <td id="status">&nbsp;</td>
+            </tr>
+        </table>
+        <p><b>Pressupposed projects</b></p>
         <table id="datatable">
             <tr>
                 <th>Id</th>

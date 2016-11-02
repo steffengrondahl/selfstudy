@@ -4,16 +4,20 @@
         <meta charset="UTF-8">
         <title>Error</title>
         <link rel="stylesheet" type="text/css" href="style/project.css" >
-        <style>
-		</style>
         <script>
             window.addEventListener("load",initialise,false);
 
 			function initialise(evt) {
 			    var message = sessionStorage.getItem("error");
-			    //alert("id " + id);
-			    sessionStorage.removeItem("error");
-			    sessionStorage.clear();
+			    alert("message " + message);
+			    if(message == null) {
+			        message = "Internal error";
+			    }
+			    else {
+    			    sessionStorage.removeItem("error");
+	    		    sessionStorage.clear();
+			    }
+
 			    document.getElementById("message").innerHTML=message;
 			}
         </script>
@@ -21,5 +25,6 @@
     <body>
         <h1>Self study: Error</h1>
         <p id="message">&nbsp;</p>
+        <p><a href="index.html">Home</a></p>
     </body>
 </html>

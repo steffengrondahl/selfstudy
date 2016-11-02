@@ -4,6 +4,7 @@ import nu.steffengrondahl.selfstudy.persist.ProjectEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity;
 import nu.steffengrondahl.selfstudy.rest.model.DAOFactory;
+import nu.steffengrondahl.selfstudy.rest.model.EstimateDTO;
 import nu.steffengrondahl.selfstudy.rest.model.GenericDAO;
 import nu.steffengrondahl.selfstudy.rest.model.PriorityDTO;
 import nu.steffengrondahl.selfstudy.rest.model.ProjectDTO;
@@ -25,12 +26,12 @@ import java.util.List;
 @Path("/projects")
 public class ProjectResource {
 
-    private GenericDAO<ProjectDTO> projectDAO;
-    private GenericDAO<ProjectLightDTO> projectLightDAO;
+    //private GenericDAO<ProjectDTO> projectDAO;
+    //private GenericDAO<ProjectLightDTO> projectLightDAO;
 
     public ProjectResource() {
-        projectDAO = DAOFactory.getProjectDAO();
-        projectLightDAO = DAOFactory.getProjectLightDAO();
+        //projectDAO = DAOFactory.getProjectDAO();
+        //projectLightDAO = DAOFactory.getProjectLightDAO();
     }
 
     @GET
@@ -38,31 +39,25 @@ public class ProjectResource {
     public List<ProjectLightDTO> readList() {
         List<ProjectLightDTO> list = new ArrayList<ProjectLightDTO>();
 
-        try {
-            ProjectEntityDAO dao = new ProjectEntityDAO();
-            List<ProjectEntity> resultList = dao.query(QuerySpecificationFactory.queryAll());
-            for(ProjectEntity pe : resultList) {
-                ProjectLightDTO projectLightDTO = new ProjectLightDTO();
-                projectLightDTO.setId(pe.getId());
-                projectLightDTO.setDescription(pe.getDescription());
+        ProjectEntityDAO dao = new ProjectEntityDAO();
+        List<ProjectEntity> resultList = dao.query(QuerySpecificationFactory.queryAll());
+        for (ProjectEntity pe : resultList) {
+            ProjectLightDTO projectLightDTO = new ProjectLightDTO();
+            projectLightDTO.setId(pe.getId());
+            projectLightDTO.setDescription(pe.getDescription());
 
-                PriorityDTO priorityDTO = new PriorityDTO();
-                priorityDTO.setId(pe.getPriority().getId());
-                priorityDTO.setName(pe.getPriority().getName());
-                projectLightDTO.setPriority(priorityDTO);
+            PriorityDTO priorityDTO = new PriorityDTO();
+            priorityDTO.setId(pe.getPriority().getId());
+            priorityDTO.setName(pe.getPriority().getName());
+            projectLightDTO.setPriority(priorityDTO);
 
-                StatusDTO statusDTO = new StatusDTO();
-                statusDTO.setId(pe.getStatus().getId());
-                statusDTO.setName(pe.getStatus().getName());
-                projectLightDTO.setStatus(statusDTO);
+            StatusDTO statusDTO = new StatusDTO();
+            statusDTO.setId(pe.getStatus().getId());
+            statusDTO.setName(pe.getStatus().getName());
+            projectLightDTO.setStatus(statusDTO);
 
-                list.add(projectLightDTO);
-            }
+            list.add(projectLightDTO);
         }
-        catch(Exception e) {
-            e.printStackTrace();;
-        }
-
 
         return list; //projectLightDAO.readAll();
     }
@@ -74,12 +69,21 @@ public class ProjectResource {
 
         ProjectDTO projectDTO = new ProjectDTO();
         ProjectEntityDAO dao = new ProjectEntityDAO();
-        ProjectEntity projectEntity = dao.find(id, false);
-        if(projectEntity == null)
+        ProjectEntity projectEntity = dao.find(id, true);
+        if (projectEntity == null)
             throw new NotFoundException();
 
         projectDTO.setId(projectEntity.getId());
         projectDTO.setDescription(projectEntity.getDescription());
+        projectDTO.setGoals(projectEntity.getGoals());
+        projectDTO.setActions(projectEntity.getActions());
+        projectDTO.setStart(projectEntity.getStart());
+        projectDTO.setDeadline(projectEntity.getDeadline());
+
+        EstimateDTO estimateDTO = new EstimateDTO();
+        estimateDTO.setId(projectEntity.getEstimate().getId());
+        estimateDTO.setName(projectEntity.getEstimate().getName());
+        projectDTO.setEstimate(estimateDTO);
 
         PriorityDTO priorityDTO = new PriorityDTO();
         priorityDTO.setId(projectEntity.getPriority().getId());
@@ -91,6 +95,41 @@ public class ProjectResource {
         statusDTO.setName(projectEntity.getStatus().getName());
         projectDTO.setStatus(statusDTO);
 
+        for(ProjectEntity pe : projectEntity.getPresupposed()) {
+            ProjectLightDTO projectLightDTO = new ProjectLightDTO();
+            projectLightDTO.setId(pe.getId());
+            projectLightDTO.setDescription(pe.getDescription());
+
+            priorityDTO = new PriorityDTO();
+            priorityDTO.setId(pe.getPriority().getId());
+            priorityDTO.setName(pe.getPriority().getName());
+            projectLightDTO.setPriority(priorityDTO);
+
+            statusDTO = new StatusDTO();
+            statusDTO.setId(pe.getStatus().getId());
+            statusDTO.setName(pe.getStatus().getName());
+            projectLightDTO.setStatus(statusDTO);
+
+            projectDTO.getPresupposed().add(projectLightDTO);
+        }
+
+        for(ProjectEntity pe : projectEntity.getLinkable()) {
+            ProjectLightDTO projectLightDTO = new ProjectLightDTO();
+            projectLightDTO.setId(pe.getId());
+            projectLightDTO.setDescription(pe.getDescription());
+
+            priorityDTO = new PriorityDTO();
+            priorityDTO.setId(pe.getPriority().getId());
+            priorityDTO.setName(pe.getPriority().getName());
+            projectLightDTO.setPriority(priorityDTO);
+
+            statusDTO = new StatusDTO();
+            statusDTO.setId(pe.getStatus().getId());
+            statusDTO.setName(pe.getStatus().getName());
+            projectLightDTO.setStatus(statusDTO);
+
+            projectDTO.getLinkable().add(projectLightDTO);
+        }
 
         return projectDTO; //projectDAO.read(id);
     }
