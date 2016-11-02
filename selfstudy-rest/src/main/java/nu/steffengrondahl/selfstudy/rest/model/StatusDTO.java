@@ -1,15 +1,15 @@
-package nu.steffengrondahl.selfstudy.rest.domain;
+package nu.steffengrondahl.selfstudy.rest.model;
 
 /**
  * Created by Steffen on 30-10-2016.
  */
-public class PriorityDTO {
+public class StatusDTO {
 
     private Integer id;
 
     private String name;
 
-    public PriorityDTO() {
+    public StatusDTO() {
 
     }
 

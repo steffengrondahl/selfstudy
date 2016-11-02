@@ -1,4 +1,4 @@
-package nu.steffengrondahl.selfstudy.rest.domain;
+package nu.steffengrondahl.selfstudy.rest.model;
 
 import java.util.List;
 

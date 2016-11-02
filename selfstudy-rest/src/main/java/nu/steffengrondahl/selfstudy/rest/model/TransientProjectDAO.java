@@ -1,4 +1,4 @@
-package nu.steffengrondahl.selfstudy.rest.domain;
+package nu.steffengrondahl.selfstudy.rest.model;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ public class TransientProjectDAO implements GenericDAO<ProjectDTO> {
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(key);
         projectDTO.setDescription("First project");
-        projectDTO.setEstimateDTO(transientEstimateDAO.read(2));
-        projectDTO.setPriorityDTO(transientPriorityDAO.read(3));
-        projectDTO.setStatusDTO(transientStatusDAO.read(1));
+        projectDTO.setEstimate(transientEstimateDAO.read(2));
+        projectDTO.setPriority(transientPriorityDAO.read(3));
+        projectDTO.setStatus(transientStatusDAO.read(1));
         return projectDTO;
     }
 

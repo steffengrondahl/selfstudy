@@ -1,9 +1,8 @@
 package nu.steffengrondahl.selfstudy.rest;
 
-import nu.steffengrondahl.selfstudy.rest.domain.DAOFactory;
-import nu.steffengrondahl.selfstudy.rest.domain.EstimateDTO;
-import nu.steffengrondahl.selfstudy.rest.domain.GenericDAO;
-import nu.steffengrondahl.selfstudy.rest.domain.PriorityDTO;
+import nu.steffengrondahl.selfstudy.rest.model.DAOFactory;
+import nu.steffengrondahl.selfstudy.rest.model.GenericDAO;
+import nu.steffengrondahl.selfstudy.rest.model.PriorityDTO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

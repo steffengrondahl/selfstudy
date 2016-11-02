@@ -1,4 +1,4 @@
-package nu.steffengrondahl.selfstudy.rest.domain;
+package nu.steffengrondahl.selfstudy.rest.model;
 
 /**
  * Created by Steffen on 30-10-2016.

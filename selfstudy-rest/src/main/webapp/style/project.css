@@ -1,0 +1,35 @@
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid black;
+  padding: 4px;
+}
+.red {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+.orange {
+  background-color: #ffaa00;
+  color: #000000;
+}
+.yellow {
+  background-color: #ffff00;
+  color: #000000;
+}
+.green {
+  background-color: #00ff00;
+  color: #000000;
+}
+.blue {
+  background-color: #0000ff;
+  color: #ffffff;
+}
+pre {
+  background-color: #555555;
+  color: #ffffff;
+  font-family: "Lucida Console", Monaco, monospace;
+  /*white-space: pre;*/
+  white-space: pre-wrap;
+  padding: 4px;
+}

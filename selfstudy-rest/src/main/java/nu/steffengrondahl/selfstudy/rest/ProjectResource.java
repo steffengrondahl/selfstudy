@@ -3,12 +3,12 @@ package nu.steffengrondahl.selfstudy.rest;
 import nu.steffengrondahl.selfstudy.persist.ProjectEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity;
-import nu.steffengrondahl.selfstudy.rest.domain.DAOFactory;
-import nu.steffengrondahl.selfstudy.rest.domain.GenericDAO;
-import nu.steffengrondahl.selfstudy.rest.domain.PriorityDTO;
-import nu.steffengrondahl.selfstudy.rest.domain.ProjectDTO;
-import nu.steffengrondahl.selfstudy.rest.domain.ProjectLightDTO;
-import nu.steffengrondahl.selfstudy.rest.domain.StatusDTO;
+import nu.steffengrondahl.selfstudy.rest.model.DAOFactory;
+import nu.steffengrondahl.selfstudy.rest.model.GenericDAO;
+import nu.steffengrondahl.selfstudy.rest.model.PriorityDTO;
+import nu.steffengrondahl.selfstudy.rest.model.ProjectDTO;
+import nu.steffengrondahl.selfstudy.rest.model.ProjectLightDTO;
+import nu.steffengrondahl.selfstudy.rest.model.StatusDTO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -49,12 +49,12 @@ public class ProjectResource {
                 PriorityDTO priorityDTO = new PriorityDTO();
                 priorityDTO.setId(pe.getPriority().getId());
                 priorityDTO.setName(pe.getPriority().getName());
-                projectLightDTO.setPriorityDTO(priorityDTO);
+                projectLightDTO.setPriority(priorityDTO);
 
                 StatusDTO statusDTO = new StatusDTO();
                 statusDTO.setId(pe.getStatus().getId());
                 statusDTO.setName(pe.getStatus().getName());
-                projectLightDTO.setStatusDTO(statusDTO);
+                projectLightDTO.setStatus(statusDTO);
 
                 list.add(projectLightDTO);
             }
@@ -84,12 +84,12 @@ public class ProjectResource {
         PriorityDTO priorityDTO = new PriorityDTO();
         priorityDTO.setId(projectEntity.getPriority().getId());
         priorityDTO.setName(projectEntity.getPriority().getName());
-        projectDTO.setPriorityDTO(priorityDTO);
+        projectDTO.setPriority(priorityDTO);
 
         StatusDTO statusDTO = new StatusDTO();
         statusDTO.setId(projectEntity.getStatus().getId());
         statusDTO.setName(projectEntity.getStatus().getName());
-        projectDTO.setStatusDTO(statusDTO);
+        projectDTO.setStatus(statusDTO);
 
 
         return projectDTO; //projectDAO.read(id);

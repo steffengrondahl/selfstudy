@@ -3,34 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>View projects</title>
+        <link rel="stylesheet" type="text/css" href="style/project.css" >
         <style>
-	    	table {
-			    border-collapse: collapse;
-		    }
-	    	th, td {
-			    border: 1px solid black;
-			    padding: 4px;
-		    }
-		    .red {
-		        background-color: #ff0000;
-		        color: #ffffff;
-		    }
-		    .orange {
-		        background-color: #ffaa00;
-		        color: #000000;
-		    }
-		    .yellow {
-		        background-color: #ffff00;
-		        color: #000000;
-		    }
-		    .green {
-		        background-color: #00ff00;
-		        color: #000000;
-		    }
-		    .blue {
-		        background-color: #0000ff;
-		        color: #ffffff;
-		    }
 	    </style>
     </head>
     <body>
@@ -48,6 +22,7 @@
             </tr>
         </table>
         <p><a href="index.html">Home</a></p>
+        <pre id="json">&nbsp;</pre>
         <script>
 			var url = "rest/projects";
 
@@ -66,15 +41,15 @@
 			}
 
 			function viewProjects(jsArray) {
-			    //alert(JSON.stringify(jsArray));
+			    document.getElementById("json").innerHTML = JSON.stringify(jsArray, null, 2);
 			    for(i = 0; i < jsArray.length; i++) {
 			        // fetch variables
 					var id = jsArray[i].id;
 					var description = jsArray[i].description;
-    				var priority_id = jsArray[i].priorityDTO.id;
-    				var priority_name = jsArray[i].priorityDTO.name;
-	    			var status_id = jsArray[i].statusDTO.id;
-	    			var status_name = jsArray[i].statusDTO.name;
+    				var priority_id = jsArray[i].priority.id;
+    				var priority_name = jsArray[i].priority.name;
+	    			var status_id = jsArray[i].status.id;
+	    			var status_name = jsArray[i].status.name;
 	    			// build table elements
         			var row = document.getElementById("datatable").insertRow(i+1);
 					var cell_id = row.insertCell(0);
@@ -105,13 +80,13 @@
 					}
 					cell_status.innerHTML = "" + status_name;
 					if(status_id == 1) {
-					    cell_status.className = "red"
+					    cell_status.className = "red";
 					}
 					else if(status_id == 2) {
-					    cell_status.className = "yellow"
+					    cell_status.className = "yellow";
 					}
 					else if(status_id == 3) {
-					    cell_status.className = "green"
+					    cell_status.className = "green";
 					}
 
 					var view_button = document.createElement("button");

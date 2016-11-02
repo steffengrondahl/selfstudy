@@ -3,38 +3,23 @@
     <head>
         <meta charset="UTF-8">
         <title>View project</title>
+        <link rel="stylesheet" type="text/css" href="style/project.css" >
         <style>
-			table {
-				border-collapse: collapse;
-			}
-			th, td {
-				border: 1px solid black;
-				padding: 4px;
-			}
+            #json {
+                display: block;
+            }
 		</style>
         <script>
+			var url = "rest/projects";
+
             window.addEventListener("load",initialise,false);
 
 			function initialise(evt) {
 			    var id = sessionStorage.getItem("pid");
+			    //alert("id " + id);
 			    sessionStorage.removeItem("pid");
 			    fetchProject(id);
 			}
-        </script>
-    </head>
-    <body>
-        <h1>Self study: View project</h1>
-        <table id="datatable">
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Priority</th>
-                <th>Status</th>
-            </tr>
-        </table>
-        <p><a href="index.html">Home</a></p>
-        <script>
-			var url = "rest/projects";
 
 			function fetchProject(id) {
 				var queryUrl = url + "/" + id;
@@ -48,24 +33,32 @@
 			function handleRequest(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
+    				    //alert("Got OK from server");
     					var jsObject = JSON.parse(evt.target.responseText);
     			        viewProject(jsObject);
     				}
     				else if(evt.target.status == 404) {
-    					alert("Project does not exist");
+    					//alert("Project does not exist");
+    					sessionStorage.setItem("error", "Project does not exist");
+						window.location.href = "error.html";
     				}
     				else {
-    					alert("Unexpected response status " + evt.target.status);    				}
-    			}
+    					//alert("Unexpected response status " + evt.target.status);
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
 			}
 
 			function viewProject(jsObject) {
 				clearAll();
+				document.getElementById("json").innerHTML= JSON.stringify(jsObject, null, 2);
 				var id = jsObject.id;
 				var description = jsObject.description;
-				var priority = jsObject.priorityDTO.name;
-				var status = jsObject.statusDTO.name;
-				//alert(JSON.stringify(jsObject));
+				var priority_id = jsObject.priority.id;
+				var priority_name = jsObject.priority.name;
+				var status_id = jsObject.status.id;
+				var status_name = jsObject.status.name;
 				var row = document.getElementById("datatable").insertRow(1);
 				var cell_id = row.insertCell(0);
 				var cell_description = row.insertCell(1);
@@ -73,8 +66,40 @@
 				var cell_status = row.insertCell(3);
 				cell_id.innerHTML = "" + id;
 				cell_description.innerHTML = "" + description;
-				cell_priority.innerHTML = "" + priority;
-				cell_status.innerHTML = "" + status;
+				cell_priority.innerHTML = "" + priority_name;
+				switch(parseInt(priority_id)) {
+				    case 1:
+				       cell_priority.className = "blue";
+				       break;
+				    case 2:
+    				    cell_priority.className = "green";
+    				    break;
+    				case 3:
+    				    cell_priority.className = "yellow";
+    				    break;
+    				case 4:
+    				    cell_priority.className = "orange";
+    				    break;
+    				case 5:
+    				    cell_priority.className = "red";
+    				    break;
+    				default:
+    				    break;
+				}
+				cell_status.innerHTML = "" + status_name;
+				switch(parseInt(status_id)) {
+				    case 1:
+				        cell_status.className = "red";
+				        break;
+				    case 2:
+				        cell_status.className = "yellow";
+				        break;
+				    case 3:
+				        cell_status.className = "green";
+				        break;
+				    default:
+				        break;
+				}
 			}
 
 			function clearAll() {
@@ -83,6 +108,20 @@
 					document.getElementById("datatable").deleteRow(rows--);
 				}
 			}
-		</script>
+
+        </script>
+    </head>
+    <body>
+        <h1>Self study: View project</h1>
+        <table id="datatable">
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Status</th>
+            </tr>
+        </table>
+        <p><a href="index.html">Home</a></p>
+        <pre id="json">&nbsp;</pre>
     </body>
 </html>

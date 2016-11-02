@@ -1,4 +1,4 @@
-package nu.steffengrondahl.selfstudy.rest.domain;
+package nu.steffengrondahl.selfstudy.rest.model;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,11 +6,7 @@ import java.util.List;
 /**
  * Created by Steffen on 30-10-2016.
  */
-public class ProjectDTO {
-
-    private Integer id;
-
-    private String description;
+public class ProjectDTO extends ProjectLightDTO {
 
     private String goals;
 
@@ -20,34 +16,14 @@ public class ProjectDTO {
 
     private LocalDate deadline;
 
-    private EstimateDTO estimateDTO;
-
-    private PriorityDTO priorityDTO;
-
-    private StatusDTO statusDTO;
+    private EstimateDTO estimate;
 
     private List<ProjectLightDTO> presupposed;
 
     private List<ProjectLightDTO> linkable;
 
     public ProjectDTO() {
-
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        super();
     }
 
     public String getGoals() {
@@ -82,28 +58,12 @@ public class ProjectDTO {
         this.deadline = deadline;
     }
 
-    public EstimateDTO getEstimateDTO() {
-        return estimateDTO;
+    public EstimateDTO getEstimate() {
+        return estimate;
     }
 
-    public void setEstimateDTO(EstimateDTO estimateDTO) {
-        this.estimateDTO = estimateDTO;
-    }
-
-    public PriorityDTO getPriorityDTO() {
-        return priorityDTO;
-    }
-
-    public void setPriorityDTO(PriorityDTO priorityDTO) {
-        this.priorityDTO = priorityDTO;
-    }
-
-    public StatusDTO getStatusDTO() {
-        return statusDTO;
-    }
-
-    public void setStatusDTO(StatusDTO statusDTO) {
-        this.statusDTO = statusDTO;
+    public void setEstimate(EstimateDTO estimate) {
+        this.estimate = estimate;
     }
 
     public List<ProjectLightDTO> getPresupposed() {

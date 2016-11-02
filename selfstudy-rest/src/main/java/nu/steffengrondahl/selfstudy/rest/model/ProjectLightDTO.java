@@ -1,4 +1,4 @@
-package nu.steffengrondahl.selfstudy.rest.domain;
+package nu.steffengrondahl.selfstudy.rest.model;
 
 /**
  * Created by Steffen on 30-10-2016.
@@ -9,9 +9,9 @@ public class ProjectLightDTO {
 
     private String description;
 
-    private PriorityDTO priorityDTO;
+    private PriorityDTO priority;
 
-    private StatusDTO statusDTO;
+    private StatusDTO status;
 
     public ProjectLightDTO() {
 
@@ -33,19 +33,19 @@ public class ProjectLightDTO {
         this.description = description;
     }
 
-    public PriorityDTO getPriorityDTO() {
-        return priorityDTO;
+    public PriorityDTO getPriority() {
+        return priority;
     }
 
-    public void setPriorityDTO(PriorityDTO priorityDTO) {
-        this.priorityDTO = priorityDTO;
+    public void setPriority(PriorityDTO priority) {
+        this.priority = priority;
     }
 
-    public StatusDTO getStatusDTO() {
-        return statusDTO;
+    public StatusDTO getStatus() {
+        return status;
     }
 
-    public void setStatusDTO(StatusDTO statusDTO) {
-        this.statusDTO = statusDTO;
+    public void setStatus(StatusDTO status) {
+        this.status = status;
     }
 }

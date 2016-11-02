@@ -1,4 +1,4 @@
-package nu.steffengrondahl.selfstudy.rest.domain;
+package nu.steffengrondahl.selfstudy.rest.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,16 +22,16 @@ public class TransientProjectLightDAO implements GenericDAO<ProjectLightDTO> {
         ProjectLightDTO projectLightDTO = new ProjectLightDTO();
         projectLightDTO.setId(key);
         projectLightDTO.setDescription("First project");
-        projectLightDTO.setPriorityDTO(transientPriorityDAO.read(3));
-        projectLightDTO.setStatusDTO(transientStatusDAO.read(1));
+        projectLightDTO.setPriority(transientPriorityDAO.read(3));
+        projectLightDTO.setStatus(transientStatusDAO.read(1));
         map.put(key, projectLightDTO);
         // second project
         key = 2;
         projectLightDTO = new ProjectLightDTO();
         projectLightDTO.setId(key);
         projectLightDTO.setDescription("Second project");
-        projectLightDTO.setPriorityDTO(transientPriorityDAO.read(4));
-        projectLightDTO.setStatusDTO(transientStatusDAO.read(2));
+        projectLightDTO.setPriority(transientPriorityDAO.read(4));
+        projectLightDTO.setStatus(transientStatusDAO.read(2));
         map.put(key, projectLightDTO);
     }
 
@@ -54,7 +54,7 @@ public class TransientProjectLightDAO implements GenericDAO<ProjectLightDTO> {
         // TODO: Remove from list
         List<ProjectLightDTO> resultList = new ArrayList<ProjectLightDTO>();
         for(ProjectLightDTO project : list) {
-            if(project.getPriorityDTO().getId() >= minPriority && project.getPriorityDTO().getId() <= maxPriority && project.getStatusDTO().getId() >= minStatus && project.getStatusDTO().getId() <= maxStatus) {
+            if(project.getPriority().getId() >= minPriority && project.getPriority().getId() <= maxPriority && project.getStatus().getId() >= minStatus && project.getStatus().getId() <= maxStatus) {
                 resultList.add(project);
             }
         }
