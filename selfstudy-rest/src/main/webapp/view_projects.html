@@ -15,7 +15,8 @@
 			window.addEventListener("load", initialise, false);
 
 			function initialise(evt) {
-			    fetchProjects();
+                fetchProjects();
+			    document.getElementById("create").addEventListener("click", create, false);
 			}
 
 			function fetchProjects() {
@@ -29,8 +30,8 @@
 			function handleRequest(evt) {
 				if (evt.target.readyState == 4 ) {
 					if(evt.target.status==200) {
-						var jsArray = JSON.parse(evt.target.responseText);
-	    		        viewProjects(jsArray);
+						var projectArray = JSON.parse(evt.target.responseText);
+	    		        viewProjects(projectArray);
 					}
 					else {
 						//alert("Unexpected response status " + evt.target.status);
@@ -40,16 +41,16 @@
 				}
 			}
 
-			function viewProjects(jsArray) {
-			    document.getElementById("json").innerHTML = JSON.stringify(jsArray, null, 2);
-			    for(i = 0; i < jsArray.length; i++) {
+			function viewProjects(projectArray) {
+			    document.getElementById("json").innerHTML = JSON.stringify(projectArray, null, 2);
+			    for(i = 0; i < projectArray.length; i++) {
 			        // fetch variables
-					var id = jsArray[i].id;
-					var description = jsArray[i].description;
-    				var priority_id = jsArray[i].priority.id;
-    				var priority_name = jsArray[i].priority.name;
-	    			var status_id = jsArray[i].status.id;
-	    			var status_name = jsArray[i].status.name;
+					var id = projectArray[i].id;
+					var description = projectArray[i].description;
+    				var priority_id = projectArray[i].priority.id;
+    				var priority_name = projectArray[i].priority.name;
+	    			var status_id = projectArray[i].status.id;
+	    			var status_name = projectArray[i].status.name;
 	    			// build table elements
         			var row = document.getElementById("datatable").insertRow(i+1);
 					var cell_id = row.insertCell(0);
@@ -158,6 +159,11 @@
 				}
 			}
 
+			function create(evt) {
+			    //alert("Create ...");
+				window.location.href = "create_project.html";
+			}
+
         </script>
     </head>
     <body>
@@ -174,6 +180,7 @@
                 <th>&nbsp;</th>
             </tr>
         </table>
+        <p><button id="create">Create</button></p>
         <p><a href="index.html">Home</a></p>
         <pre id="json">&nbsp;</pre>
     </body>

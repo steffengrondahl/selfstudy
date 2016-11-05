@@ -3,86 +3,196 @@
     <head>
         <meta charset="UTF-8">
         <title>Create project</title>
+        <link rel="stylesheet" type="text/css" href="style/project.css" >
         <style>
-			table {
-				border-collapse: collapse;
-			}
-			th, td {
-				border: 1px solid black;
-				padding: 4px;
-			}
+            #json {
+                display: block;
+            }
 		</style>
-    </head>
-    <body>
-        <h1>Self study: Create project</h1>
-        <p>Project fetched with AJAX using GET</p>
-        <p>Input:</p>
-        <p><input id="id" type="text" size="3" maxlength="3"></p>
-        <p><button id="fetch">Fetch</button></p>
-        <p>Result:</p>
-        <table id="datatable">
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Priority</th>
-                <th>Status</th>
-            </tr>
-        </table>
-        <p><a href="index.html">Home</a></p>
         <script>
 			var url = "rest/projects";
 
-			document.getElementById("fetch").addEventListener("click",submitQuery,false);
+			var estimateArray;
+			var priorityArray;
+			var statusArray;
 
-			function submitQuery(evt) {
-				clearAll();
-				var id = document.getElementById("id").value;
-				var queryUrl = url + "/" + id;
+            window.addEventListener("load",initialise,false);
+
+			function initialise(evt) {
+			    fetchEstimates();
+			    fetchPriorities();
+			    fetchStatuses();
+			    document.getElementById("create").addEventListener("click", create, false);
+			}
+
+   			function fetchEstimates() {
+				var queryUrl = "rest/estimates";
 				var xmlhttp = new XMLHttpRequest();
 				xmlhttp.open("GET", queryUrl, true);
-				xmlhttp.addEventListener("readystatechange",handleRequest,false);
+				xmlhttp.addEventListener("readystatechange",handleEstimates,false);
 				xmlhttp.setRequestHeader("Accept", "application/json");
 				xmlhttp.send();
 			}
 
-			function handleRequest(evt) {
+		    function fetchPriorities() {
+				var queryUrl = "rest/priorities";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET", queryUrl, true);
+				xmlhttp.addEventListener("readystatechange",handlePriorities,false);
+				xmlhttp.setRequestHeader("Accept", "application/json");
+				xmlhttp.send();
+		    }
+
+			function fetchStatuses() {
+				var queryUrl = "rest/statuses";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET", queryUrl, true);
+				xmlhttp.addEventListener("readystatechange",handleStatuses,false);
+				xmlhttp.setRequestHeader("Accept", "application/json");
+				xmlhttp.send();
+			}
+
+			function handleEstimates(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
-    					var jsObject = JSON.parse(evt.target.responseText);
-    			        myFunction(jsObject);
+    					estimateArray = JSON.parse(evt.target.responseText);
+    			        var estimateSelect = document.getElementById("estimate");
+        			    for(i = 0; i < estimateArray.length; i++) {
+        			        var option = document.createElement('option');
+							option.value = estimateArray[i].id;
+							option.innerHTML = estimateArray[i].name;
+							estimateSelect.appendChild(option);
+        			    }
     				}
     				else if(evt.target.status == 404) {
-    					alert("Project does not exist");
+    					sessionStorage.setItem("error", "Unable to load estimates");
+						window.location.href = "error.html";
     				}
     				else {
-    					alert("Unexpected response status " + evt.target.status);    				}
-    			}
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
 			}
 
-			function myFunction(jsObject) {
-				clearAll();
-				var id = jsObject.id;
-				var description = jsObject.description;
-				var priority = jsObject.priorityDTO.name;
-				var status = jsObject.statusDTO.name;
-				alert(JSON.stringify(jsObject));
-				var row = document.getElementById("datatable").insertRow(1);
-				var cell_id = row.insertCell(0);
-				var cell_description = row.insertCell(1);
-				var cell_priority = row.insertCell(2);
-				var cell_status = row.insertCell(3);
-				cell_id.innerHTML = "" + id;
-				cell_description.innerHTML = "" + description;
-				cell_priority.innerHTML = "" + priority;
-				cell_status.innerHTML = "" + status;
+			function handlePriorities(evt) {
+    			if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 200) {
+    					var jsArray = JSON.parse(evt.target.responseText);
+    			        var prioritySelect = document.getElementById("priority");
+        			    for(i = 0; i < jsArray.length; i++) {
+        			        var option = document.createElement("option");
+							option.value = jsArray[i].id;
+							option.innerHTML = jsArray[i].name;
+							prioritySelect.appendChild(option);
+        			    }
+    				}
+    				else if(evt.target.status == 404) {
+    					sessionStorage.setItem("error", "Unable to load priorities");
+						window.location.href = "error.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
 			}
 
-			function clearAll() {
-				var rows = parseInt(document.getElementById("datatable").rows.length - 1);
-				while(rows > 0) {
-					document.getElementById("datatable").deleteRow(rows--);
-				}
+			function handleStatuses(evt) {
+    			if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 200) {
+    					var jsArray = JSON.parse(evt.target.responseText);
+    			        var statusSelect = document.getElementById("status");
+        			    for(i = 0; i < jsArray.length; i++) {
+        			        var option = document.createElement("option");
+							option.value = jsArray[i].id;
+							option.innerHTML = jsArray[i].name;
+							statusSelect.appendChild(option);
+        			    }
+    				}
+    				else if(evt.target.status == 404) {
+    					sessionStorage.setItem("error", "Unable to load statuses");
+						window.location.href = "error.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
 			}
-		</script>
+
+            function create(evt) {
+                //alert("Create ...");
+                // fetch data
+                var description = document.getElementById("description").value;
+                //alert("description = " + description);
+				var goals = document.getElementById("goals").value;
+				//alert("goals = " + goals);
+				var actions = document.getElementById("actions").value;
+				var start = document.getElementById("start").value;
+				var deadline = document.getElementById("deadline").value;
+				//alert("deadline = " + deadline);
+				var estimate_id = document.getElementById("estimate").value;
+				//alert("estimate_id = " + estimate_id);
+				//var priority = document.getElementById("priority").value;
+				//var status = document.getElementById("status").value;
+				// build JSON project object
+                var projectObject = new Object();
+                projectObject.description = description;
+                projectObject.goals = goals;
+                projectObject.actions = actions;
+                projectObject.start = start;
+                projectObject.deadline = deadline;
+                var estimateObject = new Object();
+                estimateObject.id = estimate_id;
+                estimateObject.name = "";
+                projectObject.estimate = estimateObject;
+                //jsObject.estimate.id = estimate_id;
+                //js.Object.estimate.name = estimateArray[parseInt()].name;
+                //jsObject.actions = actions;
+                //jsObject.actions = actions;
+
+                document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
+                // TODO: Send to server and view result
+            }
+
+
+        </script>
+    </head>
+    <body>
+        <h1>Self study: Create project</h1>
+        <p>
+            <input type="text" readonly value="-" maxlength="3" size="3" style="font-weight: bold" >
+            <input type="text" maxlength="32" size="32" style="font-weight: bold" id="description">
+        </p>
+        <p style="margin-bottom: 0"><b>Goals:</b></p>
+        <textarea  maxlength="2048" id="goals"></textarea>
+        <p style="margin-bottom: 0"><b>Actions:</b></p>
+        <textarea  maxlength="2048" id="actions"></textarea>
+        <table style="margin-top: 12px">
+            <tr>
+                <td><b>Start</b></td>
+                <td><input type="date" id="start"></td>
+            </tr>
+            <tr>
+                <td><b>Deadline</b></td>
+                <td><input type="date" id="deadline"></td>
+            </tr>
+            <tr>
+                <td><b>Estimate</b></td>
+                <td><select id="estimate"></select></td>
+            </tr>
+            <tr>
+                <td><b>Priority</b></td>
+                <td><select id="priority"></select></td>
+            </tr>
+            <tr>
+                <td><b>Status</b></td>
+                <td><select id="status"></select></td>
+            </tr>
+        </table>
+        <p><button id="create">Create</button></p>
+        <p><a href="index.html">Home</a></p>
+        <pre id="json">&nbsp;</pre>
     </body>
 </html>
