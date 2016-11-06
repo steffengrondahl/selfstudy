@@ -2,7 +2,10 @@ package nu.steffengrondahl.selfstudy.rest;
 
 import nu.steffengrondahl.selfstudy.persist.ProjectEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
+import nu.steffengrondahl.selfstudy.persist.domain.EstimateEntity;
+import nu.steffengrondahl.selfstudy.persist.domain.PriorityEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity;
+import nu.steffengrondahl.selfstudy.persist.domain.StatusEntity;
 import nu.steffengrondahl.selfstudy.rest.model.DAOFactory;
 import nu.steffengrondahl.selfstudy.rest.model.EstimateDTO;
 import nu.steffengrondahl.selfstudy.rest.model.GenericDAO;
@@ -11,12 +14,21 @@ import nu.steffengrondahl.selfstudy.rest.model.ProjectDTO;
 import nu.steffengrondahl.selfstudy.rest.model.ProjectLightDTO;
 import nu.steffengrondahl.selfstudy.rest.model.StatusDTO;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +40,9 @@ public class ProjectResource {
 
     //private GenericDAO<ProjectDTO> projectDAO;
     //private GenericDAO<ProjectLightDTO> projectLightDAO;
+
+    @Context
+    private UriInfo uriInfo;
 
     public ProjectResource() {
         //projectDAO = DAOFactory.getProjectDAO();
@@ -77,8 +92,20 @@ public class ProjectResource {
         projectDTO.setDescription(projectEntity.getDescription());
         projectDTO.setGoals(projectEntity.getGoals());
         projectDTO.setActions(projectEntity.getActions());
-        projectDTO.setStart(projectEntity.getStart());
-        projectDTO.setDeadline(projectEntity.getDeadline());
+        LocalDate start = projectEntity.getStart();
+        if(start != null) {
+            projectDTO.setStart(DateTimeFormatter.ISO_LOCAL_DATE.format(start));
+        }
+        else {
+            projectDTO.setStart("");
+        }
+        LocalDate deadline = projectEntity.getDeadline();
+        if(deadline != null) {
+            projectDTO.setDeadline(DateTimeFormatter.ISO_LOCAL_DATE.format(deadline));
+        }
+        else {
+            projectDTO.setDeadline("");
+        }
 
         EstimateDTO estimateDTO = new EstimateDTO();
         estimateDTO.setId(projectEntity.getEstimate().getId());
@@ -134,5 +161,46 @@ public class ProjectResource {
         return projectDTO; //projectDAO.read(id);
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response create(ProjectDTO projectDTO) {
+        ProjectEntity projectEntity = new ProjectEntity();
+        projectEntity.setDescription(projectDTO.getDescription());
+        projectEntity.setGoals(projectDTO.getGoals());
+        projectEntity.setActions(projectDTO.getActions());
+
+        LocalDate start = null;
+        try {
+            start = LocalDate.parse(projectDTO.getStart(), DateTimeFormatter.ISO_LOCAL_DATE);
+        }
+        catch(DateTimeParseException e) {
+        }
+        projectEntity.setStart(start);
+        LocalDate deadline = null;
+        try {
+            deadline = LocalDate.parse(projectDTO.getDeadline(), DateTimeFormatter.ISO_LOCAL_DATE);
+        }
+        catch(DateTimeParseException e) {
+        }
+        projectEntity.setDeadline(deadline);
+
+        EstimateEntity estimateEntity = new EstimateEntity();
+        estimateEntity.setId(projectDTO.getEstimate().getId());
+        projectEntity.setEstimate(estimateEntity);
+
+        PriorityEntity priorityEntity = new PriorityEntity();
+        priorityEntity.setId(projectDTO.getPriority().getId());
+        projectEntity.setPriority(priorityEntity);
+
+        StatusEntity statusEntity = new StatusEntity();
+        statusEntity.setId(projectDTO.getStatus().getId());
+        projectEntity.setStatus(statusEntity);
+
+        ProjectEntityDAO dao = new ProjectEntityDAO();
+        Integer id = dao.add(projectEntity);
+        String projectId = Integer.toString(id);
+        URI uri = uriInfo.getAbsolutePathBuilder().path(projectId).build();
+        return Response.created(uri).build();
+    }
 
 }

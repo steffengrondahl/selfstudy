@@ -15,12 +15,14 @@ public class PriorityEntityDAO implements GenericEntityDAO<PriorityEntity> {
 
     }
 
-    public void add(PriorityEntity priorityEntity) {
+    public Integer add(PriorityEntity priorityEntity) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(priorityEntity);
+        Integer id = priorityEntity.getId();
         entityManager.getTransaction().commit();
         entityManager.close();
+        return id;
     }
 
     public void update(PriorityEntity priorityEntity) {

@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface GenericEntityDAO<T> {
 
-    void add(T t);
+    Integer add(T t);
 
     void update(T t);
 

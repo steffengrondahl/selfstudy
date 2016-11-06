@@ -15,12 +15,14 @@ public class StatusEntityDAO implements GenericEntityDAO<StatusEntity> {
 
     }
 
-    public void add(StatusEntity statusEntity) {
+    public Integer add(StatusEntity statusEntity) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(statusEntity);
+        Integer id = statusEntity.getId();
         entityManager.getTransaction().commit();
         entityManager.close();
+        return id;
     }
 
     public void update(StatusEntity statusEntity) {

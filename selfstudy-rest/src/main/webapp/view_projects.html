@@ -20,11 +20,11 @@
 			}
 
 			function fetchProjects() {
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("GET", url, true);
-				xmlhttp.addEventListener("readystatechange",handleRequest,false);
-				xmlhttp.setRequestHeader("Accept", "application/json");
-				xmlhttp.send();
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", url, true);
+				httpRequest.addEventListener("readystatechange",handleRequest,false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
 			}
 
 			function handleRequest(evt) {

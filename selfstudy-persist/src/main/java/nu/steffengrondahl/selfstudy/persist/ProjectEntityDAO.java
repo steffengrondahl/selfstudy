@@ -25,12 +25,14 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
 
     }
 
-    public void add(ProjectEntity projectEntity) {
+    public Integer add(ProjectEntity projectEntity) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(projectEntity);
+        Integer id = projectEntity.getId();
         entityManager.getTransaction().commit();
         entityManager.close();
+        return id;
     }
 
     public void update(ProjectEntity projectEntity) {

@@ -13,9 +13,9 @@ public class ProjectDTO extends ProjectLightDTO {
 
     private String actions;
 
-    private LocalDate start;
+    private String start;
 
-    private LocalDate deadline;
+    private String deadline;
 
     private EstimateDTO estimate;
 
@@ -43,19 +43,19 @@ public class ProjectDTO extends ProjectLightDTO {
         this.actions = actions;
     }
 
-    public LocalDate getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(LocalDate start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public LocalDate getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
 
