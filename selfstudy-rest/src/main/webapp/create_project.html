@@ -152,8 +152,9 @@
                 statusObject.id = status_id;
                 statusObject.name = "";
                 projectObject.status = statusObject;
-                projectObject.linkable = new Array();
                 projectObject.presupposed = new Array();
+                projectObject.subsequent = new Array();
+                projectObject.linkable = new Array();
                 projectObject.type = "projectDTO"; // Is this needed?
 
                 // write JSON data for debugging
@@ -224,6 +225,7 @@
             </tr>
         </table>
         <p><button id="create">Create</button></p>
+        <p><a href="view_projects.html">View projects</a></p>
         <p><a href="index.html">Home</a></p>
         <pre id="json">&nbsp;</pre>
         <pre id="result">&nbsp;</pre>

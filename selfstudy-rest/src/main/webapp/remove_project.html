@@ -3,95 +3,152 @@
     <head>
         <meta charset="UTF-8">
         <title>Remove project</title>
+        <link rel="stylesheet" type="text/css" href="style/project.css" >
         <style>
-			table {
-				border-collapse: collapse;
-			}
-			th, td {
-				border: 1px solid black;
-				padding: 4px;
-			}
+            #json {
+                display: block;
+            }
 		</style>
         <script>
             window.addEventListener("load",initialise,false);
 
 			function initialise(evt) {
+			    document.getElementById("remove").addEventListener("click", remove, false);
+			    document.getElementById("view").addEventListener("click", view, false);
 			    var id = sessionStorage.getItem("pid");
 			    sessionStorage.removeItem("pid");
-			    //fetchProject(id);
+			    fetchProject(id);
 			}
-        </script>
-    </head>
-    <body>
-        <h1>Self study: Remove project</h1>
-        <p>Project fetched with AJAX using GET</p>
-        <p>Input:</p>
-        <p><input id="id" type="text" size="3" maxlength="3"></p>
-        <p><button id="fetch">Fetch</button></p>
-        <p>Result:</p>
-        <table id="datatable">
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Priority</th>
-                <th>Status</th>
-            </tr>
-        </table>
-        <p><a href="index.html">Home</a></p>
-        <script>
-			var url = "rest/projects";
 
-			document.getElementById("fetch").addEventListener("click",submitQuery,false);
-
-			function submitQuery(evt) {
-				clearAll();
-				var id = document.getElementById("id").value;
+			function fetchProject(id) {
+			    var url = "rest/projects";
 				var queryUrl = url + "/" + id;
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("GET", queryUrl, true);
-				xmlhttp.addEventListener("readystatechange",handleRequest,false);
-				xmlhttp.setRequestHeader("Accept", "application/json");
-				xmlhttp.send();
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", queryUrl, true);
+				httpRequest.addEventListener("readystatechange",handleRequest,false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
 			}
 
 			function handleRequest(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
-    					var jsObject = JSON.parse(evt.target.responseText);
-    			        myFunction(jsObject);
+    					var projectObject = JSON.parse(evt.target.responseText);
+    			        viewProject(projectObject);
     				}
     				else if(evt.target.status == 404) {
-    					alert("Project does not exist");
+    					sessionStorage.setItem("error", "Project does not exist");
+						window.location.href = "error.html";
     				}
     				else {
-    					alert("Unexpected response status " + evt.target.status);    				}
-    			}
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
 			}
 
-			function myFunction(jsObject) {
-				clearAll();
-				var id = jsObject.id;
-				var description = jsObject.description;
-				var priority = jsObject.priorityDTO.name;
-				var status = jsObject.statusDTO.name;
-				alert(JSON.stringify(jsObject));
-				var row = document.getElementById("datatable").insertRow(1);
-				var cell_id = row.insertCell(0);
-				var cell_description = row.insertCell(1);
-				var cell_priority = row.insertCell(2);
-				var cell_status = row.insertCell(3);
-				cell_id.innerHTML = "" + id;
-				cell_description.innerHTML = "" + description;
-				cell_priority.innerHTML = "" + priority;
-				cell_status.innerHTML = "" + status;
-			}
-
-			function clearAll() {
-				var rows = parseInt(document.getElementById("datatable").rows.length - 1);
-				while(rows > 0) {
-					document.getElementById("datatable").deleteRow(rows--);
+			function viewProject(projectObject) {
+				document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
+		        // fetch variables
+				var id = projectObject.id;
+				//alert("id: " + id);
+				var description = projectObject.description;
+				/*
+				var goals = projectObject.goals;
+				if(goals == null) {
+				    goals = "";
+				}
+				var actions = projectObject.actions;
+				if(actions == null) {
+				    actions = "";
+				}
+				var start = projectObject.start;
+				var deadline = projectObject.deadline;
+				//alert("deadline: " + deadline);
+				var estimate_name = projectObject.estimate.name;
+				*/
+				var priority_id = projectObject.priority.id;
+				var priority_name = projectObject.priority.name;
+				var status_id = projectObject.status.id;
+				var status_name = projectObject.status.name;
+				// set values
+    			document.getElementById("project_id").value = id;
+    			document.getElementById("description").value = description;
+    			//document.getElementById("goals").value = goals;
+    			//document.getElementById("actions").value = actions;
+    			//document.getElementById("start").value = start;
+    			//alert("Deadline: " + deadline);
+    			//document.getElementById("deadline").value = ""; //deadline;
+    			//document.getElementById("deadline").value = deadline;
+    			//document.getElementById("estimate").innerHTML = estimate_name;
+    			document.getElementById("priority").innerHTML = priority_name;
+    			document.getElementById("status").innerHTML = status_name;
+    			switch(parseInt(priority_id)) {
+				    case 1:
+				       document.getElementById("priority").className = "blue";
+				       break;
+				    case 2:
+    				    document.getElementById("priority").className = "green";
+    				    break;
+    				case 3:
+    				    document.getElementById("priority").className = "yellow";
+    				    break;
+    				case 4:
+    				    document.getElementById("priority").className = "orange";
+    				    break;
+    				case 5:
+    				    document.getElementById("priority").className = "red";
+    				    break;
+    				default:
+    				    break;
+				}
+				switch(parseInt(status_id)) {
+				    case 1:
+				        document.getElementById("status").className = "red";
+				        break;
+				    case 2:
+				        document.getElementById("status").className = "yellow";
+				        break;
+				    case 3:
+				        document.getElementById("status").className = "green";
+				        break;
+				    default:
+				        break;
 				}
 			}
-		</script>
+
+			function remove(evt) {
+			    alert("Removing");
+			}
+
+			function view(evt) {
+    			var id = document.getElementById("project_id").value;
+				sessionStorage.setItem("pid", id);
+				window.location.href = "view_project.html";
+			}
+
+        </script>
+    </head>
+    <body>
+        <h1>Self study: Remove project</h1>
+        <p>
+            <input type="text" readonly maxlength="3" size="3" style="font-weight: bold" id="project_id">
+            <input type="text" readonly maxlength="32" size="32" style="font-weight: bold" id="description">
+        </p>
+        <table style="margin-top: 12px">
+            <tr>
+                <td><b>Priority</b></td>
+                <td id="priority">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Status</b></td>
+                <td id="status">&nbsp;</td>
+            </tr>
+        </table>
+        <p><button id="remove">Confirm remove</button></p>
+        <p><button id="view">View</button></p>
+        <p><a href="view_projects.html">View projects</a></p>
+        <p><a href="index.html">Home</a></p>
+        <pre id="json"></pre>
     </body>
 </html>

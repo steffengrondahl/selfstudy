@@ -3,33 +3,264 @@
     <head>
         <meta charset="UTF-8">
         <title>Edit project</title>
+        <link rel="stylesheet" type="text/css" href="style/project.css" >
         <style>
-			table {
-				border-collapse: collapse;
-			}
-			th, td {
-				border: 1px solid black;
-				padding: 4px;
-			}
+            #json {
+                display: block;
+            }
 		</style>
         <script>
+            var projectObject;
+
             window.addEventListener("load",initialise,false);
 
 			function initialise(evt) {
+			    document.getElementById("save").addEventListener("click", save, false);
 			    var id = sessionStorage.getItem("pid");
 			    sessionStorage.removeItem("pid");
-			    //fetchProject(id);
+			    fetchProject(id);
 			}
+
+			function fetchProject(id) {
+			    var url = "rest/projects";
+				var queryUrl = url + "/" + id;
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", queryUrl, true);
+				httpRequest.addEventListener("readystatechange",handleRequest,false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
+			}
+
+			function handleRequest(evt) {
+    			if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 200) {
+    					projectObject = JSON.parse(evt.target.responseText);
+    			        viewProject(projectObject);
+    				}
+    				else if(evt.target.status == 404) {
+    					sessionStorage.setItem("error", "Project does not exist");
+						window.location.href = "error.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
+			}
+
+			function viewProject(projectObject) {
+				clearAll();
+				document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
+		        // fetch variables
+				var id = projectObject.id;
+				//alert("id: " + id);
+				var description = projectObject.description;
+				var goals = projectObject.goals;
+				if(goals == null) {
+				    goals = "";
+				}
+				var actions = projectObject.actions;
+				if(actions == null) {
+				    actions = "";
+				}
+				var start = projectObject.start;
+				var deadline = projectObject.deadline;
+				//alert("deadline: " + deadline);
+				var estimate_name = projectObject.estimate.name;
+				var priority_id = projectObject.priority.id;
+				var priority_name = projectObject.priority.name;
+				var status_id = projectObject.status.id;
+				var status_name = projectObject.status.name;
+				// set values
+    			document.getElementById("project_id").value = id;
+    			document.getElementById("description").value = description;
+    			document.getElementById("goals").value = goals;
+    			document.getElementById("actions").value = actions;
+    			document.getElementById("start").value = start;
+    			//alert("Deadline: " + deadline);
+    			//document.getElementById("deadline").value = ""; //deadline;
+    			document.getElementById("deadline").value = deadline;
+    			document.getElementById("estimate").innerHTML = estimate_name;
+    			document.getElementById("priority").innerHTML = priority_name;
+    			document.getElementById("status").innerHTML = status_name;
+    			switch(parseInt(priority_id)) {
+				    case 1:
+				       document.getElementById("priority").className = "blue";
+				       break;
+				    case 2:
+    				    document.getElementById("priority").className = "green";
+    				    break;
+    				case 3:
+    				    document.getElementById("priority").className = "yellow";
+    				    break;
+    				case 4:
+    				    document.getElementById("priority").className = "orange";
+    				    break;
+    				case 5:
+    				    document.getElementById("priority").className = "red";
+    				    break;
+    				default:
+    				    break;
+				}
+				switch(parseInt(status_id)) {
+				    case 1:
+				        document.getElementById("status").className = "red";
+				        break;
+				    case 2:
+				        document.getElementById("status").className = "yellow";
+				        break;
+				    case 3:
+				        document.getElementById("status").className = "green";
+				        break;
+				    default:
+				        break;
+				}
+
+    			// build table elements
+    			for(i=0; i<projectObject.presupposed.length; i++) {
+    			    // create table
+    				var row = document.getElementById("presupposed").insertRow(i+1);
+	    			var cell_id = row.insertCell(0);
+		    		var cell_description = row.insertCell(1);
+			    	var cell_priority = row.insertCell(2);
+				    var cell_status = row.insertCell(3);
+				    // fill table
+    				cell_id.innerHTML = "" + projectObject.presupposed[i].id;
+	    			cell_description.innerHTML = "" + projectObject.presupposed[i].description;
+		    		cell_priority.innerHTML = "" + projectObject.presupposed[i].priority.name;
+			    	switch(parseInt(projectObject.presupposed[i].priority.id)) {
+				        case 1:
+				           cell_priority.className = "blue";
+				        break;
+	    			    case 2:
+    	    			    cell_priority.className = "green";
+    		    		    break;
+    			    	case 3:
+    				        cell_priority.className = "yellow";
+    				        break;
+        				case 4:
+        				    cell_priority.className = "orange";
+    	    			    break;
+    		    		case 5:
+    			    	    cell_priority.className = "red";
+    				        break;
+         				default:
+    	    			    break;
+			    	}
+				    cell_status.innerHTML = "" + projectObject.presupposed[i].status.name;
+	    			switch(parseInt(projectObject.presupposed[i].status.id)) {
+		    		    case 1:
+			    	        cell_status.className = "red";
+				            break;
+    				    case 2:
+	    			        cell_status.className = "yellow";
+		    		        break;
+			    	    case 3:
+				            cell_status.className = "green";
+				            break;
+    				    default:
+	    			        break;
+		    		}
+		    	}
+		    	// Linkable
+		    	for(i=0; i<projectObject.linkable.length; i++) {
+    			    // create table
+    				var row = document.getElementById("linkable").insertRow(i+1);
+	    			var cell_id = row.insertCell(0);
+		    		var cell_description = row.insertCell(1);
+			    	var cell_priority = row.insertCell(2);
+				    var cell_status = row.insertCell(3);
+				    // fill table
+    				cell_id.innerHTML = "" + projectObject.linkable[i].id;
+	    			cell_description.innerHTML = "" + projectObject.linkable[i].description;
+		    		cell_priority.innerHTML = "" + projectObject.linkable[i].priority.name;
+			    	switch(parseInt(projectObject.linkable[i].priority.id)) {
+				        case 1:
+				           cell_priority.className = "blue";
+				        break;
+	    			    case 2:
+    	    			    cell_priority.className = "green";
+    		    		    break;
+    			    	case 3:
+    				        cell_priority.className = "yellow";
+    				        break;
+        				case 4:
+        				    cell_priority.className = "orange";
+    	    			    break;
+    		    		case 5:
+    			    	    cell_priority.className = "red";
+    				        break;
+         				default:
+    	    			    break;
+			    	}
+				    cell_status.innerHTML = "" + projectObject.linkable[i].status.name;
+	    			switch(parseInt(projectObject.linkable[i].status.id)) {
+		    		    case 1:
+			    	        cell_status.className = "red";
+				            break;
+    				    case 2:
+	    			        cell_status.className = "yellow";
+		    		        break;
+			    	    case 3:
+				            cell_status.className = "green";
+				            break;
+    				    default:
+	    			        break;
+		    		}
+		    	}
+			}
+
+			function clearAll() {
+				var rows = parseInt(document.getElementById("presupposed").rows.length - 1);
+				while(rows > 0) {
+					document.getElementById("presupposed").deleteRow(rows--);
+				}
+				var rows = parseInt(document.getElementById("linkable").rows.length - 1);
+				while(rows > 0) {
+					document.getElementById("linkable").deleteRow(rows--);
+				}
+			}
+
+			function save(evt) {
+			    alert("Saving ...");
+			}
+
         </script>
     </head>
     <body>
         <h1>Self study: Edit project</h1>
-        <p>Project fetched with AJAX using GET</p>
-        <p>Input:</p>
-        <p><input id="id" type="text" size="3" maxlength="3"></p>
-        <p><button id="fetch">Fetch</button></p>
-        <p>Result:</p>
-        <table id="datatable">
+        <p>
+            <input type="text" readonly maxlength="3" size="3" style="font-weight: bold" id="project_id">
+            <input type="text" maxlength="32" size="32" style="font-weight: bold" id="description">
+        </p>
+        <p style="margin-bottom: 0"><b>Goals:</b></p>
+        <textarea maxlength="2048" id="goals"></textarea>
+        <p style="margin-bottom: 0"><b>Actions:</b></p>
+        <textarea maxlength="2048" id="actions"></textarea>
+        <table style="margin-top: 12px">
+            <tr>
+                <td><b>Start</b></td>
+                <td><input type="date" id="start"></td>
+            </tr>
+            <tr>
+                <td><b>Deadline</b></td>
+                <td><input type="date" id="deadline"></td>
+            </tr>
+            <tr>
+                <td><b>Estimate</b></td>
+                <td id="estimate">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Priority</b></td>
+                <td id="priority">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Status</b></td>
+                <td id="status">&nbsp;</td>
+            </tr>
+        </table>
+        <p><b>Presupposed projects:</b></p>
+        <table id="presupposed">
             <tr>
                 <th>Id</th>
                 <th>Description</th>
@@ -37,61 +268,18 @@
                 <th>Status</th>
             </tr>
         </table>
+        <p><b>Linkable projects:</b></p>
+        <table id="linkable">
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Status</th>
+            </tr>
+        </table>
+        <p><button id="save">Save</button></p>
+        <p><a href="view_projects.html">View projects</a></p>
         <p><a href="index.html">Home</a></p>
-        <script>
-			var url = "rest/projects";
-
-			document.getElementById("fetch").addEventListener("click",submitQuery,false);
-
-			function submitQuery(evt) {
-				clearAll();
-				var id = document.getElementById("id").value;
-				var queryUrl = url + "/" + id;
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("GET", queryUrl, true);
-				xmlhttp.addEventListener("readystatechange",handleRequest,false);
-				xmlhttp.setRequestHeader("Accept", "application/json");
-				xmlhttp.send();
-			}
-
-			function handleRequest(evt) {
-    			if (evt.target.readyState == 4 ) {
-    				if(evt.target.status == 200) {
-    					var jsObject = JSON.parse(evt.target.responseText);
-    			        myFunction(jsObject);
-    				}
-    				else if(evt.target.status == 404) {
-    					alert("Project does not exist");
-    				}
-    				else {
-    					alert("Unexpected response status " + evt.target.status);    				}
-    			}
-			}
-
-			function myFunction(jsObject) {
-				clearAll();
-				var id = jsObject.id;
-				var description = jsObject.description;
-				var priority = jsObject.priorityDTO.name;
-				var status = jsObject.statusDTO.name;
-				alert(JSON.stringify(jsObject));
-				var row = document.getElementById("datatable").insertRow(1);
-				var cell_id = row.insertCell(0);
-				var cell_description = row.insertCell(1);
-				var cell_priority = row.insertCell(2);
-				var cell_status = row.insertCell(3);
-				cell_id.innerHTML = "" + id;
-				cell_description.innerHTML = "" + description;
-				cell_priority.innerHTML = "" + priority;
-				cell_status.innerHTML = "" + status;
-			}
-
-			function clearAll() {
-				var rows = parseInt(document.getElementById("datatable").rows.length - 1);
-				while(rows > 0) {
-					document.getElementById("datatable").deleteRow(rows--);
-				}
-			}
-		</script>
+        <pre id="json"></pre>
     </body>
 </html>

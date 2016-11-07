@@ -140,6 +140,24 @@ public class ProjectResource {
             projectDTO.getPresupposed().add(projectLightDTO);
         }
 
+        for(ProjectEntity pe : projectEntity.getSubsequent()) {
+            ProjectLightDTO projectLightDTO = new ProjectLightDTO();
+            projectLightDTO.setId(pe.getId());
+            projectLightDTO.setDescription(pe.getDescription());
+
+            priorityDTO = new PriorityDTO();
+            priorityDTO.setId(pe.getPriority().getId());
+            priorityDTO.setName(pe.getPriority().getName());
+            projectLightDTO.setPriority(priorityDTO);
+
+            statusDTO = new StatusDTO();
+            statusDTO.setId(pe.getStatus().getId());
+            statusDTO.setName(pe.getStatus().getName());
+            projectLightDTO.setStatus(statusDTO);
+
+            projectDTO.getSubsequent().add(projectLightDTO);
+        }
+
         for(ProjectEntity pe : projectEntity.getLinkable()) {
             ProjectLightDTO projectLightDTO = new ProjectLightDTO();
             projectLightDTO.setId(pe.getId());

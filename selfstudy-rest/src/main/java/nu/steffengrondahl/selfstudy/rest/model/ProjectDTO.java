@@ -21,6 +21,8 @@ public class ProjectDTO extends ProjectLightDTO {
 
     private List<ProjectLightDTO> presupposed = new ArrayList<>();
 
+    private List<ProjectLightDTO> subsequent = new ArrayList<>();
+
     private List<ProjectLightDTO> linkable = new ArrayList<>();
 
     public ProjectDTO() {
@@ -73,6 +75,14 @@ public class ProjectDTO extends ProjectLightDTO {
 
     public void setPresupposed(List<ProjectLightDTO> presupposed) {
         this.presupposed = presupposed;
+    }
+
+    public List<ProjectLightDTO> getSubsequent() {
+        return subsequent;
+    }
+
+    public void setSubsequent(List<ProjectLightDTO> subsequent) {
+        this.subsequent = subsequent;
     }
 
     public List<ProjectLightDTO> getLinkable() {

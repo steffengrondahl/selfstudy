@@ -10,8 +10,6 @@
             }
 	    </style>
         <script>
-			var url = "rest/projects";
-
 			window.addEventListener("load", initialise, false);
 
 			function initialise(evt) {
@@ -20,6 +18,7 @@
 			}
 
 			function fetchProjects() {
+			    var url = "rest/projects";
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", url, true);
 				httpRequest.addEventListener("readystatechange",handleRequest,false);
