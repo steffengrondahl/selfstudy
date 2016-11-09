@@ -25,12 +25,12 @@
 				var queryUrl = url + "/" + id;
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", queryUrl, true);
-				httpRequest.addEventListener("readystatechange",handleRequest,false);
+				httpRequest.addEventListener("readystatechange", handleFetch, false);
 				httpRequest.setRequestHeader("Accept", "application/json");
 				httpRequest.send();
 			}
 
-			function handleRequest(evt) {
+			function handleFetch(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
     					var projectObject = JSON.parse(evt.target.responseText);
@@ -51,22 +51,7 @@
 				document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
 		        // fetch variables
 				var id = projectObject.id;
-				//alert("id: " + id);
 				var description = projectObject.description;
-				/*
-				var goals = projectObject.goals;
-				if(goals == null) {
-				    goals = "";
-				}
-				var actions = projectObject.actions;
-				if(actions == null) {
-				    actions = "";
-				}
-				var start = projectObject.start;
-				var deadline = projectObject.deadline;
-				//alert("deadline: " + deadline);
-				var estimate_name = projectObject.estimate.name;
-				*/
 				var priority_id = projectObject.priority.id;
 				var priority_name = projectObject.priority.name;
 				var status_id = projectObject.status.id;
@@ -74,13 +59,6 @@
 				// set values
     			document.getElementById("project_id").value = id;
     			document.getElementById("description").value = description;
-    			//document.getElementById("goals").value = goals;
-    			//document.getElementById("actions").value = actions;
-    			//document.getElementById("start").value = start;
-    			//alert("Deadline: " + deadline);
-    			//document.getElementById("deadline").value = ""; //deadline;
-    			//document.getElementById("deadline").value = deadline;
-    			//document.getElementById("estimate").innerHTML = estimate_name;
     			document.getElementById("priority").innerHTML = priority_name;
     			document.getElementById("status").innerHTML = status_name;
     			switch(parseInt(priority_id)) {
@@ -118,7 +96,25 @@
 			}
 
 			function remove(evt) {
-			    alert("Removing");
+			    var url = "rest/projects";
+			    var id = document.getElementById("project_id").value;
+				var queryUrl = url + "/" + id;
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("DELETE", queryUrl, true);
+				httpRequest.addEventListener("readystatechange", handleDelete, false);
+				httpRequest.send();
+			}
+
+			function handleDelete(evt) {
+    			if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 204) {
+        				window.location.href = "view_projects.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
 			}
 
 			function view(evt) {
