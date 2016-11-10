@@ -12,13 +12,16 @@
         <script>
             var projectObject;
 
-            window.addEventListener("load",initialise,false);
+            window.addEventListener("load", initialize, false);
 
-			function initialise(evt) {
-			    document.getElementById("save").addEventListener("click", save, false);
+			function initialize(evt) {
 			    var id = sessionStorage.getItem("pid");
 			    sessionStorage.removeItem("pid");
+			    //alert("Fetching project with id " + id);
 			    fetchProject(id);
+			    //alert("Fetching estimates, priorities and statuses");
+			    document.getElementById("save").addEventListener("click", save, false);
+			    document.getElementById("add").addEventListener("click", addDependency, false);
 			}
 
 			function fetchProject(id) {
@@ -26,16 +29,16 @@
 				var queryUrl = url + "/" + id;
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", queryUrl, true);
-				httpRequest.addEventListener("readystatechange",handleRequest,false);
+				httpRequest.addEventListener("readystatechange", handleFetch, false);
 				httpRequest.setRequestHeader("Accept", "application/json");
 				httpRequest.send();
 			}
 
-			function handleRequest(evt) {
+			function handleFetch(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
     					projectObject = JSON.parse(evt.target.responseText);
-    			        viewProject(projectObject);
+    			        viewProject();
     				}
     				else if(evt.target.status == 404) {
     					sessionStorage.setItem("error", "Project does not exist");
@@ -48,7 +51,7 @@
 			    }
 			}
 
-			function viewProject(projectObject) {
+			function viewProject() {
 				clearAll();
 				document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
 		        // fetch variables
@@ -66,11 +69,12 @@
 				var start = projectObject.start;
 				var deadline = projectObject.deadline;
 				//alert("deadline: " + deadline);
-				var estimate_name = projectObject.estimate.name;
-				var priority_id = projectObject.priority.id;
-				var priority_name = projectObject.priority.name;
-				var status_id = projectObject.status.id;
-				var status_name = projectObject.status.name;
+				//var estimate_id = projectObject.estimate.id;
+				//var estimate_name = projectObject.estimate.name;
+				//var priority_id = projectObject.priority.id;
+				//var priority_name = projectObject.priority.name;
+				//var status_id = projectObject.status.id;
+				//var status_name = projectObject.status.name;
 				// set values
     			document.getElementById("project_id").value = id;
     			document.getElementById("description").value = description;
@@ -80,42 +84,18 @@
     			//alert("Deadline: " + deadline);
     			//document.getElementById("deadline").value = ""; //deadline;
     			document.getElementById("deadline").value = deadline;
-    			document.getElementById("estimate").innerHTML = estimate_name;
-    			document.getElementById("priority").innerHTML = priority_name;
-    			document.getElementById("status").innerHTML = status_name;
-    			switch(parseInt(priority_id)) {
-				    case 1:
-				       document.getElementById("priority").className = "blue";
-				       break;
-				    case 2:
-    				    document.getElementById("priority").className = "green";
-    				    break;
-    				case 3:
-    				    document.getElementById("priority").className = "yellow";
-    				    break;
-    				case 4:
-    				    document.getElementById("priority").className = "orange";
-    				    break;
-    				case 5:
-    				    document.getElementById("priority").className = "red";
-    				    break;
-    				default:
-    				    break;
-				}
-				switch(parseInt(status_id)) {
-				    case 1:
-				        document.getElementById("status").className = "red";
-				        break;
-				    case 2:
-				        document.getElementById("status").className = "yellow";
-				        break;
-				    case 3:
-				        document.getElementById("status").className = "green";
-				        break;
-				    default:
-				        break;
-				}
 
+                buildPresupposed();
+                buildLinkable();
+
+		    	// Finally fetch these resources - but first after projectObject has been fetched
+			    fetchEstimates();
+			    fetchPriorities();
+			    fetchStatuses();
+			}
+
+			function buildPresupposed() {
+			    clearPresupposed();
     			// build table elements
     			for(i=0; i<projectObject.presupposed.length; i++) {
     			    // create table
@@ -124,6 +104,7 @@
 		    		var cell_description = row.insertCell(1);
 			    	var cell_priority = row.insertCell(2);
 				    var cell_status = row.insertCell(3);
+				    var cell_remove = row.insertCell(4);
 				    // fill table
     				cell_id.innerHTML = "" + projectObject.presupposed[i].id;
 	    			cell_description.innerHTML = "" + projectObject.presupposed[i].description;
@@ -161,68 +142,232 @@
     				    default:
 	    			        break;
 		    		}
+		    		var button = document.createElement("button");
+		    		button.innerHTML = "Remove";
+		    		button.addEventListener("click", removeDependency, false);
+		    		cell_remove.appendChild(button);
 		    	}
+			}
+
+			function buildLinkable() {
+			    clearLinkable();
 		    	// Linkable
 		    	for(i=0; i<projectObject.linkable.length; i++) {
-    			    // create table
-    				var row = document.getElementById("linkable").insertRow(i+1);
-	    			var cell_id = row.insertCell(0);
-		    		var cell_description = row.insertCell(1);
-			    	var cell_priority = row.insertCell(2);
-				    var cell_status = row.insertCell(3);
-				    // fill table
-    				cell_id.innerHTML = "" + projectObject.linkable[i].id;
-	    			cell_description.innerHTML = "" + projectObject.linkable[i].description;
-		    		cell_priority.innerHTML = "" + projectObject.linkable[i].priority.name;
-			    	switch(parseInt(projectObject.linkable[i].priority.id)) {
-				        case 1:
-				           cell_priority.className = "blue";
-				        break;
-	    			    case 2:
-    	    			    cell_priority.className = "green";
-    		    		    break;
-    			    	case 3:
-    				        cell_priority.className = "yellow";
-    				        break;
-        				case 4:
-        				    cell_priority.className = "orange";
-    	    			    break;
-    		    		case 5:
-    			    	    cell_priority.className = "red";
-    				        break;
-         				default:
-    	    			    break;
-			    	}
-				    cell_status.innerHTML = "" + projectObject.linkable[i].status.name;
-	    			switch(parseInt(projectObject.linkable[i].status.id)) {
-		    		    case 1:
-			    	        cell_status.className = "red";
-				            break;
-    				    case 2:
-	    			        cell_status.className = "yellow";
-		    		        break;
-			    	    case 3:
-				            cell_status.className = "green";
-				            break;
-    				    default:
-	    			        break;
-		    		}
+    			    // create select
+    			    var option = document.createElement("option");
+    			    option.value = projectObject.linkable[i].id;
+    			    option.innerHTML = projectObject.linkable[i].description;
+    			    document.getElementById("linkable").appendChild(option);
 		    	}
 			}
 
 			function clearAll() {
+			    clearLinkable();
+				while (document.getElementById("estimate").options.length > 0) {
+					document.getElementById("estimate").remove(0);
+				}
+				while (document.getElementById("priority").options.length > 0) {
+					document.getElementById("priority").remove(0);
+				}
+				while (document.getElementById("status").options.length > 0) {
+					document.getElementById("status").remove(0);
+				}
+				clearPresupposed();
+			}
+
+			function clearLinkable() {
+				while (document.getElementById("linkable").options.length > 0) {
+					document.getElementById("linkable").remove(0);
+				}
+			}
+
+			function clearPresupposed() {
 				var rows = parseInt(document.getElementById("presupposed").rows.length - 1);
 				while(rows > 0) {
 					document.getElementById("presupposed").deleteRow(rows--);
 				}
-				var rows = parseInt(document.getElementById("linkable").rows.length - 1);
-				while(rows > 0) {
-					document.getElementById("linkable").deleteRow(rows--);
+			}
+
+   			function fetchEstimates() {
+				var queryUrl = "rest/estimates";
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", queryUrl, true);
+				httpRequest.addEventListener("readystatechange", handleEstimates, false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
+			}
+
+		    function fetchPriorities() {
+				var queryUrl = "rest/priorities";
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", queryUrl, true);
+				httpRequest.addEventListener("readystatechange", handlePriorities, false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
+		    }
+
+			function fetchStatuses() {
+				var queryUrl = "rest/statuses";
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", queryUrl, true);
+				httpRequest.addEventListener("readystatechange", handleStatuses, false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
+			}
+
+			function handleEstimates(evt) {
+    			if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 200) {
+    				    var selectedIndex = 0;
+    				    //alert("projectObject.estimate.id " + projectObject.estimate.id);
+    			        var estimateSelect = document.getElementById("estimate");
+    					var estimateArray = JSON.parse(evt.target.responseText);
+        			    for(i = 0; i < estimateArray.length; i++) {
+        			        var option = document.createElement("option");
+							option.value = estimateArray[i].id;
+							if(estimateArray[i].id == projectObject.estimate.id) {
+            				    selectedIndex = i;
+							}
+							option.innerHTML = estimateArray[i].name;
+							estimateSelect.appendChild(option);
+        			    }
+        			    //alert("Setting selected index" + selectedIndex);
+        			    estimateSelect.selectedIndex = selectedIndex;
+    				}
+    				else if(evt.target.status == 404) {
+    					sessionStorage.setItem("error", "Unable to load estimates");
+						window.location.href = "error.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
+			}
+
+			function handlePriorities(evt) {
+    			if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 200) {
+    				    var selectedIndex = 0;
+    					var priorityArray = JSON.parse(evt.target.responseText);
+    			        var prioritySelect = document.getElementById("priority");
+        			    for(i = 0; i < priorityArray.length; i++) {
+        			        var option = document.createElement("option");
+							option.value = priorityArray[i].id;
+							if(priorityArray[i].id == projectObject.priority.id) {
+							    selectedIndex = i;
+							}
+							option.innerHTML = priorityArray[i].name;
+							prioritySelect.appendChild(option);
+        			    }
+        			    prioritySelect.selectedIndex = selectedIndex;
+    				}
+    				else if(evt.target.status == 404) {
+    					sessionStorage.setItem("error", "Unable to load priorities");
+						window.location.href = "error.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
+			}
+
+			function handleStatuses(evt) {
+    			if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 200) {
+    				    var selectedIndex = 0;
+    					var statusArray = JSON.parse(evt.target.responseText);
+    			        var statusSelect = document.getElementById("status");
+        			    for(i = 0; i < statusArray.length; i++) {
+        			        var option = document.createElement("option");
+							option.value = statusArray[i].id;
+							if(statusArray[i].id == projectObject.status.id) {
+							    selectedIndex = i;
+							}
+							option.innerHTML = statusArray[i].name;
+							statusSelect.appendChild(option);
+        			    }
+        			    statusSelect.selectedIndex = selectedIndex;
+    				}
+    				else if(evt.target.status == 404) {
+    					sessionStorage.setItem("error", "Unable to load statuses");
+						window.location.href = "error.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
+			}
+
+			function addDependency(evt) {
+				var id = document.getElementById("linkable").value;
+				//alert("Index " + index);
+				// find element by name
+				var moveElement = null;
+				for(i=0; i<projectObject.linkable.length; i++) {
+					var objectElement = projectObject.linkable[i];
+					if(objectElement.id == id) {
+						moveElement = projectObject.linkable.splice(i,1)[0];
+						break;
+					}
 				}
+				if(moveElement == null) {
+					return;
+				}
+				//alert(i);
+				//alert(copyElement.name);
+				projectObject.presupposed.push(moveElement);
+				projectObject.presupposed.sort(function(a, b) {return a.status.id - b.status.id});
+				buildLinkable();
+				buildPresupposed();
+			}
+
+
+			function removeDependency(evt) {
+                //alert("Removing dependency ...");
+				var table = document.getElementById("presupposed");
+				var cell = evt.target.parentNode;
+				//alert(cell);
+				var id = "";
+				for(i=0; i<table.rows.length; i++) {
+					var row = table.rows[i];
+					//alert("row " + row);
+					if(row.cells[4] == cell) {
+						//alert("Found it !");
+						id = row.cells[0].innerHTML;
+						//id = row.cells[0].childNodes[0].value;
+						//alert("(from hidden) " + another_id);
+						break;
+					}
+				}
+				//alert(id);
+				if(id == "") {
+					return;
+				}
+				var moveElement = null;
+				for(i=0; i<projectObject.presupposed.length; i++) {
+					var objectElement = projectObject.presupposed[i];
+					if(objectElement.id == id) {
+						moveElement = projectObject.presupposed.splice(i,1)[0];
+						break;
+					}
+				}
+				if(moveElement == null) {
+					return;
+				}
+				//alert(i);
+				//alert(copyElement.name);
+				projectObject.linkable.push(moveElement);
+				projectObject.linkable.sort(function(a, b) {return a.id - b.id});
+				buildLinkable();
+				buildPresupposed();
 			}
 
 			function save(evt) {
 			    alert("Saving ...");
+			    // TODO: Decorate projectObject with fields, send to rest service and on success show project list
 			}
 
         </script>
@@ -248,15 +393,15 @@
             </tr>
             <tr>
                 <td><b>Estimate</b></td>
-                <td id="estimate">&nbsp;</td>
+                <td><select id="estimate"></select></td>
             </tr>
             <tr>
                 <td><b>Priority</b></td>
-                <td id="priority">&nbsp;</td>
+                <td><select id="priority"></select></td>
             </tr>
             <tr>
                 <td><b>Status</b></td>
-                <td id="status">&nbsp;</td>
+                <td><select id="status"></select></td>
             </tr>
         </table>
         <p><b>Presupposed projects:</b></p>
@@ -266,17 +411,13 @@
                 <th>Description</th>
                 <th>Priority</th>
                 <th>Status</th>
+                <th>&nbsp;</th>
             </tr>
         </table>
         <p><b>Linkable projects:</b></p>
-        <table id="linkable">
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Priority</th>
-                <th>Status</th>
-            </tr>
-        </table>
+        <select id="linkable">
+        </select>
+        <button id="add">Add</button>
         <p><button id="save">Save</button></p>
         <p><a href="view_projects.html">View projects</a></p>
         <p><a href="index.html">Home</a></p>

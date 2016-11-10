@@ -12,9 +12,9 @@
         <script>
 			//var url = "rest/projects";
 
-            window.addEventListener("load",initialise,false);
+            window.addEventListener("load", initialize, false);
 
-			function initialise(evt) {
+			function initialize(evt) {
 			    document.getElementById("edit").addEventListener("click", edit, false);
 			    document.getElementById("remove").addEventListener("click", remove, false);
 			    var id = sessionStorage.getItem("pid");
@@ -27,12 +27,12 @@
 				var queryUrl = url + "/" + id;
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", queryUrl, true);
-				httpRequest.addEventListener("readystatechange",handleRequest,false);
+				httpRequest.addEventListener("readystatechange", handleFetch, false);
 				httpRequest.setRequestHeader("Accept", "application/json");
 				httpRequest.send();
 			}
 
-			function handleRequest(evt) {
+			function handleFetch(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
     					var projectObject = JSON.parse(evt.target.responseText);
@@ -118,7 +118,6 @@
 				}
 
     			// build table elements
-    			// linkable -> presupposed
     			for(i=0; i<projectObject.presupposed.length; i++) {
     			    // create table
     				var row = document.getElementById("presupposed").insertRow(i+1);

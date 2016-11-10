@@ -242,16 +242,18 @@ public class ProjectResource {
         projectEntity.setGoals(projectDTO.getGoals());
         projectEntity.setActions(projectDTO.getActions());
 
-        LocalDate start = null;
+        LocalDate start;
         try {
             start = LocalDate.parse(projectDTO.getStart(), DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
+            start = null;
         }
         projectEntity.setStart(start);
-        LocalDate deadline = null;
+        LocalDate deadline;
         try {
             deadline = LocalDate.parse(projectDTO.getDeadline(), DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
+            deadline = null;
         }
         projectEntity.setDeadline(deadline);
 

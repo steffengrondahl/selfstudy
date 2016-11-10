@@ -10,9 +10,9 @@
             }
 	    </style>
         <script>
-			window.addEventListener("load", initialise, false);
+			window.addEventListener("load", initialize, false);
 
-			function initialise(evt) {
+			function initialize(evt) {
                 fetchProjects();
 			    document.getElementById("create").addEventListener("click", create, false);
 			}
@@ -21,12 +21,12 @@
 			    var url = "rest/projects";
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", url, true);
-				httpRequest.addEventListener("readystatechange",handleRequest,false);
+				httpRequest.addEventListener("readystatechange", handleFetch, false);
 				httpRequest.setRequestHeader("Accept", "application/json");
 				httpRequest.send();
 			}
 
-			function handleRequest(evt) {
+			function handleFetch(evt) {
 				if (evt.target.readyState == 4 ) {
 					if(evt.target.status==200) {
 						var projectArray = JSON.parse(evt.target.responseText);

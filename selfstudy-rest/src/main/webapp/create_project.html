@@ -10,13 +10,9 @@
             }
 		</style>
         <script>
-			//var estimateArray;
-			//var priorityArray;
-			//var statusArray;
+            window.addEventListener("load", initialize, false);
 
-            window.addEventListener("load",initialise,false);
-
-			function initialise(evt) {
+			function initialize(evt) {
 			    fetchEstimates();
 			    fetchPriorities();
 			    fetchStatuses();
@@ -142,20 +138,20 @@
                 projectObject.deadline = deadline;
                 var estimateObject = new Object();
                 estimateObject.id = estimate_id;
-                estimateObject.name = "";
+                //estimateObject.name = "";
                 projectObject.estimate = estimateObject;
                 var priorityObject = new Object();
                 priorityObject.id = priority_id
-                priorityObject.name = "";
+                //priorityObject.name = "";
                 projectObject.priority = priorityObject;
                 var statusObject = new Object();
                 statusObject.id = status_id;
-                statusObject.name = "";
+                //statusObject.name = "";
                 projectObject.status = statusObject;
-                projectObject.presupposed = new Array();
-                projectObject.subsequent = new Array();
-                projectObject.linkable = new Array();
-                projectObject.type = "projectDTO"; // Is this needed?
+                //projectObject.presupposed = new Array();
+                //projectObject.subsequent = new Array();
+                //projectObject.linkable = new Array();
+                //projectObject.type = "projectDTO"; // Is this needed?
 
                 // write JSON data for debugging
                 document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
