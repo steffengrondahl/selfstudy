@@ -62,6 +62,11 @@ public class ProjectResource {
             projectLightDTO.setId(pe.getId());
             projectLightDTO.setDescription(pe.getDescription());
 
+            EstimateDTO estimateDTO = new EstimateDTO();
+            estimateDTO.setId(pe.getEstimate().getId());
+            estimateDTO.setName(pe.getEstimate().getName());
+            projectLightDTO.setEstimate(estimateDTO);
+
             PriorityDTO priorityDTO = new PriorityDTO();
             priorityDTO.setId(pe.getPriority().getId());
             priorityDTO.setName(pe.getPriority().getName());
@@ -126,6 +131,11 @@ public class ProjectResource {
             projectLightDTO.setId(pe.getId());
             projectLightDTO.setDescription(pe.getDescription());
 
+            estimateDTO = new EstimateDTO();
+            estimateDTO.setId(pe.getEstimate().getId());
+            estimateDTO.setName(pe.getEstimate().getName());
+            projectLightDTO.setEstimate(estimateDTO);
+
             priorityDTO = new PriorityDTO();
             priorityDTO.setId(pe.getPriority().getId());
             priorityDTO.setName(pe.getPriority().getName());
@@ -144,6 +154,11 @@ public class ProjectResource {
             projectLightDTO.setId(pe.getId());
             projectLightDTO.setDescription(pe.getDescription());
 
+            estimateDTO = new EstimateDTO();
+            estimateDTO.setId(pe.getEstimate().getId());
+            estimateDTO.setName(pe.getEstimate().getName());
+            projectLightDTO.setEstimate(estimateDTO);
+
             priorityDTO = new PriorityDTO();
             priorityDTO.setId(pe.getPriority().getId());
             priorityDTO.setName(pe.getPriority().getName());
@@ -161,6 +176,11 @@ public class ProjectResource {
             ProjectLightDTO projectLightDTO = new ProjectLightDTO();
             projectLightDTO.setId(pe.getId());
             projectLightDTO.setDescription(pe.getDescription());
+
+            estimateDTO = new EstimateDTO();
+            estimateDTO.setId(pe.getEstimate().getId());
+            estimateDTO.setName(pe.getEstimate().getName());
+            projectLightDTO.setEstimate(estimateDTO);
 
             priorityDTO = new PriorityDTO();
             priorityDTO.setId(pe.getPriority().getId());
@@ -234,7 +254,7 @@ public class ProjectResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void update(@PathParam("id") int id, ProjectDTO projectDTO) {
         if (projectDTO.getId() != id) {
-            throw new BadRequestException("Requested id does not match id in json data");
+            throw new BadRequestException("No support for changing project id");
         }
         ProjectEntity projectEntity = new ProjectEntity();
         projectEntity.setId(id);
@@ -269,8 +289,50 @@ public class ProjectResource {
         statusEntity.setId(projectDTO.getStatus().getId());
         projectEntity.setStatus(statusEntity);
 
-        // TODO: Fetch presupposed and subsequent
+        // Fetch presupposed and subsequent
+        List<ProjectEntity> presupposed = new ArrayList<>();
+        for(ProjectLightDTO p : projectDTO.getPresupposed()) {
+            ProjectEntity pe = new ProjectEntity();
+            pe.setId(p.getId());
+            pe.setDescription(p.getDescription());
 
+            estimateEntity = new EstimateEntity();
+            estimateEntity.setId(p.getEstimate().getId());
+            pe.setEstimate(estimateEntity);
+
+            priorityEntity = new PriorityEntity();
+            priorityEntity.setId(p.getPriority().getId());
+            pe.setPriority(priorityEntity);
+
+            statusEntity = new StatusEntity();
+            statusEntity.setId(p.getStatus().getId());
+            pe.setStatus(statusEntity);
+
+            presupposed.add(pe);
+        }
+        projectEntity.setPresupposed(presupposed);
+
+        List<ProjectEntity> subsequent = new ArrayList<>();
+        for(ProjectLightDTO p : projectDTO.getSubsequent()) {
+            ProjectEntity pe = new ProjectEntity();
+            pe.setId(p.getId());
+            pe.setDescription(p.getDescription());
+
+            estimateEntity = new EstimateEntity();
+            estimateEntity.setId(p.getEstimate().getId());
+            pe.setEstimate(estimateEntity);
+
+            priorityEntity = new PriorityEntity();
+            priorityEntity.setId(p.getPriority().getId());
+            pe.setPriority(priorityEntity);
+
+            statusEntity = new StatusEntity();
+            statusEntity.setId(p.getStatus().getId());
+            pe.setStatus(statusEntity);
+
+            subsequent.add(pe);
+        }
+        projectEntity.setSubsequent(subsequent);
 
         ProjectEntityDAO dao = new ProjectEntityDAO();
         dao.update(projectEntity);

@@ -17,8 +17,6 @@ public class ProjectDTO extends ProjectLightDTO {
 
     private String deadline;
 
-    private EstimateDTO estimate;
-
     private List<ProjectLightDTO> presupposed = new ArrayList<>();
 
     private List<ProjectLightDTO> subsequent = new ArrayList<>();
@@ -59,14 +57,6 @@ public class ProjectDTO extends ProjectLightDTO {
 
     public void setDeadline(String deadline) {
         this.deadline = deadline;
-    }
-
-    public EstimateDTO getEstimate() {
-        return estimate;
-    }
-
-    public void setEstimate(EstimateDTO estimate) {
-        this.estimate = estimate;
     }
 
     public List<ProjectLightDTO> getPresupposed() {
