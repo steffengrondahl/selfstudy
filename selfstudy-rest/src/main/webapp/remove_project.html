@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Remove project</title>
-        <link rel="stylesheet" type="text/css" href="style/project.css" >
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <title>Remove project</title>
+    <link rel="stylesheet" type="text/css" href="style/project.css">
+    <style>
             #json {
                 display: block;
             }
-		</style>
-        <script>
+
+    </style>
+    <script>
             window.addEventListener("load", initialize, false);
 
 			function initialize(evt) {
@@ -123,28 +124,35 @@
 				window.location.href = "view_project.html";
 			}
 
-        </script>
-    </head>
-    <body>
-        <h1>Self study: Remove project</h1>
-        <p>
-            <input type="text" readonly maxlength="3" size="3" style="font-weight: bold" id="project_id">
-            <input type="text" readonly maxlength="32" size="32" style="font-weight: bold" id="description">
-        </p>
-        <table style="margin-top: 12px">
-            <tr>
-                <td><b>Priority</b></td>
-                <td id="priority">&nbsp;</td>
-            </tr>
-            <tr>
-                <td><b>Status</b></td>
-                <td id="status">&nbsp;</td>
-            </tr>
-        </table>
-        <p><button id="remove">Confirm remove</button></p>
-        <p><button id="view">View</button></p>
-        <p><a href="view_projects.html">View projects</a></p>
-        <p><a href="index.html">Home</a></p>
-        <pre id="json"></pre>
-    </body>
+
+    </script>
+</head>
+<body>
+<section>
+    <h1>Remove project</h1>
+    <p>
+        <input type="text" readonly maxlength="3" size="3" style="font-weight: bold" id="project_id">
+        <input type="text" readonly maxlength="32" size="32" style="font-weight: bold" id="description">
+    </p>
+    <table style="margin-top: 12px">
+        <tr>
+            <td><b>Priority</b></td>
+            <td id="priority">&nbsp;</td>
+        </tr>
+        <tr>
+            <td><b>Status</b></td>
+            <td id="status">&nbsp;</td>
+        </tr>
+    </table>
+    <p>
+        <button id="remove">Confirm remove</button>
+    </p>
+    <p>
+        <button id="view">View</button>
+    </p>
+    <p><a href="view_projects.html">View projects</a></p>
+    <p><a href="index.html">Home</a></p>
+    <pre id="json"></pre>
+</section>
+</body>
 </html>

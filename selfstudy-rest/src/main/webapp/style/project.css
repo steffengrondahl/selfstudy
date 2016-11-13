@@ -1,9 +1,31 @@
+body {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 16px;
+    color: #0000aa;
+	margin: 0;
+	padding: 0;
+}
+section {
+	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	background-color: #ddeeff;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+h1 {
+	margin-top: 0;
+}
 table {
+  border: 1px solid #0000aa;
   border-collapse: collapse;
 }
 th, td {
-  border: 1px solid black;
+  border: 1px solid #0000aa;
   padding: 4px;
+  text-align: left;
+  min-width: 78px;
 }
 .red {
   background-color: #ff0000;
@@ -32,4 +54,26 @@ pre {
   /*white-space: pre;*/
   white-space: pre-wrap;
   padding: 4px;
+}
+button {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 16px;
+    color: #0000aa;
+	width: 100px;
+	background-color: #ddeeff;
+}
+button:disabled {
+	background-color: #dddddd;
+}
+input {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 16px;
+}
+select {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 16px;
+}
+textarea {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 16px;
 }

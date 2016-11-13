@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Create project</title>
-        <link rel="stylesheet" type="text/css" href="style/project.css" >
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <title>Create project</title>
+    <link rel="stylesheet" type="text/css" href="style/project.css">
+    <style>
             #json {
                 display: block;
             }
-		</style>
-        <script>
+
+    </style>
+    <script>
             window.addEventListener("load", initialize, false);
 
 			function initialize(evt) {
@@ -186,44 +187,48 @@
 				}
             }
 
-        </script>
-    </head>
-    <body>
-        <h1>Self study: Create project</h1>
-        <p>
-            <input type="text" readonly value="-" maxlength="3" size="3" style="font-weight: bold" >
-            <input type="text" maxlength="32" size="32" style="font-weight: bold" id="description">
-        </p>
-        <p style="margin-bottom: 0"><b>Goals:</b></p>
-        <textarea  maxlength="2048" id="goals"></textarea>
-        <p style="margin-bottom: 0"><b>Actions:</b></p>
-        <textarea  maxlength="2048" id="actions"></textarea>
-        <table style="margin-top: 12px">
-            <tr>
-                <td><b>Start</b></td>
-                <td><input type="text" maxlength="10" size="10" id="start"></td>
-            </tr>
-            <tr>
-                <td><b>Deadline</b></td>
-                <td><input type="text" maxlength="10" size="10" id="deadline"></td>
-            </tr>
-            <tr>
-                <td><b>Estimate</b></td>
-                <td><select id="estimate"></select></td>
-            </tr>
-            <tr>
-                <td><b>Priority</b></td>
-                <td><select id="priority"></select></td>
-            </tr>
-            <tr>
-                <td><b>Status</b></td>
-                <td><select id="status"></select></td>
-            </tr>
-        </table>
-        <p><button id="create">Create</button></p>
-        <p><a href="view_projects.html">View projects</a></p>
-        <p><a href="index.html">Home</a></p>
-        <pre id="json">&nbsp;</pre>
-        <pre id="result">&nbsp;</pre>
-    </body>
+
+    </script>
+</head>
+<body>
+<section>
+    <h1>Create project</h1>
+    <p>
+        <input type="text" readonly value="-" maxlength="3" size="3" style="font-weight: bold">
+        <input type="text" maxlength="32" size="32" style="font-weight: bold" id="description">
+    </p>
+    <p style="margin-bottom: 0"><b>Goals:</b></p>
+    <textarea maxlength="2048" id="goals"></textarea>
+    <p style="margin-bottom: 0"><b>Actions:</b></p>
+    <textarea maxlength="2048" id="actions"></textarea>
+    <table style="margin-top: 12px">
+        <tr>
+            <td><b>Start</b></td>
+            <td><input type="text" maxlength="10" size="10" id="start"></td>
+        </tr>
+        <tr>
+            <td><b>Deadline</b></td>
+            <td><input type="text" maxlength="10" size="10" id="deadline"></td>
+        </tr>
+        <tr>
+            <td><b>Estimate</b></td>
+            <td><select id="estimate"></select></td>
+        </tr>
+        <tr>
+            <td><b>Priority</b></td>
+            <td><select id="priority"></select></td>
+        </tr>
+        <tr>
+            <td><b>Status</b></td>
+            <td><select id="status"></select></td>
+        </tr>
+    </table>
+    <p>
+        <button id="create">Create</button>
+    </p>
+    <p><a href="view_projects.html">View projects</a></p>
+    <p><a href="index.html">Home</a></p>
+    <pre id="json">&nbsp;</pre>
+</section>
+</body>
 </html>

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>View project</title>
-        <link rel="stylesheet" type="text/css" href="style/project.css" >
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <title>View project</title>
+    <link rel="stylesheet" type="text/css" href="style/project.css">
+    <style>
             #json {
                 display: block;
             }
-		</style>
-        <script>
+
+    </style>
+    <script>
 			//var url = "rest/projects";
 
             window.addEventListener("load", initialize, false);
@@ -125,6 +126,7 @@
 		    		var cell_description = row.insertCell(1);
 			    	var cell_priority = row.insertCell(2);
 				    var cell_status = row.insertCell(3);
+				    var cell_view = row.insertCell(4);
 				    // fill table
     				cell_id.innerHTML = "" + projectObject.presupposed[i].id;
 	    			cell_description.innerHTML = "" + projectObject.presupposed[i].description;
@@ -162,6 +164,10 @@
     				    default:
 	    			        break;
 		    		}
+		    		var button = document.createElement("button");
+		    		button.innerHTML = "view";
+		    		button.addEventListener("click", viewPresupposed, false);
+		    		cell_view.appendChild(button);
 		    	}
 			}
 
@@ -184,53 +190,77 @@
 				window.location.href = "remove_project.html";
     		}
 
-        </script>
-    </head>
-    <body>
-        <h1>Self study: View project</h1>
-        <p>
-            <input type="text" readonly maxlength="3" size="3" style="font-weight: bold" id="project_id">
-            <input type="text" readonly maxlength="32" size="32" style="font-weight: bold" id="description">
-        </p>
-        <p style="margin-bottom: 0"><b>Goals:</b></p>
-        <textarea readonly maxlength="2048" id="goals"></textarea>
-        <p style="margin-bottom: 0"><b>Actions:</b></p>
-        <textarea readonly maxlength="2048" id="actions"></textarea>
-        <table style="margin-top: 12px">
-            <tr>
-                <td><b>Start</b></td>
-                <td><input type="date" readonly id="start"></td>
-            </tr>
-            <tr>
-                <td><b>Deadline</b></td>
-                <td><input type="date" readonly id="deadline"></td>
-            </tr>
-            <tr>
-                <td><b>Estimate</b></td>
-                <td id="estimate">&nbsp;</td>
-            </tr>
-            <tr>
-                <td><b>Priority</b></td>
-                <td id="priority">&nbsp;</td>
-            </tr>
-            <tr>
-                <td><b>Status</b></td>
-                <td id="status">&nbsp;</td>
-            </tr>
-        </table>
-        <p><b>Presupposed projects:</b></p>
-        <table id="presupposed">
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Priority</th>
-                <th>Status</th>
-            </tr>
-        </table>
-        <p><button id="edit">Edit</button></p>
-        <p><button id="remove">Remove</button></p>
-        <p><a href="view_projects.html">View projects</a></p>
-        <p><a href="index.html">Home</a></p>
-        <pre id="json">&nbsp;</pre>
-    </body>
+            function viewPresupposed(evt) {
+			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("presupposed");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[4] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+						sessionStorage.setItem("pid", id);
+						window.location.href = "view_project.html";
+						return;
+					}
+				}
+            }
+
+    </script>
+</head>
+<body>
+<section>
+    <h1>View project</h1>
+    <p>
+        <input type="text" readonly maxlength="3" size="3" style="font-weight: bold" id="project_id">
+        <input type="text" readonly maxlength="32" size="32" style="font-weight: bold" id="description">
+    </p>
+    <p style="margin-bottom: 0"><b>Goals:</b></p>
+    <textarea readonly maxlength="2048" id="goals"></textarea>
+    <p style="margin-bottom: 0"><b>Actions:</b></p>
+    <textarea readonly maxlength="2048" id="actions"></textarea>
+    <table style="margin-top: 12px">
+        <tr>
+            <td><b>Start</b></td>
+            <td><input type="date" readonly id="start"></td>
+        </tr>
+        <tr>
+            <td><b>Deadline</b></td>
+            <td><input type="date" readonly id="deadline"></td>
+        </tr>
+        <tr>
+            <td><b>Estimate</b></td>
+            <td id="estimate">&nbsp;</td>
+        </tr>
+        <tr>
+            <td><b>Priority</b></td>
+            <td id="priority">&nbsp;</td>
+        </tr>
+        <tr>
+            <td><b>Status</b></td>
+            <td id="status">&nbsp;</td>
+        </tr>
+    </table>
+    <p><b>Presupposed projects:</b></p>
+    <table id="presupposed">
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>&nbsp;</th>
+        </tr>
+    </table>
+    <p>
+        <button id="edit">Edit</button>
+    </p>
+    <p>
+        <button id="remove">Remove</button>
+    </p>
+    <p><a href="view_projects.html">View projects</a></p>
+    <p><a href="index.html">Home</a></p>
+    <pre id="json">&nbsp;</pre>
+</section>
+</body>
 </html>                                                                                                                                                                                                                                                                                                                                                                                    

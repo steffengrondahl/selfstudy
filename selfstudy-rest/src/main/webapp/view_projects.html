@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>View projects</title>
-        <link rel="stylesheet" type="text/css" href="style/project.css" >
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <title>View projects</title>
+    <link rel="stylesheet" type="text/css" href="style/project.css">
+    <style>
             #json {
                 display: block;
             }
-	    </style>
-        <script>
+
+    </style>
+    <script>
 			window.addEventListener("load", initialize, false);
 
 			function initialize(evt) {
@@ -163,24 +164,28 @@
 				window.location.href = "create_project.html";
 			}
 
-        </script>
-    </head>
-    <body>
-        <h1>Self study: View projects</h1>
-        <p>List of projects fetched with AJAX using GET</p>
-        <table id="datatable">
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-            </tr>
-        </table>
-        <p><button id="create">Create</button></p>
-        <p><a href="index.html">Home</a></p>
-        <pre id="json">&nbsp;</pre>
-    </body>
+
+    </script>
+</head>
+<body>
+<section>
+    <h1>Projects</h1>
+    <table id="datatable">
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+    </table>
+    <p>
+        <button id="create">Create</button>
+    </p>
+    <p><a href="index.html">Home</a></p>
+    <pre id="json">&nbsp;</pre>
+</section>
+</body>
 </html>
