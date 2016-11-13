@@ -67,9 +67,7 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
         if (decorate && project != null) {
             // Fetch entities explicit is required as the mapping has fetch =
             // FetchType.LAZY
-
-            // Fetch entities explicit is required as the mapping has fetch =
-            // FetchType.LAZY
+            project.getHyperlinks().size();
 
             // Fetch all project entities
             // Notice we can not use ProjectDAO, because it closes the

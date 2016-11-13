@@ -35,4 +35,10 @@ public class QuerySpecificationFactory {
         return specification;
     }
 
+    public static QuerySpecification queryByProjectId(Integer projectId) {
+        QuerySpecification specification = new QuerySpecification();
+        specification.setProjectId(projectId);
+        return specification;
+
+    }
 }

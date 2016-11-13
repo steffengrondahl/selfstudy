@@ -6,6 +6,7 @@ import nu.steffengrondahl.selfstudy.persist.ProjectEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.StatusEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.domain.EstimateEntity;
+import nu.steffengrondahl.selfstudy.persist.domain.HyperlinkEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.PriorityEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.StatusEntity;
@@ -119,6 +120,7 @@ public class ProjectTest {
 
     }
 
+    @Ignore
     @Test
     public void testPresupposedSorting() {
         System.out.println("Creating lots of projects");
@@ -168,6 +170,55 @@ public class ProjectTest {
         for(int i=0; i<5; i++) {
             dao.delete(presupposed[i]);
         }
+
+    }
+
+    @Test
+    public void testHyperlink() {
+        System.out.println("Creating project and hyperlinks");
+
+        EstimateEntity estimateHours = new EstimateEntity();
+        estimateHours.setId(1);
+
+        EstimateEntity estimateDays = new EstimateEntity();
+        estimateDays.setId(2);
+
+        PriorityEntity priorityVeryHigh = new PriorityEntity();
+        priorityVeryHigh.setId(5);
+
+        PriorityEntity priorityHigh = new PriorityEntity();
+        priorityHigh.setId(4);
+
+        StatusEntity statusOpen = new StatusEntity();
+        statusOpen.setId(1);
+
+        ProjectEntity project = new ProjectEntity("PROJECT WITH LINKS");
+        project.setEstimate(estimateHours);
+        project.setPriority(priorityVeryHigh);
+        project.setStatus(statusOpen);
+
+        Integer projectId = dao.add(project);
+
+        HyperlinkEntity hyperlink = new HyperlinkEntity();
+        hyperlink.setName("http://steffengrondahl.nu/index.html");
+        hyperlink.setProject(project);
+
+        HyperlinkDAO hyperlinkDAO = new HyperlinkDAO();
+        // Using update and not persist as the project is detached!
+        hyperlinkDAO.update(hyperlink);
+
+        ProjectEntity receivedProject = dao.find(projectId, true);
+        for(HyperlinkEntity h : receivedProject.getHyperlinks()) {
+            System.out.printf("Hyperlink for project %s: %s%n ", receivedProject.getDescription(), h.getName());
+        }
+
+        List<HyperlinkEntity> hyperlinkList =  hyperlinkDAO.query(QuerySpecificationFactory.queryByProjectId(projectId));
+        for(HyperlinkEntity h : hyperlinkList) {
+            System.out.printf("Hyperlink fetched from query: %s (project %s)%n ", h.getName(), receivedProject.getDescription());
+        }
+
+        // Finally remove projects
+        dao.delete(project);
 
     }
 

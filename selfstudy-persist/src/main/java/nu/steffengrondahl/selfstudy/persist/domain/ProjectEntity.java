@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -23,7 +24,7 @@ import java.util.List;
  * Created by Steffen on 28-10-2016.
  */
 @Entity
-@Table(name="project")
+@Table(name = "project")
 public class ProjectEntity {
 
     @Id
@@ -48,7 +49,7 @@ public class ProjectEntity {
     private LocalDate deadline;
 
     // name="estimate_fk" is the name for the column in project table
-    // holding the foreign key to (column id) in estimate project
+    // holding the foreign key to (column id) in table estimate
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "estimate_fk", nullable = false)
     private EstimateEntity estimate;
@@ -65,9 +66,16 @@ public class ProjectEntity {
     @JoinColumn(name = "status_fk", nullable = false)
     private StatusEntity status;
 
+    // mappedBy="project" is mandatory as we are implementing a bidirectional
+    // one to many relation. It's value should match the name for field for this
+    // entity (i.e. for HyperlinkEntity) in the owner Entity (i.e. in
+    // ProjectEntity).
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HyperlinkEntity> hyperlinks = new ArrayList<>();
+
     @JoinTable(name = "dependency", joinColumns = {
-            @JoinColumn(name = "subsequent", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
-            @JoinColumn(name = "presupposed", referencedColumnName = "id", nullable = false) })
+            @JoinColumn(name = "subsequent", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "presupposed", referencedColumnName = "id", nullable = false)})
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @OrderBy("status ASC")
     private List<ProjectEntity> presupposed = new ArrayList<ProjectEntity>();
@@ -156,6 +164,14 @@ public class ProjectEntity {
 
     public void setStatus(StatusEntity status) {
         this.status = status;
+    }
+
+    public List<HyperlinkEntity> getHyperlinks() {
+        return hyperlinks;
+    }
+
+    public void setHyperlinks(List<HyperlinkEntity> hyperlinks) {
+        this.hyperlinks = hyperlinks;
     }
 
     public List<ProjectEntity> getPresupposed() {

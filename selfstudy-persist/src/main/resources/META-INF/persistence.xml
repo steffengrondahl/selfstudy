@@ -18,6 +18,7 @@
         <class>nu.steffengrondahl.project.persist.domain.EstimateEntity</class>
         <class>nu.steffengrondahl.project.persist.domain.PriorityEntity</class>
         <class>nu.steffengrondahl.project.persist.domain.StatusEntity</class>
+        <class>nu.steffengrondahl.project.persist.domain.HyperlinkEntity</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

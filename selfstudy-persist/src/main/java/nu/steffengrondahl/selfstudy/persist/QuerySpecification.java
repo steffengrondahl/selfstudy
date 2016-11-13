@@ -9,6 +9,7 @@ public class QuerySpecification {
     private Integer maxPriority = 0;
     private Integer minStatus = 0;
     private Integer maxStatus = 0;
+    private Integer projectId = 0;
 
     public QuerySpecification() {
 
@@ -46,4 +47,11 @@ public class QuerySpecification {
         return maxStatus;
     }
 
+    public Integer getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
 }
