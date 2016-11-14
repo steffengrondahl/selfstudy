@@ -169,6 +169,16 @@
 		    		button.addEventListener("click", viewPresupposed, false);
 		    		cell_view.appendChild(button);
 		    	}
+		    	// build hyperlinks
+		    	for(i=0; i< projectObject.hyperlinks.length; i++) {
+		    	    var anchor = document.createElement("a");
+		    	    anchor.href = projectObject.hyperlinks[i].url;
+		    	    anchor.innerHTML = projectObject.hyperlinks[i].url;
+		    	    anchor.target = '_blank';
+		    	    var listElement = document.createElement("li");
+		    	    listElement.appendChild(anchor);
+		    	    document.getElementById("hyperlinks").appendChild(listElement);
+		    	}
 			}
 
 			function clearAll() {
@@ -252,6 +262,9 @@
             <th>&nbsp;</th>
         </tr>
     </table>
+    <p><b>Hyperlinks</b></p>
+    <ul id="hyperlinks">
+    </ul>
     <p>
         <button id="edit">Edit</button>
     </p>

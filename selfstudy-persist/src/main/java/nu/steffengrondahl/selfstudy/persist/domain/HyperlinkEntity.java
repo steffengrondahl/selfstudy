@@ -23,11 +23,11 @@ public class HyperlinkEntity {
     @Column(name = "id")
     private Integer id;
 
-    private String name;
+    private String url;
 
     // name="project_fk" is the name for the column in hyperlink table
     // holding the foreign key to (column id) in table project
-    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_fk", nullable = false)
     private ProjectEntity project;
 
@@ -42,12 +42,12 @@ public class HyperlinkEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUrl() {
+        return url;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public ProjectEntity getProject() {

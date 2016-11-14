@@ -12,6 +12,7 @@
     </style>
     <script>
             var projectObject;
+            var hyperlinkId = 0;
 
             window.addEventListener("load", initialize, false);
 
@@ -23,6 +24,8 @@
 			    //alert("Fetching estimates, priorities and statuses");
 			    document.getElementById("save").addEventListener("click", save, false);
 			    document.getElementById("add").addEventListener("click", addDependency, false);
+			    document.getElementById("addHyperlink").addEventListener("click", addHyperlink, false);
+			    hyperlinkId = 0;
 			}
 
 			function fetchProject(id) {
@@ -90,6 +93,7 @@
 
                 buildPresupposed();
                 buildLinkable();
+                buildHyperlinks();
 
 		    	// Finally fetch these resources - but first after projectObject has been fetched
 			    fetchEstimates();
@@ -164,8 +168,34 @@
 		    	}
 			}
 
+			function buildHyperlinks() {
+			    clearHyperlinks();
+    			// build table elements
+    			for(i=0; i<projectObject.hyperlinks.length; i++) {
+    			    //alert("Create hyperlink " + i);
+    			    // create table
+    				var row = document.getElementById("hyperlinks").insertRow(i+1);
+	    			var cell_id = row.insertCell(0);
+		    		var cell_url = row.insertCell(1);
+				    var cell_remove = row.insertCell(2);
+				    // fill table
+    				cell_id.innerHTML = "" + projectObject.hyperlinks[i].id;
+    				//cell_id.style.display = "none";
+    				//var input = document.createElement("input");
+    				//input.type = "text";
+    				//input.maxLength = 255;
+    				//input.size = 32;
+    				//input.value = projectObject.hyperlinks[i].url;
+	    			//cell_url.appendChild(input);
+	    			cell_url.innerHTML = projectObject.hyperlinks[i].url;
+		    		var button = document.createElement("button");
+		    		button.innerHTML = "Remove";
+		    		button.addEventListener("click", removeHyperlink, false);
+		    		cell_remove.appendChild(button);
+		    	}
+			}
+
 			function clearAll() {
-			    clearLinkable();
 				while (document.getElementById("estimate").options.length > 0) {
 					document.getElementById("estimate").remove(0);
 				}
@@ -176,6 +206,15 @@
 					document.getElementById("status").remove(0);
 				}
 				clearPresupposed();
+			    clearLinkable();
+			    clearHyperlinks();
+			}
+
+			function clearPresupposed() {
+				var rows = parseInt(document.getElementById("presupposed").rows.length - 1);
+				while(rows > 0) {
+					document.getElementById("presupposed").deleteRow(rows--);
+				}
 			}
 
 			function clearLinkable() {
@@ -184,10 +223,10 @@
 				}
 			}
 
-			function clearPresupposed() {
-				var rows = parseInt(document.getElementById("presupposed").rows.length - 1);
+			function clearHyperlinks() {
+				var rows = parseInt(document.getElementById("hyperlinks").rows.length - 1);
 				while(rows > 0) {
-					document.getElementById("presupposed").deleteRow(rows--);
+					document.getElementById("hyperlinks").deleteRow(rows--);
 				}
 			}
 
@@ -368,6 +407,42 @@
 				buildPresupposed();
 			}
 
+
+            function addHyperlink(evt) {
+                var hyperlinkObject = new Object();
+                hyperlinkObject.id = hyperlinkId--;
+                hyperlinkObject.url = document.getElementById("url").value;
+                projectObject.hyperlinks.push(hyperlinkObject);
+                buildHyperlinks();
+            }
+
+            function removeHyperlink(evt) {
+				var table = document.getElementById("hyperlinks");
+				var cell = evt.target.parentNode;
+				//alert(cell);
+				var id = "";
+				for(i=0; i<table.rows.length; i++) {
+					var row = table.rows[i];
+					//alert("row " + row);
+					if(row.cells[2] == cell) {
+						//alert("Found it !");
+						id = row.cells[0].innerHTML;
+						//id = row.cells[0].childNodes[0].value;
+						//alert("(from hidden) " + another_id);
+						break;
+					}
+				}
+				for(i=0; i<projectObject.hyperlinks.length; i++) {
+					var objectElement = projectObject.hyperlinks[i];
+					if(objectElement.id == id) {
+						projectObject.hyperlinks.splice(i,1);
+						break;
+					}
+				}
+				buildHyperlinks();
+            }
+
+
 			function save(evt) {
 			    //alert("Saving ...");
 			    // TODO: Decorate projectObject with fields, send to rest service and on success show project list
@@ -439,7 +514,6 @@
 				}
             }
 
-
     </script>
 </head>
 <body>
@@ -489,6 +563,17 @@
     <select id="linkable">
     </select>
     <button id="add">Add</button>
+    <p><b>Hyperlinks:</b></p>
+    <table id="hyperlinks">
+        <tr>
+            <th>Id</th>
+            <th>URL</th>
+            <th>&nbsp;</th>
+        </tr>
+    </table>
+    <p>
+    <input id="url" type="text" maxlength="255" size="32" style="margin-right: 4px"><button id="addHyperlink">Add</button>
+    </p>
     <p>
         <button id="save">Save</button>
     </p>

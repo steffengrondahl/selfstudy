@@ -3,10 +3,12 @@ package nu.steffengrondahl.selfstudy.rest;
 import nu.steffengrondahl.selfstudy.persist.ProjectEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.domain.EstimateEntity;
+import nu.steffengrondahl.selfstudy.persist.domain.HyperlinkEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.PriorityEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.StatusEntity;
 import nu.steffengrondahl.selfstudy.rest.model.EstimateDTO;
+import nu.steffengrondahl.selfstudy.rest.model.HyperlinkDTO;
 import nu.steffengrondahl.selfstudy.rest.model.PriorityDTO;
 import nu.steffengrondahl.selfstudy.rest.model.ProjectDTO;
 import nu.steffengrondahl.selfstudy.rest.model.ProjectLightDTO;
@@ -39,15 +41,10 @@ import java.util.List;
 @Path("/projects")
 public class ProjectResource {
 
-    //private GenericDAO<ProjectDTO> projectDAO;
-    //private GenericDAO<ProjectLightDTO> projectLightDAO;
-
     @Context
     private UriInfo uriInfo;
 
     public ProjectResource() {
-        //projectDAO = DAOFactory.getProjectDAO();
-        //projectLightDAO = DAOFactory.getProjectLightDAO();
     }
 
     @GET
@@ -125,6 +122,13 @@ public class ProjectResource {
         statusDTO.setId(projectEntity.getStatus().getId());
         statusDTO.setName(projectEntity.getStatus().getName());
         projectDTO.setStatus(statusDTO);
+
+        for(HyperlinkEntity h : projectEntity.getHyperlinks()) {
+            HyperlinkDTO hyperlinkDTO = new HyperlinkDTO();
+            hyperlinkDTO.setId(h.getId());
+            hyperlinkDTO.setUrl(h.getUrl());
+            projectDTO.getHyperlinks().add(hyperlinkDTO);
+        }
 
         for (ProjectEntity pe : projectEntity.getPresupposed()) {
             ProjectLightDTO projectLightDTO = new ProjectLightDTO();
@@ -288,6 +292,16 @@ public class ProjectResource {
         StatusEntity statusEntity = new StatusEntity();
         statusEntity.setId(projectDTO.getStatus().getId());
         projectEntity.setStatus(statusEntity);
+
+        List<HyperlinkEntity> hyperlinks = new ArrayList<>();
+        for(HyperlinkDTO h : projectDTO.getHyperlinks()) {
+            HyperlinkEntity hyperlinkEntity = new HyperlinkEntity();
+            hyperlinkEntity.setId(h.getId());
+            hyperlinkEntity.setUrl(h.getUrl());
+            hyperlinkEntity.setProject(projectEntity);
+            hyperlinks.add(hyperlinkEntity);
+        }
+        projectEntity.setHyperlinks(hyperlinks);
 
         // Fetch presupposed and subsequent
         List<ProjectEntity> presupposed = new ArrayList<>();

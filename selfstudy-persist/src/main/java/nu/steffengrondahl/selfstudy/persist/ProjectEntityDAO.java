@@ -163,7 +163,9 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
             q.setParameter(pMinStatus, specification.getMinStatus());
             q.setParameter(pMaxStatus, specification.getMaxStatus());
         }
+
         List<ProjectEntity> resultList = q.getResultList();
+        entityManager.close();
 
         return resultList;
     }

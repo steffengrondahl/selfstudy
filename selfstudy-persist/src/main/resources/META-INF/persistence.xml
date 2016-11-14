@@ -21,16 +21,16 @@
         <class>nu.steffengrondahl.project.persist.domain.HyperlinkEntity</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/projectdb" />
-            <property name="javax.persistence.jdbc.user" value="projectman" />
-            <property name="javax.persistence.jdbc.password" value="project41c" />
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/projectdb"/>
+            <property name="javax.persistence.jdbc.user" value="projectman"/>
+            <property name="javax.persistence.jdbc.password" value="project41c"/>
 
             <!-- the dialect might not be needed but better use it than depend on
                 default value -->
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
 
-            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.show_sql" value="true"/>
             <!-- In production environment hibernate.hbm2ddl.auto should be avoided.
                 Table creation, altering and dropping should be left to the DBA, not the
                 application. For development the following options are possible: * create:
@@ -46,7 +46,6 @@
             <!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
             <!-- consider changing this to <property name="hibernate.hbm2ddl.auto"
                 value="validate" /> -->
-            <property name="hibernate.hbm2ddl.auto" value="validate" />
 
         </properties>
 

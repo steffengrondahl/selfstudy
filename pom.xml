@@ -8,6 +8,7 @@
     <modules>
         <module>selfstudy-persist</module>
         <module>selfstudy-rest</module>
+        <module>selfstudy-export</module>
     </modules>
     <packaging>pom</packaging>
 

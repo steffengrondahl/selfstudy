@@ -105,7 +105,7 @@ public class HyperlinkDAO implements GenericEntityDAO<HyperlinkEntity> {
         TypedQuery<HyperlinkEntity> q = entityManager.createQuery(criteriaQuery);
         q.setParameter(projectId, specification.getProjectId());
         List<HyperlinkEntity> resultList = q.getResultList();
-
+        entityManager.close();
         return resultList;
     }
 }

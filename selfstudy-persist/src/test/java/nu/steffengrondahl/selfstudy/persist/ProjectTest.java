@@ -200,7 +200,7 @@ public class ProjectTest {
         Integer projectId = dao.add(project);
 
         HyperlinkEntity hyperlink = new HyperlinkEntity();
-        hyperlink.setName("http://steffengrondahl.nu/index.html");
+        hyperlink.setUrl("http://steffengrondahl.nu/index.html");
         hyperlink.setProject(project);
 
         HyperlinkDAO hyperlinkDAO = new HyperlinkDAO();
@@ -209,12 +209,12 @@ public class ProjectTest {
 
         ProjectEntity receivedProject = dao.find(projectId, true);
         for(HyperlinkEntity h : receivedProject.getHyperlinks()) {
-            System.out.printf("Hyperlink for project %s: %s%n ", receivedProject.getDescription(), h.getName());
+            System.out.printf("Hyperlink for project %s: %s%n ", receivedProject.getDescription(), h.getUrl());
         }
 
         List<HyperlinkEntity> hyperlinkList =  hyperlinkDAO.query(QuerySpecificationFactory.queryByProjectId(projectId));
         for(HyperlinkEntity h : hyperlinkList) {
-            System.out.printf("Hyperlink fetched from query: %s (project %s)%n ", h.getName(), receivedProject.getDescription());
+            System.out.printf("Hyperlink fetched from query: %s (project %s)%n ", h.getUrl(), receivedProject.getDescription());
         }
 
         // Finally remove projects
