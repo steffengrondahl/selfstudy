@@ -84,7 +84,7 @@ public class ExportProjects
 
                 ProjectEntity projectEntity = dao.find(pe.getId(), true);
 
-                fos = new FileOutputStream(rootDir.getAbsolutePath() + File.separator + "projects" + projectEntity.getId() + ".json");
+                fos = new FileOutputStream(rootDir.getAbsolutePath() + File.separator + "project" + projectEntity.getId() + ".json");
                 jsonGenerator = Json.createGenerator(fos);
                 jsonGenerator.writeStartObject();
 
