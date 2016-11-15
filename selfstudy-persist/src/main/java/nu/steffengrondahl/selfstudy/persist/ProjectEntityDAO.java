@@ -165,6 +165,7 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
         }
 
         List<ProjectEntity> resultList = q.getResultList();
+        entityManager.getTransaction().commit();
         entityManager.close();
 
         return resultList;

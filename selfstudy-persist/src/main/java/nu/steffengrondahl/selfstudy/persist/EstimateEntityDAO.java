@@ -49,17 +49,21 @@ public class EstimateEntityDAO implements GenericEntityDAO<EstimateEntity> {
 
     public EstimateEntity find(Integer key, boolean decorate) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
+        entityManager.getTransaction().begin();
         EstimateEntity estimate = entityManager.find(EstimateEntity.class, key);
+        entityManager.getTransaction().commit();
         entityManager.close();
         return estimate;
     }
 
     public List<EstimateEntity> query(QuerySpecification specification) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
+        entityManager.getTransaction().begin();
         // fetch data
         TypedQuery<EstimateEntity> query = entityManager.createQuery("SELECT e from EstimateEntity AS e ORDER BY e.id", EstimateEntity.class);
         List<EstimateEntity> resultList = query.getResultList();
         // close - now the items are detached
+        entityManager.getTransaction().commit();
         entityManager.close();
         return resultList;
     }

@@ -49,18 +49,22 @@ public class StatusEntityDAO implements GenericEntityDAO<StatusEntity> {
 
     public StatusEntity find(Integer key, boolean decorate) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
+        entityManager.getTransaction().begin();
         StatusEntity status = entityManager.find(StatusEntity.class, key);
+        entityManager.getTransaction().commit();
         entityManager.close();
         return status;
     }
 
     public List<StatusEntity> query(QuerySpecification specification) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
+        entityManager.getTransaction().begin();
         // fetch data
         TypedQuery<StatusEntity> query = entityManager.createQuery("SELECT s from StatusEntity AS s ORDER BY s.id",
                 StatusEntity.class);
         List<StatusEntity> resultList = query.getResultList();
         // close - now the items are detached
+        entityManager.getTransaction().commit();
         entityManager.close();
         return resultList;
     }

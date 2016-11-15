@@ -58,7 +58,9 @@ public class HyperlinkDAO implements GenericEntityDAO<HyperlinkEntity> {
     @Override
     public HyperlinkEntity find(Integer key, boolean decorate) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
+        entityManager.getTransaction().begin();
         HyperlinkEntity hyperlink = entityManager.find(HyperlinkEntity.class, key);
+        entityManager.getTransaction().commit();
         entityManager.close();
         return hyperlink;
     }
@@ -105,6 +107,7 @@ public class HyperlinkDAO implements GenericEntityDAO<HyperlinkEntity> {
         TypedQuery<HyperlinkEntity> q = entityManager.createQuery(criteriaQuery);
         q.setParameter(projectId, specification.getProjectId());
         List<HyperlinkEntity> resultList = q.getResultList();
+        entityManager.getTransaction().commit();
         entityManager.close();
         return resultList;
     }

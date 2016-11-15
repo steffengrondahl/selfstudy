@@ -12,8 +12,12 @@ import javax.json.stream.JsonGeneratorFactory;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -26,43 +30,55 @@ import java.util.Map;
  */
 public class ExportProjects
 {
-    public static void main( String[] args ) {
+    private Path directory;
 
+    public ExportProjects() throws IOException {
+        File rootDir = new File(".");
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(rootDir);
+        chooser.setDialogTitle("Select export directory");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        //
+        // disable the "All files" option.
+        //
+        chooser.setAcceptAllFileFilterUsed(false);
+        //
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            rootDir = chooser.getSelectedFile();
+            directory = rootDir.toPath();
+            validate(directory.toString());
+        }
+        else {
+            throw new IOException("No directory selected");
+        }
+    }
+
+    public ExportProjects(String dir) throws IOException {
+        directory = Paths.get(dir);
+        validate(dir);
+    }
+
+    private void validate(String dir) throws IOException {
+        boolean isRegularWritableDir = Files.isDirectory(directory) & Files.isReadable(directory) & Files.isWritable(directory);
+        if(!isRegularWritableDir) {
+            throw new IOException("Unable to write to directory, " + dir);
+        }
+    }
+
+    public void createJsonFiles() throws IOException {
         try {
-            // Build json array with all projects and save to selected file
-
-            File rootDir = new java.io.File(".");
-            JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(rootDir);
-            chooser.setDialogTitle("Select export directory");
-            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            //
-            // disable the "All files" option.
-            //
-            chooser.setAcceptAllFileFilterUsed(false);
-            //
-            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                rootDir = chooser.getSelectedFile();
-                System.out.println("getSelectedFile() : "
-                        +  chooser.getSelectedFile());
-            }
-            else {
-                System.out.println("No Selection ");
-                System.exit(0);
-            }
-
-            // write json file for all projects
-            OutputStream fos = new FileOutputStream(rootDir.getAbsolutePath() + File.separator + "projects.json");
-
             Map<String, Object> properties = new HashMap<>(1);
             properties.put(JsonGenerator.PRETTY_PRINTING, true);
-
             JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
+
+            // Build json array with all projects and save to selected file
+            OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "projects.json");
             JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
 
             jsonGenerator.writeStartArray();
 
             ProjectEntityDAO dao = new ProjectEntityDAO();
+
             List<ProjectEntity> list = dao.query(QuerySpecificationFactory.queryAll());
             for(ProjectEntity pe : list) {
                 jsonGenerator.writeStartObject();
@@ -94,7 +110,7 @@ public class ExportProjects
 
                 ProjectEntity projectEntity = dao.find(pe.getId(), true);
 
-                fos = new FileOutputStream(rootDir.getAbsolutePath() + File.separator + "project" + projectEntity.getId() + ".json");
+                fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "project" + projectEntity.getId() + ".json");
                 jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
                 jsonGenerator.writeStartObject();
 
@@ -183,15 +199,30 @@ public class ExportProjects
                 jsonGenerator.writeEnd(); // end project
                 jsonGenerator.close();
             }
+        }
+        catch(Exception e) {
+            throw e;
+        }
+        finally {
+            PersistUtil.shutdown();
+            System.out.println("Entity manager factory has been closed");
+        }
+    }
 
+    public static void main( String[] args ) {
+        try {
+            ExportProjects exportProjects;
+            if(args.length > 0) {
+                exportProjects = new ExportProjects(args[0]);
+            }
+            else {
+                exportProjects = new ExportProjects();
+            }
+            exportProjects.createJsonFiles();
         }
         catch(Exception e) {
             e.printStackTrace();
         }
-        finally {
-            PersistUtil.shutdown();
-        }
-
         System.out.println( "Done export" );
     }
 }

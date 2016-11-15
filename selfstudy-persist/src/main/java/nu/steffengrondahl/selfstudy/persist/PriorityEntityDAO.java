@@ -49,18 +49,22 @@ public class PriorityEntityDAO implements GenericEntityDAO<PriorityEntity> {
 
     public PriorityEntity find(Integer key, boolean decorate) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
+        entityManager.getTransaction().begin();
         PriorityEntity priority = entityManager.find(PriorityEntity.class, key);
+        entityManager.getTransaction().commit();
         entityManager.close();
         return priority;
     }
 
     public List<PriorityEntity> query(QuerySpecification specification) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
+        entityManager.getTransaction().begin();
         // fetch data
         TypedQuery<PriorityEntity> query = entityManager.createQuery("SELECT p from PriorityEntity AS p ORDER BY p.id",
                 PriorityEntity.class);
         List<PriorityEntity> resultList = query.getResultList();
         // close - now the items are detached
+        entityManager.getTransaction().commit();
         entityManager.close();
         return resultList;
     }
