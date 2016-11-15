@@ -8,13 +8,17 @@ import nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity;
 
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
+import javax.json.stream.JsonGeneratorFactory;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Export all projects to projects.json in user selected directory
@@ -25,9 +29,6 @@ public class ExportProjects
     public static void main( String[] args ) {
 
         try {
-            ProjectEntityDAO dao = new ProjectEntityDAO();
-            List<ProjectEntity> list = dao.query(QuerySpecificationFactory.queryAll());
-
             // Build json array with all projects and save to selected file
 
             File rootDir = new java.io.File(".");
@@ -52,8 +53,17 @@ public class ExportProjects
 
             // write json file for all projects
             OutputStream fos = new FileOutputStream(rootDir.getAbsolutePath() + File.separator + "projects.json");
-            JsonGenerator jsonGenerator = Json.createGenerator(fos);
+
+            Map<String, Object> properties = new HashMap<>(1);
+            properties.put(JsonGenerator.PRETTY_PRINTING, true);
+
+            JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+
             jsonGenerator.writeStartArray();
+
+            ProjectEntityDAO dao = new ProjectEntityDAO();
+            List<ProjectEntity> list = dao.query(QuerySpecificationFactory.queryAll());
             for(ProjectEntity pe : list) {
                 jsonGenerator.writeStartObject();
                 jsonGenerator.write("id", pe.getId());
@@ -85,7 +95,7 @@ public class ExportProjects
                 ProjectEntity projectEntity = dao.find(pe.getId(), true);
 
                 fos = new FileOutputStream(rootDir.getAbsolutePath() + File.separator + "project" + projectEntity.getId() + ".json");
-                jsonGenerator = Json.createGenerator(fos);
+                jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
                 jsonGenerator.writeStartObject();
 
                 jsonGenerator.write("id", projectEntity.getId());
@@ -94,17 +104,29 @@ public class ExportProjects
                 if(goals != null) {
                     jsonGenerator.write("goals", projectEntity.getGoals());
                 }
+                else {
+                    jsonGenerator.write("goals", "");
+                }
                 String actions = projectEntity.getActions();
                 if(actions != null) {
                     jsonGenerator.write("actions", projectEntity.getActions());
+                }
+                else {
+                    jsonGenerator.write("actions", "");
                 }
                 LocalDate start = projectEntity.getStart();
                 if (start != null) {
                     jsonGenerator.write("start", DateTimeFormatter.ISO_LOCAL_DATE.format(start));
                 }
+                else {
+                    jsonGenerator.write("start", "");
+                }
                 LocalDate deadline = projectEntity.getDeadline();
                 if (deadline != null) {
-                    jsonGenerator.write("start", DateTimeFormatter.ISO_LOCAL_DATE.format(deadline));
+                    jsonGenerator.write("deadline", DateTimeFormatter.ISO_LOCAL_DATE.format(deadline));
+                }
+                else {
+                    jsonGenerator.write("deadline", "");
                 }
 
                 jsonGenerator.writeStartObject("estimate");

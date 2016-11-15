@@ -11,11 +11,16 @@
 
     </style>
     <script>
+            var projectArray;
+
 			window.addEventListener("load", initialize, false);
 
 			function initialize(evt) {
                 fetchProjects();
 			    document.getElementById("create").addEventListener("click", create, false);
+				document.getElementById("sortById").addEventListener("change", sort, false);
+				document.getElementById("sortByPriority").addEventListener("change", sort, false);
+				document.getElementById("sortByStatus").addEventListener("change", sort, false);
 			}
 
 			function fetchProjects() {
@@ -30,8 +35,8 @@
 			function handleFetch(evt) {
 				if (evt.target.readyState == 4 ) {
 					if(evt.target.status==200) {
-						var projectArray = JSON.parse(evt.target.responseText);
-	    		        viewProjects(projectArray);
+						projectArray = JSON.parse(evt.target.responseText);
+	    		        viewProjects();
 					}
 					else {
 						//alert("Unexpected response status " + evt.target.status);
@@ -41,8 +46,9 @@
 				}
 			}
 
-			function viewProjects(projectArray) {
+			function viewProjects() {
 			    document.getElementById("json").innerHTML = JSON.stringify(projectArray, null, 2);
+			    clearAll();
 			    for(i = 0; i < projectArray.length; i++) {
 			        // fetch variables
 					var id = projectArray[i].id;
@@ -108,6 +114,13 @@
 			    }
 			}
 
+			function clearAll() {
+				var rows = parseInt(document.getElementById("datatable").rows.length - 1);
+				while(rows > 0) {
+					document.getElementById("datatable").deleteRow(rows--);
+				}
+			}
+
 			function view(evt) {
 			    var selectedCell = evt.target.parentNode;
 				// find selected row - loop through table
@@ -164,6 +177,18 @@
 				window.location.href = "create_project.html";
 			}
 
+			function sort(evt) {
+				if(document.getElementById("sortById").checked) {
+					projectArray.sort(function(a, b) {return a.id - b.id});
+				}
+				else if(document.getElementById("sortByPriority").checked) {
+					projectArray.sort(function(a, b) {return b.priority.id - a.priority.id});
+				}
+				else { //document.getElementById("sortByStatus").checked
+					projectArray.sort(function(a, b) {return a.status.id - b.status.id});
+				}
+				viewProjects();
+			}
 
     </script>
 </head>
@@ -181,6 +206,12 @@
             <th>&nbsp;</th>
         </tr>
     </table>
+    <p><b>Sort by:</b></p>
+    <ul style="list-style: none; padding-left: 0; margin: 0;">
+        <li><input id="sortById" type="radio" name="sorting" checked><label for="sortById">Id</label></li>
+        <li><input id="sortByPriority" type="radio" name="sorting"><label for="sortByPriority">Priority</label></li>
+        <li><input id="sortByStatus" type="radio" name="sorting"><label for="sortByStatus">Status</label></li>
+    </ul>
     <p>
         <button id="create">Create</button>
     </p>

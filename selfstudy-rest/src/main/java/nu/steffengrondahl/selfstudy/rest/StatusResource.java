@@ -3,11 +3,10 @@ package nu.steffengrondahl.selfstudy.rest;
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.StatusEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.domain.StatusEntity;
-import nu.steffengrondahl.selfstudy.rest.model.DAOFactory;
-import nu.steffengrondahl.selfstudy.rest.model.GenericDAO;
 import nu.steffengrondahl.selfstudy.rest.model.StatusDTO;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -21,34 +20,21 @@ import java.util.List;
 @Path("/statuses")
 public class StatusResource {
 
-    private GenericDAO<StatusDTO> statusDAO;
-
     public StatusResource() {
-        statusDAO = DAOFactory.getStatusDAO();
+
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<StatusDTO> readList() {
-    //public List<StatusEntity> readList() {
         List<StatusDTO> list = new ArrayList<StatusDTO>();
-        try {
-            StatusEntityDAO dao = new StatusEntityDAO();
-            List<StatusEntity> resultList = dao.query(QuerySpecificationFactory.queryAll());
-            for(StatusEntity se : resultList) {
-                StatusDTO statusDTO = new StatusDTO();
-                statusDTO.setId(se.getId());
-                statusDTO.setName(se.getName());
-                list.add(statusDTO);
-            }
-            //return resultList;
-        }
-        catch(Throwable e) {
-            e.printStackTrace();
-            if(e instanceof RuntimeException) {
-                throw (RuntimeException)e;
-            }
-            //return null;
+        StatusEntityDAO dao = new StatusEntityDAO();
+        List<StatusEntity> resultList = dao.query(QuerySpecificationFactory.queryAll());
+        for(StatusEntity se : resultList) {
+            StatusDTO statusDTO = new StatusDTO();
+            statusDTO.setId(se.getId());
+            statusDTO.setName(se.getName());
+            list.add(statusDTO);
         }
         return list; //statusDAO.readAll();
     }
@@ -57,7 +43,17 @@ public class StatusResource {
     @Path("{id: \\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public StatusDTO read(@PathParam("id") int id) {
-        return statusDAO.read(id);
+        StatusDTO statusDTO = new StatusDTO();
+        StatusEntityDAO dao = new StatusEntityDAO();
+        StatusEntity statusEntity = dao.find(id, false);
+        if(statusEntity == null) {
+            throw new NotFoundException();
+        }
+
+        statusDTO.setId(statusEntity.getId());
+        statusDTO.setName(statusEntity.getName());
+
+        return statusDTO;
     }
 
 }

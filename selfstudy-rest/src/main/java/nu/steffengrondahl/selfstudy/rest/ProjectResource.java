@@ -77,7 +77,7 @@ public class ProjectResource {
             list.add(projectLightDTO);
         }
 
-        return list; //projectLightDAO.readAll();
+        return list;
     }
 
     @GET
@@ -88,8 +88,9 @@ public class ProjectResource {
         ProjectDTO projectDTO = new ProjectDTO();
         ProjectEntityDAO dao = new ProjectEntityDAO();
         ProjectEntity projectEntity = dao.find(id, true);
-        if (projectEntity == null)
+        if (projectEntity == null) {
             throw new NotFoundException();
+        }
 
         projectDTO.setId(projectEntity.getId());
         projectDTO.setDescription(projectEntity.getDescription());
