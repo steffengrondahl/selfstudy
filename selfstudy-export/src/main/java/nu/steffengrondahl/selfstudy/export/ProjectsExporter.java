@@ -122,7 +122,6 @@ public class ProjectsExporter {
             ProjectEntityDAO dao = new ProjectEntityDAO();
             ProjectEntity projectEntity = dao.find(id, true);
 
-
             JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
             jsonGenerator.writeStartObject();
 
@@ -176,7 +175,7 @@ public class ProjectsExporter {
                 jsonGenerator.write("url", hyperlinkEntity.getUrl());
                 jsonGenerator.writeEnd();
             }
-            jsonGenerator.writeEnd(); // end array
+            jsonGenerator.writeEnd(); // end of array with hyperlinks
 
             // Write presupposed
             jsonGenerator.writeStartArray("presupposed");
@@ -202,6 +201,11 @@ public class ProjectsExporter {
 
                 jsonGenerator.writeEnd();
             }
+            jsonGenerator.writeEnd(); // end of array with presupposed projects
+
+            jsonGenerator.writeEnd(); // end of object
+
+            jsonGenerator.close();
         }
     }
 
