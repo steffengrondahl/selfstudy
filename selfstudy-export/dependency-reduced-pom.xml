@@ -23,7 +23,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>nu.steffengrondahl.selfstudy.export.ExportProjects</mainClass>
+                  <mainClass>nu.steffengrondahl.selfstudy.export.ProjectsExporter</mainClass>
                 </transformer>
               </transformers>
             </configuration>
