@@ -3,6 +3,9 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 <web-app>
     <display-name>SelfstudyWebApp</display-name>
+    <listener>
+        <listener-class>nu.steffengrondahl.selfstudy.rest.ContextFinalizer</listener-class>
+    </listener>
     <servlet>
         <servlet-name>Jersey-Servlet</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
