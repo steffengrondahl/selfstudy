@@ -4,6 +4,7 @@ import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.StatusEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.domain.StatusEntity;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class StatusTest {
 
     private static StatusEntityDAO dao = new StatusEntityDAO();
 
+    @Ignore
     @Test
     public void testStatus() {
         List<StatusEntity> statusList = dao.query(QuerySpecificationFactory.queryAll());

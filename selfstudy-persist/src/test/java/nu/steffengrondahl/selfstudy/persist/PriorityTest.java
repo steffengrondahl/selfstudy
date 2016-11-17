@@ -4,6 +4,7 @@ import nu.steffengrondahl.selfstudy.persist.PriorityEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.domain.PriorityEntity;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class PriorityTest {
 
     private static PriorityEntityDAO dao = new PriorityEntityDAO();
 
+    @Ignore
     @Test
     public void testPriority() {
         List<PriorityEntity> priorityList = dao.query(QuerySpecificationFactory.queryAll());

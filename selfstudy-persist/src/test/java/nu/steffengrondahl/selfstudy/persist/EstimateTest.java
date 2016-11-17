@@ -4,6 +4,7 @@ import nu.steffengrondahl.selfstudy.persist.EstimateEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.domain.EstimateEntity;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,8 +12,11 @@ import java.util.List;
 /**
  * Created by Steffen on 29-10-2016.
  */
-public class EstimateTest {	private static EstimateEntityDAO dao = new EstimateEntityDAO();
+public class EstimateTest {
 
+    private static EstimateEntityDAO dao = new EstimateEntityDAO();
+
+    @Ignore
     @Test
     public void testEstimate() {
         List<EstimateEntity> estimateList = dao.query(QuerySpecificationFactory.queryAll());

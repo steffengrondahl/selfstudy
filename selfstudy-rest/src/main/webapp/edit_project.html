@@ -445,7 +445,7 @@
 
 
 			function save(evt) {
-			    alert("Saving ...");
+			    //alert("Saving ...");
 			    // TODO: Decorate projectObject with fields, send to rest service and on success show project list
                 // fetch data
                 var description = document.getElementById("description").value;
@@ -489,7 +489,7 @@
                 document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
                 // Send to server and view result
    				var url = "rest/projects/" + projectObject.id;
-   				alert("PUT to url: " + url);
+   				//alert("PUT to url: " + url);
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("PUT", url, true);
 				httpRequest.addEventListener("readystatechange",handleUpdatedProject,false);
@@ -500,7 +500,7 @@
             function handleUpdatedProject(evt) {
                 //alert(evt.target.readyState);
                 if (evt.target.readyState == 4 ) {
-                    alert("Updating project, " + evt.target.status);
+                    //alert("Updating project, " + evt.target.status);
                     if(evt.target.status==201) {
                         var location = evt.target.getResponseHeader("Location");
 						var index = location.lastIndexOf("/");

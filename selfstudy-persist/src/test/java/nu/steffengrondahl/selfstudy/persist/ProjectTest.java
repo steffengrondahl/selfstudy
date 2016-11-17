@@ -65,7 +65,7 @@ public class ProjectTest {
         dao.update(subsequent);
 
         // link all projects and their dependencies (i.e. presupposed projects)
-        System.out.println("List all projects and their pressuposed projects");
+        System.out.println("List all projects and their presupposed projects");
         List<ProjectEntity> projectList = dao.query(QuerySpecificationFactory.queryAll());
         for (ProjectEntity pe : projectList) {
             System.out.printf("Project: %s. %s (%s, %s, %s)%n", pe.getId(), pe.getDescription(),
@@ -89,8 +89,6 @@ public class ProjectTest {
         // Finally remove projects
         dao.delete(presupposed);
         dao.delete(subsequent);
-
-
     }
 
     @Ignore
@@ -139,7 +137,7 @@ public class ProjectTest {
         ProjectEntity[] presupposed = new ProjectEntity[5];
         int[] statusList = { 2, 3, 2, 1, 3};
         for(int i=0; i<5; i++) {
-            int number = new Integer(i+1);
+            int number = i+1;
             presupposed[i] = new ProjectEntity("PRESUPPOSED PROJECT " + number);
             presupposed[i].setEstimate(estimate);
             presupposed[i].setPriority(priority);
@@ -171,6 +169,7 @@ public class ProjectTest {
 
     }
 
+    @Ignore
     @Test
     public void testHyperlink() {
         System.out.println("Creating project and hyperlinks");
@@ -217,7 +216,6 @@ public class ProjectTest {
 
         // Finally remove projects
         dao.delete(project);
-
     }
 
 }
