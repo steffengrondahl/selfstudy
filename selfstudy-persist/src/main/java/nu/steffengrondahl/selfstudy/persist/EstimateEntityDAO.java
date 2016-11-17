@@ -25,12 +25,13 @@ public class EstimateEntityDAO implements GenericEntityDAO<EstimateEntity> {
         return id;
     }
 
-    public void update(EstimateEntity estimateEntity) {
+    public Integer update(EstimateEntity estimateEntity) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.merge(estimateEntity);
+        EstimateEntity mergedEstimateEntity = entityManager.merge(estimateEntity);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return mergedEstimateEntity.getId();
     }
 
     public void delete(EstimateEntity estimateEntity) {

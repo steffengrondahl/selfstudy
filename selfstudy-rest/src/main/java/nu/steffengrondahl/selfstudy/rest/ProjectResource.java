@@ -154,28 +154,28 @@ public class ProjectResource {
             projectDTO.getPresupposed().add(projectLightDTO);
         }
 
-        for (ProjectEntity pe : projectEntity.getSubsequent()) {
-            ProjectLightDTO projectLightDTO = new ProjectLightDTO();
-            projectLightDTO.setId(pe.getId());
-            projectLightDTO.setDescription(pe.getDescription());
-
-            estimateDTO = new EstimateDTO();
-            estimateDTO.setId(pe.getEstimate().getId());
-            estimateDTO.setName(pe.getEstimate().getName());
-            projectLightDTO.setEstimate(estimateDTO);
-
-            priorityDTO = new PriorityDTO();
-            priorityDTO.setId(pe.getPriority().getId());
-            priorityDTO.setName(pe.getPriority().getName());
-            projectLightDTO.setPriority(priorityDTO);
-
-            statusDTO = new StatusDTO();
-            statusDTO.setId(pe.getStatus().getId());
-            statusDTO.setName(pe.getStatus().getName());
-            projectLightDTO.setStatus(statusDTO);
-
-            projectDTO.getSubsequent().add(projectLightDTO);
-        }
+        //for (ProjectEntity pe : projectEntity.getSubsequent()) {
+        //    ProjectLightDTO projectLightDTO = new ProjectLightDTO();
+        //    projectLightDTO.setId(pe.getId());
+        //    projectLightDTO.setDescription(pe.getDescription());
+        //
+        //    estimateDTO = new EstimateDTO();
+        //    estimateDTO.setId(pe.getEstimate().getId());
+        //    estimateDTO.setName(pe.getEstimate().getName());
+        //    projectLightDTO.setEstimate(estimateDTO);
+        //
+        //    priorityDTO = new PriorityDTO();
+        //    priorityDTO.setId(pe.getPriority().getId());
+        //    priorityDTO.setName(pe.getPriority().getName());
+        //    projectLightDTO.setPriority(priorityDTO);
+        //
+        //    statusDTO = new StatusDTO();
+        //    statusDTO.setId(pe.getStatus().getId());
+        //    statusDTO.setName(pe.getStatus().getName());
+        //    projectLightDTO.setStatus(statusDTO);
+        //
+        //    projectDTO.getSubsequent().add(projectLightDTO);
+        //}
 
         for (ProjectEntity pe : projectEntity.getLinkable()) {
             ProjectLightDTO projectLightDTO = new ProjectLightDTO();
@@ -257,7 +257,7 @@ public class ProjectResource {
     @PUT
     @Path("{id: \\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(@PathParam("id") int id, ProjectDTO projectDTO) {
+    public Response update(@PathParam("id") int id, ProjectDTO projectDTO) {
         if (projectDTO.getId() != id) {
             throw new BadRequestException("No support for changing project id");
         }
@@ -327,31 +327,36 @@ public class ProjectResource {
         }
         projectEntity.setPresupposed(presupposed);
 
-        List<ProjectEntity> subsequent = new ArrayList<>();
-        for(ProjectLightDTO p : projectDTO.getSubsequent()) {
-            ProjectEntity pe = new ProjectEntity();
-            pe.setId(p.getId());
-            pe.setDescription(p.getDescription());
-
-            estimateEntity = new EstimateEntity();
-            estimateEntity.setId(p.getEstimate().getId());
-            pe.setEstimate(estimateEntity);
-
-            priorityEntity = new PriorityEntity();
-            priorityEntity.setId(p.getPriority().getId());
-            pe.setPriority(priorityEntity);
-
-            statusEntity = new StatusEntity();
-            statusEntity.setId(p.getStatus().getId());
-            pe.setStatus(statusEntity);
-
-            subsequent.add(pe);
-        }
-        projectEntity.setSubsequent(subsequent);
+        //List<ProjectEntity> subsequent = new ArrayList<>();
+        //for(ProjectLightDTO p : projectDTO.getSubsequent()) {
+        //    ProjectEntity pe = new ProjectEntity();
+        //    pe.setId(p.getId());
+        //    pe.setDescription(p.getDescription());
+        //
+        //    estimateEntity = new EstimateEntity();
+        //    estimateEntity.setId(p.getEstimate().getId());
+        //    pe.setEstimate(estimateEntity);
+        //
+        //    priorityEntity = new PriorityEntity();
+        //    priorityEntity.setId(p.getPriority().getId());
+        //    pe.setPriority(priorityEntity);
+        //
+        //    statusEntity = new StatusEntity();
+        //    statusEntity.setId(p.getStatus().getId());
+        //    pe.setStatus(statusEntity);
+        //
+        //    subsequent.add(pe);
+        //}
+        //projectEntity.setSubsequent(subsequent);
 
         ProjectEntityDAO dao = new ProjectEntityDAO();
-        dao.update(projectEntity);
-        // No need to return a Response object, as returning nothing (void)
-        // implies returning HTTP 204 No Content
+        Integer projectId = dao.update(projectEntity);
+        if(projectId == id) { // update
+            return Response.noContent().build();
+        }
+        else { // create
+            URI uri = uriInfo.getAbsolutePathBuilder().path(Integer.toString(projectId)).build();
+            return Response.created(uri).build();
+        }
     }
 }

@@ -9,7 +9,7 @@ public interface GenericEntityDAO<T> {
 
     Integer add(T t);
 
-    void update(T t);
+    Integer update(T t);
 
     void delete(T t);
 

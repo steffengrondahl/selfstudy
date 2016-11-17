@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Steffen on 13-11-2016.
  */
-public class HyperlinkDAO implements GenericEntityDAO<HyperlinkEntity> {
+public class HyperlinkEntityDAO implements GenericEntityDAO<HyperlinkEntity> {
 
     @Override
     public Integer add(HyperlinkEntity hyperlinkEntity) {
@@ -32,12 +32,13 @@ public class HyperlinkDAO implements GenericEntityDAO<HyperlinkEntity> {
     }
 
     @Override
-    public void update(HyperlinkEntity hyperlinkEntity) {
+    public Integer update(HyperlinkEntity hyperlinkEntity) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.merge(hyperlinkEntity);
+        HyperlinkEntity mergedHyperlinkEntity = entityManager.merge(hyperlinkEntity);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return mergedHyperlinkEntity.getId();
     }
 
     @Override

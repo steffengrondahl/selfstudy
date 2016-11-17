@@ -76,12 +76,12 @@ public class ProjectEntity {
     @JoinTable(name = "dependency", joinColumns = {
             @JoinColumn(name = "subsequent", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "presupposed", referencedColumnName = "id", nullable = false)})
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.LAZY)
     @OrderBy("status ASC")
     private List<ProjectEntity> presupposed = new ArrayList<ProjectEntity>();
 
-    @ManyToMany(mappedBy = "presupposed", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private List<ProjectEntity> subsequent = new ArrayList<ProjectEntity>();
+    //@ManyToMany(mappedBy = "presupposed", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    //private List<ProjectEntity> subsequent = new ArrayList<ProjectEntity>();
 
     @Transient
     private List<ProjectEntity> linkable = new ArrayList<ProjectEntity>();
@@ -182,13 +182,13 @@ public class ProjectEntity {
         this.presupposed = presupposed;
     }
 
-    public List<ProjectEntity> getSubsequent() {
-        return subsequent;
-    }
+    //public List<ProjectEntity> getSubsequent() {
+    //    return subsequent;
+    //}
 
-    public void setSubsequent(List<ProjectEntity> subsequent) {
-        this.subsequent = subsequent;
-    }
+    //public void setSubsequent(List<ProjectEntity> subsequent) {
+    //    this.subsequent = subsequent;
+    //}
 
     public List<ProjectEntity> getLinkable() {
         return linkable;

@@ -35,12 +35,13 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
         return id;
     }
 
-    public void update(ProjectEntity projectEntity) {
+    public Integer update(ProjectEntity projectEntity) {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.merge(projectEntity);
+        ProjectEntity mergedProject = entityManager.merge(projectEntity);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return mergedProject.getId();
     }
 
     public void delete(ProjectEntity projectEntity) {
@@ -52,7 +53,6 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
         if(attachedProject != null) {
             entityManager.remove(attachedProject);
         }
-
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -80,9 +80,9 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
             for (ProjectEntity presupposed : project.getPresupposed()) {
                 allProjects.remove(presupposed);
             }
-            for (ProjectEntity subsequent : project.getSubsequent()) {
-                allProjects.remove(subsequent);
-            }
+            //for (ProjectEntity subsequent : project.getSubsequent()) {
+            //    allProjects.remove(subsequent);
+            //}
 
             project.setLinkable(allProjects);
         }

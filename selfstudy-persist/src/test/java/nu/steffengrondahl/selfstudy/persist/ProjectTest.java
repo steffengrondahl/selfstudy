@@ -1,10 +1,5 @@
 package nu.steffengrondahl.selfstudy.persist;
 
-import nu.steffengrondahl.selfstudy.persist.EstimateEntityDAO;
-import nu.steffengrondahl.selfstudy.persist.PriorityEntityDAO;
-import nu.steffengrondahl.selfstudy.persist.ProjectEntityDAO;
-import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
-import nu.steffengrondahl.selfstudy.persist.StatusEntityDAO;
 import nu.steffengrondahl.selfstudy.persist.domain.EstimateEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.HyperlinkEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.PriorityEntity;
@@ -58,13 +53,16 @@ public class ProjectTest {
         dao.add(subsequent);
 
         // links projects and save one of them
-        presupposed.getSubsequent().add(subsequent);
+        //presupposed.getSubsequent().add(subsequent);
         subsequent.getPresupposed().add(presupposed);
         // the project is now detached, so it has to be updated (i.e. merge to
         // persistence)
         // the subsequent project will be updated as the many-to-many relation
         // has cascaded set for update
-        dao.update(presupposed);
+        //dao.update(presupposed);
+
+        // With unidirectional many-to-many the subsequent project is the one to persist (and merge)
+        dao.update(subsequent);
 
         // link all projects and their dependencies (i.e. presupposed projects)
         System.out.println("List all projects and their pressuposed projects");
@@ -151,7 +149,7 @@ public class ProjectTest {
 
         for(int i=0; i<5; i++) {
             // links projects and save one of them
-            presupposed[i].getSubsequent().add(subsequent);
+            //presupposed[i].getSubsequent().add(subsequent);
             subsequent.getPresupposed().add(presupposed[i]);
         }
         // the project is now detached, so it has to be updated (i.e. merge to
@@ -203,16 +201,16 @@ public class ProjectTest {
         hyperlink.setUrl("http://steffengrondahl.nu/index.html");
         hyperlink.setProject(project);
 
-        HyperlinkDAO hyperlinkDAO = new HyperlinkDAO();
+        HyperlinkEntityDAO hyperlinkEntityDAO = new HyperlinkEntityDAO();
         // Using update and not persist as the project is detached!
-        hyperlinkDAO.update(hyperlink);
+        hyperlinkEntityDAO.update(hyperlink);
 
         ProjectEntity receivedProject = dao.find(projectId, true);
         for(HyperlinkEntity h : receivedProject.getHyperlinks()) {
             System.out.printf("Hyperlink for project %s: %s%n ", receivedProject.getDescription(), h.getUrl());
         }
 
-        List<HyperlinkEntity> hyperlinkList =  hyperlinkDAO.query(QuerySpecificationFactory.queryByProjectId(projectId));
+        List<HyperlinkEntity> hyperlinkList =  hyperlinkEntityDAO.query(QuerySpecificationFactory.queryByProjectId(projectId));
         for(HyperlinkEntity h : hyperlinkList) {
             System.out.printf("Hyperlink fetched from query: %s (project %s)%n ", h.getUrl(), receivedProject.getDescription());
         }
