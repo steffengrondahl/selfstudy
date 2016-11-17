@@ -10,7 +10,7 @@
     <artifactId>selfstudy-rest</artifactId>
     <packaging>war</packaging>
 
-    <name>SelfStudy</name>
+    <name>SelfStudyWebApp</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -42,7 +42,7 @@
     </dependencies>
 
     <build>
-        <finalName>SelfstudyWebApp</finalName>
+        <finalName>SelfStudyWebApp</finalName>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>

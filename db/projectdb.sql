@@ -1,4 +1,5 @@
 USE projectdb;
+DROP TABLE IF EXISTS hyperlink;
 DROP TABLE IF EXISTS dependency;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS priority;
