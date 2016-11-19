@@ -212,6 +212,35 @@ public class JsonExporter {
             }
             jsonGenerator.writeEnd(); // end of array with presupposed projects
 
+            // Write linkable
+            jsonGenerator.writeStartArray("linkable");
+            for (ProjectEntity linkable : projectEntity.getLinkable()) {
+                jsonGenerator.writeStartObject();
+                jsonGenerator.write("id", linkable.getId());
+                jsonGenerator.write("description", linkable.getDescription());
+
+                jsonGenerator.writeStartObject("estimate");
+                jsonGenerator.write("id", linkable.getEstimate().getId());
+                jsonGenerator.write("name", linkable.getEstimate().getName());
+                jsonGenerator.writeEnd();
+
+                jsonGenerator.writeStartObject("priority");
+                jsonGenerator.write("id", linkable.getPriority().getId());
+                jsonGenerator.write("name", linkable.getPriority().getName());
+                jsonGenerator.writeEnd();
+
+                jsonGenerator.writeStartObject("status");
+                jsonGenerator.write("id", linkable.getStatus().getId());
+                jsonGenerator.write("name", linkable.getStatus().getName());
+                jsonGenerator.writeEnd();
+
+                jsonGenerator.writeEnd();
+            }
+            jsonGenerator.writeEnd(); // end of array with linkable projects
+
+
+
+
             jsonGenerator.writeEnd(); // end of object
 
             jsonGenerator.close();
