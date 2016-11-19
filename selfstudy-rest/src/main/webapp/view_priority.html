@@ -1,80 +1,131 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>View priority</title>
-        <style>
-			table {
-				border-collapse: collapse;
-			}
-			th, td {
-				border: 1px solid black;
-				padding: 4px;
-			}
-		</style>
-    </head>
-    <body>
-        <h1>Self study: View priority</h1>
-        <p>Priority fetched with AJAX using GET</p>
-        <p>Input:</p>
-        <p><input id="id" type="text" size="1" maxlength="1"></p>
-        <p><button id="fetch">Fetch</button></p>
-        <p>Result:</p>
-        <table id="datatable">
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-            </tr>
-        </table>
-        <p><a href="index.html">Home</a></p>
-        <script>
-			var url = "rest/priorities";
+<head>
+    <meta charset="UTF-8">
+    <title>View priority</title>
+    <link rel="stylesheet" type="text/css" href="style/project.css">
+    <style>
+            #json {
+                display: block;
+            }
+    </style>
+    <script>
+            window.addEventListener("load", initialise, false);
 
-			document.getElementById("fetch").addEventListener("click",submitQuery,false);
+			function initialise(evt) {
+			    var id = sessionStorage.getItem("pid");
+			    sessionStorage.removeItem("pid");
+			    //sessionStorage.clear();
+			    fetchPriority(id);
+			}
 
-			function submitQuery(evt) {
-				clearAll();
-				var id = document.getElementById("id").value;
+			function fetchPriority(id) {
+			    var url = "rest/priorities";
 				var queryUrl = url + "/" + id;
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("GET", queryUrl, true);
-				xmlhttp.addEventListener("readystatechange",handleRequest,false);
-				xmlhttp.setRequestHeader("Accept", "application/json");
-				xmlhttp.send();
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", queryUrl, true);
+				httpRequest.addEventListener("readystatechange", handleFetch, false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
 			}
 
-			function handleRequest(evt) {
+			function handleFetch(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
-    					var jsObject = JSON.parse(evt.target.responseText);
-    			        myFunction(jsObject);
+    					var priorityObject = JSON.parse(evt.target.responseText);
+    			        viewPriority(priorityObject);
     				}
     				else if(evt.target.status == 404) {
-    					alert("Notification does not exist");
+    					sessionStorage.setItem("error", "Priority does not exist");
+						window.location.href = "error.html";
     				}
     				else {
-    					alert("Unexpected response status " + evt.target.status);    				}
-    			}
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
 			}
 
-			function myFunction(jsObject) {
-				clearAll();
-				var id = jsObject.id;
-				var name = jsObject.name;
-				//alert(JSON.stringify(jsObject));
-				var row = document.getElementById("datatable").insertRow(1);
-				var cell_id = row.insertCell(0);
-				var cell_name = row.insertCell(1);
-				cell_id.innerHTML = "" + id;
-				cell_name.innerHTML = "" + name;
+			function viewPriority(priorityObject) {
+				document.getElementById("json").innerHTML= JSON.stringify(priorityObject, null, 2);
+		        // fetch variables
+				var id = priorityObject.id;
+				//alert("id: " + id);
+				var name = priorityObject.name;
+				// set values
+    			document.getElementById("priority_id").value = id;
+    			document.getElementById("name").value = name;
+    			// build table elements
+    			for(i=0; i<priorityObject.projects.length; i++) {
+    				var project_id = priorityObject.projects[i].id;
+    				var project_description = priorityObject.projects[i].description;
+	    			var status_id = priorityObject.projects[i].status.id;
+		    		var status_name = priorityObject.projects[i].status.name;
+    			    // create table
+    				var row = document.getElementById("datatable").insertRow(i+1);
+	    			var cell_id = row.insertCell(0);
+		    		var cell_description = row.insertCell(1);
+				    var cell_status = row.insertCell(2);
+				    var cell_view = row.insertCell(3);
+				    // fill table
+       				cell_id.innerHTML = "" + project_id;
+	    			cell_description.innerHTML = "" + project_description;
+				    cell_status.innerHTML = "" + status_name;
+	    			switch(parseInt(status_id)) {
+		    		    case 1:
+			    	        cell_status.className = "red";
+				            break;
+    				    case 2:
+	    			        cell_status.className = "yellow";
+		    		        break;
+			    	    case 3:
+				            cell_status.className = "green";
+				            break;
+    				    default:
+	    			        break;
+		    		}
+		    		var button = document.createElement("button");
+		    		button.innerHTML = "view";
+		    		button.addEventListener("click", viewProject, false);
+		    		cell_view.appendChild(button);
+		    	}
 			}
 
-			function clearAll() {
-				var rows = parseInt(document.getElementById("datatable").rows.length - 1);
-				while(rows > 0) {
-					document.getElementById("datatable").deleteRow(rows--);
+			function viewProject(evt) {
+   			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("datatable");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[3] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+						sessionStorage.setItem("pid", id);
+						window.location.href = "view_project.html";
+						return;
+					}
 				}
 			}
-		</script>
-    </body>
+    </script>
+</head>
+<body>
+<section>
+    <h1>View priority</h1>
+    <p>
+        <input type="text" readonly maxlength="3" size="3" style="font-weight: bold" id="priority_id">
+        <input type="text" readonly maxlength="32" size="32" style="font-weight: bold" id="name">
+    </p>
+    <table id="datatable">
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>&nbsp;</th>
+        </tr>
+    </table>
+    <p><a href="index.html">Home</a></p>
+    <pre id="json">&nbsp;</pre>
+</section>
+</body>
 </html>

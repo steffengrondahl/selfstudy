@@ -14,9 +14,9 @@
             var projectObject;
             var hyperlinkId = 0;
 
-            window.addEventListener("load", initialize, false);
+            window.addEventListener("load", initialise, false);
 
-			function initialize(evt) {
+			function initialise(evt) {
 			    var id = sessionStorage.getItem("pid");
 			    sessionStorage.removeItem("pid");
 			    //alert("Fetching project with id " + id);

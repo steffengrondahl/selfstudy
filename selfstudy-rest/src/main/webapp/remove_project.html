@@ -8,12 +8,11 @@
             #json {
                 display: block;
             }
-
     </style>
     <script>
-            window.addEventListener("load", initialize, false);
+            window.addEventListener("load", initialise, false);
 
-			function initialize(evt) {
+			function initialise(evt) {
 			    document.getElementById("remove").addEventListener("click", remove, false);
 			    document.getElementById("view").addEventListener("click", view, false);
 			    var id = sessionStorage.getItem("pid");
@@ -123,8 +122,6 @@
 				sessionStorage.setItem("pid", id);
 				window.location.href = "view_project.html";
 			}
-
-
     </script>
 </head>
 <body>

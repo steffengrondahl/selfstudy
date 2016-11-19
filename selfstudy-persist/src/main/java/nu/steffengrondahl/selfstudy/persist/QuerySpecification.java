@@ -1,6 +1,10 @@
 package nu.steffengrondahl.selfstudy.persist;
 
 /**
+ * Specification of query used for restricting the query
+ * Don't instantiate this class direct, used factory nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory
+ *
+ *
  * Created by Steffen on 29-10-2016.
  */
 public class QuerySpecification {
@@ -9,7 +13,7 @@ public class QuerySpecification {
     private Integer maxPriority = 0;
     private Integer minStatus = 0;
     private Integer maxStatus = 0;
-    private Integer projectId = 0;
+    private Integer projectId = null;
 
     public QuerySpecification() {
 

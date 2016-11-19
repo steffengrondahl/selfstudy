@@ -1,6 +1,8 @@
 package nu.steffengrondahl.selfstudy.persist;
 
 /**
+ * Factory for query specification
+ *
  * Created by Steffen on 29-10-2016.
  */
 public class QuerySpecificationFactory {

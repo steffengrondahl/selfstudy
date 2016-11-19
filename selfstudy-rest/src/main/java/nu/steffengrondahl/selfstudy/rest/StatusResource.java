@@ -2,7 +2,10 @@ package nu.steffengrondahl.selfstudy.rest;
 
 import nu.steffengrondahl.selfstudy.persist.QuerySpecificationFactory;
 import nu.steffengrondahl.selfstudy.persist.StatusEntityDAO;
+import nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity;
 import nu.steffengrondahl.selfstudy.persist.domain.StatusEntity;
+import nu.steffengrondahl.selfstudy.rest.model.PriorityDTO;
+import nu.steffengrondahl.selfstudy.rest.model.ProjectLightDTO;
 import nu.steffengrondahl.selfstudy.rest.model.StatusDTO;
 
 import javax.ws.rs.GET;
@@ -45,13 +48,28 @@ public class StatusResource {
     public StatusDTO read(@PathParam("id") int id) {
         StatusDTO statusDTO = new StatusDTO();
         StatusEntityDAO dao = new StatusEntityDAO();
-        StatusEntity statusEntity = dao.find(id, false);
+        StatusEntity statusEntity = dao.find(id, true);
         if(statusEntity == null) {
             throw new NotFoundException();
         }
 
         statusDTO.setId(statusEntity.getId());
         statusDTO.setName(statusEntity.getName());
+
+        List<ProjectLightDTO> projects = new ArrayList<>();
+        for(ProjectEntity pe : statusEntity.getProjects()) {
+            ProjectLightDTO projectLightDTO = new ProjectLightDTO();
+            projectLightDTO.setId(pe.getId());
+            projectLightDTO.setDescription(pe.getDescription());
+
+            PriorityDTO priorityDTO = new PriorityDTO();
+            priorityDTO.setId(pe.getPriority().getId());
+            priorityDTO.setName(pe.getPriority().getName());
+            projectLightDTO.setPriority(priorityDTO);
+
+            projects.add(projectLightDTO);
+        }
+        statusDTO.setProjects(projects);
 
         return statusDTO;
     }

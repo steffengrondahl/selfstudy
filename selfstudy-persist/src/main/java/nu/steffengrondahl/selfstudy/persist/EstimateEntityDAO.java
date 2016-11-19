@@ -7,6 +7,8 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
+ * Data accessor object for nu.steffengrondahl.selfstudy.persist.domain.EstimateEntity
+ *
  * Created by Steffen on 29-10-2016.
  */
 public class EstimateEntityDAO implements GenericEntityDAO<EstimateEntity> {
@@ -52,6 +54,9 @@ public class EstimateEntityDAO implements GenericEntityDAO<EstimateEntity> {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
         EstimateEntity estimate = entityManager.find(EstimateEntity.class, key);
+        if (decorate) {
+            estimate.getProjects().size();
+        }
         entityManager.getTransaction().commit();
         entityManager.close();
         return estimate;

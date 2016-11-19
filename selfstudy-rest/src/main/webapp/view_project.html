@@ -8,14 +8,11 @@
             #json {
                 display: block;
             }
-
     </style>
     <script>
-			//var url = "rest/projects";
+            window.addEventListener("load", initialise, false);
 
-            window.addEventListener("load", initialize, false);
-
-			function initialize(evt) {
+			function initialise(evt) {
 			    document.getElementById("edit").addEventListener("click", edit, false);
 			    document.getElementById("remove").addEventListener("click", remove, false);
 			    var id = sessionStorage.getItem("pid");

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>View hyperlinks</title>
+    <link rel="stylesheet" type="text/css" href="style/project.css">
+    <style>
+            #json {
+                display: block;
+            }
+    </style>
+    <script>
+            var hyperlinkArray;
+
+			window.addEventListener("load", initialise, false);
+
+			function initialise(evt) {
+                fetchHyperlinks();
+			    document.getElementById("create").addEventListener("click", create, false);
+				document.getElementById("sortById").addEventListener("change", sort, false);
+				document.getElementById("sortByProjectId").addEventListener("change", sort, false);
+			}
+
+			function fetchHyperlinks() {
+			    var url = "rest/hyperlinks";
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", url, true);
+				httpRequest.addEventListener("readystatechange", handleFetch, false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
+			}
+
+			function handleFetch(evt) {
+				if (evt.target.readyState == 4 ) {
+					if(evt.target.status==200) {
+						hyperlinkArray = JSON.parse(evt.target.responseText);
+	    		        viewHyperlinks();
+					}
+					else {
+						//alert("Unexpected response status " + evt.target.status);
+                        sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+				}
+			}
+
+			function viewHyperlinks() {
+			    document.getElementById("json").innerHTML = JSON.stringify(hyperlinkArray, null, 2);
+			    clearAll();
+			    for(i = 0; i < hyperlinkArray.length; i++) {
+			        // fetch variables
+					var id = hyperlinkArray[i].id;
+					var url = hyperlinkArray[i].url;
+					var project_id = hyperlinkArray[i].project.id;
+					var description = hyperlinkArray[i].project.description;
+	    			// build table elements
+        			var row = document.getElementById("datatable").insertRow(i+1);
+					var cell_id = row.insertCell(0);
+					var cell_url = row.insertCell(1);
+					var cell_project_id = row.insertCell(2);
+					var cell_description = row.insertCell(3);
+					var cell_save = row.insertCell(4);
+					var cell_remove = row.insertCell(5);
+					// set values
+					cell_id.innerHTML = "" + id;
+
+                    var input = document.createElement("input");
+    				input.type = "text";
+    				input.maxLength = 255;
+    				input.size = 32;
+    				input.value = url;
+	    			cell_url.appendChild(input);
+
+					cell_project_id.innerHTML = "" + project_id;
+					cell_description.innerHTML = "" + description;
+
+					var save_button = document.createElement("button");
+					save_button.innerHTML="save";
+					save_button.addEventListener("click", save, false);
+					cell_save.appendChild(save_button);
+
+					var remove_button = document.createElement("button");
+					remove_button.innerHTML="remove";
+					remove_button.addEventListener("click", remove, false);
+					cell_remove.appendChild(remove_button);
+			    }
+			    // TODO: Fetch projects and add to select
+			    fetchProjects();
+			}
+
+			function clearAll() {
+				var rows = parseInt(document.getElementById("datatable").rows.length - 1);
+				while(rows > 0) {
+					document.getElementById("datatable").deleteRow(rows--);
+				}
+			}
+
+			function fetchProjects() {
+			    var queryUrl = "rest/projects";
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", queryUrl, true);
+				httpRequest.addEventListener("readystatechange", handleProjects, false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
+			}
+
+			function handleProjects(evt) {
+			    if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 200) {
+    					var projectArray = JSON.parse(evt.target.responseText);
+        			    for(i = 0; i < projectArray.length; i++) {
+        			        var option = document.createElement("option");
+							option.value = projectArray[i].id;
+							option.innerHTML = projectArray[i].description;
+							document.getElementById("project").appendChild(option);
+        			    }
+    				}
+    				else if(evt.target.status == 404) {
+    					sessionStorage.setItem("error", "Unable to load projects");
+						window.location.href = "error.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
+			}
+
+			function save(evt) {
+			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("datatable");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[4] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+						var url = table.rows[r].cells[1].childNodes[0].value;
+						//alert(url);
+						var projectId = table.rows[r].cells[2].innerHTML;
+						//alert(projectId);
+						// Create hyperlinkObject;
+						var hyperlinkObject = new Object();
+						hyperlinkObject.id = id;
+						hyperlinkObject.url = url;
+        				var projectObject = new Object();
+		        		projectObject.id = projectId;
+				        hyperlinkObject.project = projectObject;
+				        // Send to server and view result
+   				        var url = "rest/hyperlinks/" + id;
+           				//alert("PUT to url: " + url);
+		        		var httpRequest = new XMLHttpRequest();
+        				httpRequest.open("PUT", url, true);
+		        		httpRequest.addEventListener("readystatechange",handleUpdateHyperlink,false);
+				        httpRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+			        	httpRequest.send(JSON.stringify(hyperlinkObject));
+						return;
+					}
+				}
+			}
+
+			function handleUpdateHyperlink(evt) {
+                //alert(evt.target.readyState);
+                if (evt.target.readyState == 4 ) {
+                    //alert("Updating project, " + evt.target.status);
+                    if(evt.target.status==201) {
+                        //var location = evt.target.getResponseHeader("Location");
+                        //alert("location " + location);
+						window.location.href = "view_hyperlinks.html";
+                    }
+					else if(evt.target.status==204) {
+						window.location.href = "view_hyperlinks.html";
+					}
+				    else {
+                        //alert("Unexpected response status " + evt.target.status);
+                        sessionStorage.setItem("error", "Unexpected response status " + evt.target.status );
+						window.location.href = "error.html";
+				    }
+				}
+			}
+
+			function remove(evt) {
+			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("datatable");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[5] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+				        // Send to server and view result
+   				        var url = "rest/hyperlinks/" + id;
+           				//alert("DELETE to url: " + url);
+		        		var httpRequest = new XMLHttpRequest();
+        				httpRequest.open("DELETE", url, true);
+		        		httpRequest.addEventListener("readystatechange",handleDeleteHyperlink,false);
+				        httpRequest.send();
+			        	return;
+					}
+				}
+			}
+
+			function handleDeleteHyperlink(evt) {
+                //alert(evt.target.readyState);
+			    if (evt.target.readyState == 4 ) {
+                    //alert("Deleting hyperlink, " + evt.target.status);
+                    if(evt.target.status==204) {
+						window.location.href = "view_hyperlinks.html";
+                    }
+				    else {
+                        //alert("Unexpected response status " + evt.target.status);
+                        sessionStorage.setItem("error", "Unexpected response status " + evt.target.status );
+						window.location.href = "error.html";
+				    }
+				}
+			}
+
+			function create(evt) {
+			    //alert("Create ...");
+			    // TODO: fetch project id
+			    var url = document.getElementById("url").value;
+			    //alert("url " + url);
+			    var projectId = document.getElementById("project").value;
+			    //alert("project id " + projectId);
+				// create hyperlinkObject;
+				var hyperlinkObject = new Object();
+				hyperlinkObject.url = url;
+				var projectObject = new Object();
+				projectObject.id = projectId;
+				hyperlinkObject.project = projectObject;
+				// Send to server and view result
+   				var url = "rest/hyperlinks";
+   				//alert("POST to url: " + url);
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("POST", url, true);
+				httpRequest.addEventListener("readystatechange",handleCreateHyperlink,false);
+				httpRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+				httpRequest.send(JSON.stringify(hyperlinkObject));
+			}
+
+			function handleCreateHyperlink(evt) {
+                //alert(evt.target.readyState);
+			    if (evt.target.readyState == 4 ) {
+                    //alert("Creating hyperlink, " + evt.target.status);
+                    if(evt.target.status==201) {
+                        //var location = evt.target.getResponseHeader("Location");
+                        //alert("location " + location);
+						//var index = location.lastIndexOf("/");
+						//var id = location.substring(parseInt(index + 1));
+						//sessionStorage.setItem("pid", id);
+						window.location.href = "view_hyperlinks.html";
+                    }
+				    else {
+                        //alert("Unexpected response status " + evt.target.status);
+                        sessionStorage.setItem("error", "Unexpected response status " + evt.target.status );
+						window.location.href = "error.html";
+				    }
+				}
+			}
+
+			function sort(evt) {
+				if(document.getElementById("sortById").checked) {
+					hyperlinkArray.sort(function(a, b) {return a.id - b.id});
+				}
+				else if(document.getElementById("sortByProjectId").checked) {
+					hyperlinkArray.sort(function(a, b) {return a.project.id - b.project.id});
+				}
+				viewHyperlinks();
+			}
+
+    </script>
+</head>
+<body>
+<section>
+    <h1>Hyperlinks</h1>
+    <table id="datatable">
+        <tr>
+            <th>Id</th>
+            <th>URL</th>
+            <th>Project id</th>
+            <th>Description</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+    </table>
+    <p><b>Sort by:</b></p>
+    <ul style="list-style: none; padding-left: 0; margin: 0;">
+        <li><input id="sortById" type="radio" name="sorting" checked><label for="sortById">Id</label></li>
+        <li><input id="sortByProjectId" type="radio" name="sorting"><label for="sortByProjectId">Project id</label></li>
+    </ul>
+    <p>
+        <input id="url" type="text" maxlength="255" size="32" style="margin-right: 4px">
+        <select id="project"></select>
+        <button id="create">Create</button>
+    </p>
+    <p><a href="index.html">Home</a></p>
+    <pre id="json">&nbsp;</pre>
+</section>
+</body>
+</html>

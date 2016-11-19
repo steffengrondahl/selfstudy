@@ -9,6 +9,8 @@ public class HyperlinkDTO {
 
     private String url;
 
+    private ProjectLightDTO project;
+
     public HyperlinkDTO() {
 
     }
@@ -27,5 +29,13 @@ public class HyperlinkDTO {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public ProjectLightDTO getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectLightDTO project) {
+        this.project = project;
     }
 }

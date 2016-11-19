@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Data accessor object for nu.steffengrondahl.selfstudy.persist.domain.HyperlinkEntity
+ *
  * Created by Steffen on 13-11-2016.
  */
 public class HyperlinkEntityDAO implements GenericEntityDAO<HyperlinkEntity> {
@@ -68,16 +70,18 @@ public class HyperlinkEntityDAO implements GenericEntityDAO<HyperlinkEntity> {
 
     @Override
     public List<HyperlinkEntity> query(QuerySpecification specification) {
-        /*
-        EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
-        // fetch data
-        TypedQuery<HyperlinkEntity> query = entityManager.createQuery("SELECT h from HyperlinkEntity AS h ORDER BY h.id",
-                HyperlinkEntity.class);
-        List<HyperlinkEntity> resultList = query.getResultList();
-        // close - now the items are detached
-        entityManager.close();
-        return resultList;
-        */
+        if(specification.getProjectId() == null) {
+            EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
+            entityManager.getTransaction().begin();
+            // fetch data
+            TypedQuery<HyperlinkEntity> query = entityManager.createQuery("SELECT h from HyperlinkEntity AS h ORDER BY h.id",
+                    HyperlinkEntity.class);
+            List<HyperlinkEntity> resultList = query.getResultList();
+            // close - now the items are detached
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return resultList;
+        }
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
 
@@ -90,7 +94,7 @@ public class HyperlinkEntityDAO implements GenericEntityDAO<HyperlinkEntity> {
         criteriaQuery.select(hyperlink);
 
         // Create predicates
-        final List<Predicate> predicates = new ArrayList<Predicate>();
+        final List<Predicate> predicates = new ArrayList<>();
         ParameterExpression<Integer> projectId = criteriaBuilder.parameter(Integer.class);
 
         // Join with priority table

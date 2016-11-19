@@ -1,36 +1,162 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>View estimate</title>
-        <style>
-			table {
-				border-collapse: collapse;
+<head>
+    <meta charset="UTF-8">
+    <title>View estimate</title>
+    <link rel="stylesheet" type="text/css" href="style/project.css">
+    <style>
+            #json {
+                display: block;
+            }
+
+    </style>
+    <script>
+            window.addEventListener("load", initialise, false);
+
+			function initialise(evt) {
+			    var id = sessionStorage.getItem("pid");
+			    sessionStorage.removeItem("pid");
+			    //sessionStorage.clear();
+			    fetchEstimate(id);
 			}
-			th, td {
-				border: 1px solid black;
-				padding: 4px;
+
+			function fetchEstimate(id) {
+			    var url = "rest/estimates";
+				var queryUrl = url + "/" + id;
+				var httpRequest = new XMLHttpRequest();
+				httpRequest.open("GET", queryUrl, true);
+				httpRequest.addEventListener("readystatechange", handleFetch, false);
+				httpRequest.setRequestHeader("Accept", "application/json");
+				httpRequest.send();
 			}
-		</style>
-    </head>
-    <body>
-        <h1>Self study: View estimate</h1>
-        <p>Estimate fetched with AJAX using GET</p>
-        <p>Input:</p>
-        <p><input id="id" type="text" size="1" maxlength="1"></p>
-        <p><button id="fetch">Fetch</button></p>
-        <p>Result:</p>
-        <table id="datatable">
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-            </tr>
-        </table>
-        <p><a href="index.html">Home</a></p>
-        <script>
+
+			function handleFetch(evt) {
+    			if (evt.target.readyState == 4 ) {
+    				if(evt.target.status == 200) {
+    					var estimateObject = JSON.parse(evt.target.responseText);
+    			        viewEstimate(estimateObject);
+    				}
+    				else if(evt.target.status == 404) {
+    					sessionStorage.setItem("error", "Estimate does not exist");
+						window.location.href = "error.html";
+    				}
+    				else {
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+			    }
+			}
+
+			function viewEstimate(estimateObject) {
+				document.getElementById("json").innerHTML= JSON.stringify(estimateObject, null, 2);
+		        // fetch variables
+				var id = estimateObject.id;
+				//alert("id: " + id);
+				var name = estimateObject.name;
+				// set values
+    			document.getElementById("estimate_id").value = id;
+    			document.getElementById("name").value = name;
+    			// build table elements
+    			for(i=0; i<estimateObject.projects.length; i++) {
+    				var project_id = estimateObject.projects[i].id;
+    				var project_description = estimateObject.projects[i].description;
+	    			var priority_id = estimateObject.projects[i].priority.id;
+		    		var priority_name = estimateObject.projects[i].priority.name;
+	    			var status_id = estimateObject.projects[i].status.id;
+		    		var status_name = estimateObject.projects[i].status.name;
+    			    // create table
+    				var row = document.getElementById("datatable").insertRow(i+1);
+	    			var cell_id = row.insertCell(0);
+		    		var cell_description = row.insertCell(1);
+				    var cell_priority = row.insertCell(2);
+				    var cell_status = row.insertCell(3);
+				    var cell_view = row.insertCell(4);
+				    // fill table
+       				cell_id.innerHTML = "" + project_id;
+	    			cell_description.innerHTML = "" + project_description;
+				    cell_priority.innerHTML = "" + priority_name;
+	    			switch(parseInt(priority_id)) {
+		    		    case 1:
+				           cell_priority.className = "blue";
+				        break;
+	    			    case 2:
+    	    			    cell_priority.className = "green";
+    		    		    break;
+    			    	case 3:
+    				        cell_priority.className = "yellow";
+    				        break;
+        				case 4:
+        				    cell_priority.className = "orange";
+    	    			    break;
+    		    		case 5:
+    			    	    cell_priority.className = "red";
+    				        break;
+         				default:
+    	    			    break;
+		    		}
+		    		cell_status.innerHTML = "" + status_name;
+    				switch(parseInt(status_id)) {
+	    			    case 1:
+		    		        cell_status.className = "red";
+			    	        break;
+				        case 2:
+				            cell_status.className = "yellow";
+				            break;
+	    			    case 3:
+		    		        cell_status.className = "green";
+			    	        break;
+				        default:
+				            break;
+			    	}
+
+		    		var button = document.createElement("button");
+		    		button.innerHTML = "view";
+		    		button.addEventListener("click", viewProject, false);
+		    		cell_view.appendChild(button);
+		    	}
+			}
+
+			function viewProject(evt) {
+   			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("datatable");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[4] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+						sessionStorage.setItem("pid", id);
+						window.location.href = "view_project.html";
+						return;
+					}
+				}
+			}
+
+    </script>
+</head>
+<body>
+<section>
+    <h1>View estimate</h1>
+    <p>
+        <input type="text" readonly maxlength="3" size="3" style="font-weight: bold" id="estimate_id">
+        <input type="text" readonly maxlength="32" size="32" style="font-weight: bold" id="name">
+    </p>
+    <table id="datatable">
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>&nbsp;</th>
+        </tr>
+    </table>
+    <p><a href="index.html">Home</a></p>
+    <pre id="json">&nbsp;</pre>
+    <script>
 			var url = "rest/estimates";
 
-			document.getElementById("fetch").addEventListener("click",submitQuery,false);
+			//document.getElementById("fetch").addEventListener("click",submitQuery,false);
 
 			function submitQuery(evt) {
 				clearAll();
@@ -75,6 +201,8 @@
 					document.getElementById("datatable").deleteRow(rows--);
 				}
 			}
-		</script>
-    </body>
+
+    </script>
+</section>
+</body>
 </html>

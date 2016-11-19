@@ -7,6 +7,8 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
+ * Data accessor object for nu.steffengrondahl.selfstudy.persist.domain.StatusEntity
+ *
  * Created by Steffen on 29-10-2016.
  */
 public class StatusEntityDAO implements GenericEntityDAO<StatusEntity> {
@@ -52,6 +54,9 @@ public class StatusEntityDAO implements GenericEntityDAO<StatusEntity> {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
         StatusEntity status = entityManager.find(StatusEntity.class, key);
+        if (decorate) {
+            status.getProjects().size();
+        }
         entityManager.getTransaction().commit();
         entityManager.close();
         return status;

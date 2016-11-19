@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Data accessor object for nu.steffengrondahl.selfstudy.persist.domain.ProjectEntity
+ *
  * Created by Steffen on 29-10-2016.
  */
 public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
@@ -109,7 +111,7 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
         criteriaQuery.select(project);
 
         // Create predicates
-        final List<Predicate> predicates = new ArrayList<Predicate>();
+        final List<Predicate> predicates = new ArrayList<>();
         ParameterExpression<Integer> pMinPriority = criteriaBuilder.parameter(Integer.class);
         ParameterExpression<Integer> pMaxPriority = criteriaBuilder.parameter(Integer.class);
         ParameterExpression<Integer> pMinStatus = criteriaBuilder.parameter(Integer.class);

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class PriorityEntity implements Comparable<PriorityEntity> {
     // ProjectEntity).
     // We are not cascading because this class should not be changed run-time.s
     @OneToMany(mappedBy = "priority", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OrderBy("status ASC")
     private List<ProjectEntity> projects = new ArrayList<ProjectEntity>();
 
     public PriorityEntity() {

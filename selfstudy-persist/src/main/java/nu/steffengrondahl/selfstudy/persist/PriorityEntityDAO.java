@@ -7,6 +7,8 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
+ * Data accessor object for nu.steffengrondahl.selfstudy.persist.domain.PriorityEntity
+ *
  * Created by Steffen on 29-10-2016.
  */
 public class PriorityEntityDAO implements GenericEntityDAO<PriorityEntity> {
@@ -52,6 +54,10 @@ public class PriorityEntityDAO implements GenericEntityDAO<PriorityEntity> {
         EntityManager entityManager = PersistUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
         PriorityEntity priority = entityManager.find(PriorityEntity.class, key);
+        if(decorate) {
+            // decorate with projects
+            priority.getProjects().size();
+        }
         entityManager.getTransaction().commit();
         entityManager.close();
         return priority;

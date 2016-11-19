@@ -1,32 +1,96 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>View statuses</title>
-        <style>
-	    	table {
-			    border-collapse: collapse;
-		    }
-	    	th, td {
-			    border: 1px solid black;
-			    padding: 4px;
-		    }
-	    </style>
-    </head>
-    <body>
-        <h1>Self study: View statuses</h1>
-        <p>List of statuses fetched with AJAX using GET</p>
-        <table id="datatable">
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-            </tr>
-        </table>
-        <p><a href="index.html">Home</a></p>
-        <script>
+<head>
+    <meta charset="UTF-8">
+    <title>View statuses</title>
+    <link rel="stylesheet" type="text/css" href="style/project.css">
+    <style>
+            #json {
+                display: block;
+            }
+
+    </style>
+    <script>
+   			window.addEventListener("load", initialise, false);
+
+			function initialise(evt) {
+                fetchStatuses();
+            }
+
+            function fetchStatuses() {
+    			var url = "rest/statuses";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET", url, true);
+				xmlhttp.addEventListener("readystatechange",handleFetch,false);
+				xmlhttp.setRequestHeader("Accept", "application/json");
+				xmlhttp.send();
+            }
+
+            function handleFetch(evt) {
+				if (evt.target.readyState == 4 ) {
+					if(evt.target.status==200) {
+						var statusArray = JSON.parse(evt.target.responseText);
+	    		        viewStatuses(statusArray);
+					}
+					else {
+						//alert("Unexpected response status " + evt.target.status);
+    					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
+						window.location.href = "error.html";
+					}
+				}
+            }
+
+            function viewStatuses(statusArray) {
+			    for(i = 0; i < statusArray.length; i++) {
+					var id = statusArray[i].id;
+					var name = statusArray[i].name;
+					var row = document.getElementById("datatable").insertRow(i+1);
+					var cell_id = row.insertCell(0);
+					var cell_name = row.insertCell(1);
+					var cell_view = row.insertCell(2);
+					cell_id.innerHTML = ""+id;
+					cell_name.innerHTML = ""+name;
+					var view_button = document.createElement("button");
+					view_button.innerHTML="view";
+					view_button.addEventListener("click", view, false);
+					cell_view.appendChild(view_button);
+			    }
+            }
+
+			function view(evt) {
+			    var selectedCell = evt.target.parentNode;
+				// find selected row - loop through table
+				var table = document.getElementById("datatable");
+				var rows = table.rows.length;
+				for(r = 1; r < rows; r++) {
+					if(table.rows[r].cells[2] == selectedCell) {
+						var id_cell = table.rows[r].cells[0];
+						var id = parseInt(id_cell.innerHTML);
+						//alert(id);
+						sessionStorage.setItem("pid", id);
+						window.location.href = "view_status.html";
+						return;
+					}
+				}
+			}
+
+    </script>
+</head>
+<body>
+<section>
+    <h1>Statuses</h1>
+    <table id="datatable">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>&nbsp;</th>
+        </tr>
+    </table>
+    <p><a href="index.html">Home</a></p>
+    <script>
 			var url = "rest/statuses";
 
-			window.addEventListener("load", init, false);
+			//window.addEventListener("load", init, false);
 
 			function handleRequest(evt) {
 				if (evt.target.readyState == 4 ) {
@@ -59,6 +123,8 @@
 				xmlhttp.setRequestHeader("Accept", "application/json");
 				xmlhttp.send();
 			}
-		</script>
-    </body>
+
+    </script>
+</section>
+</body>
 </html>
