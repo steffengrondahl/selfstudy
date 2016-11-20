@@ -59,11 +59,6 @@ public class ProjectResource {
             projectLightDTO.setId(pe.getId());
             projectLightDTO.setDescription(pe.getDescription());
 
-            //EstimateDTO estimateDTO = new EstimateDTO();
-            //estimateDTO.setId(pe.getEstimate().getId());
-            //estimateDTO.setName(pe.getEstimate().getName());
-            //projectLightDTO.setEstimate(estimateDTO);
-
             PriorityDTO priorityDTO = new PriorityDTO();
             priorityDTO.setId(pe.getPriority().getId());
             priorityDTO.setName(pe.getPriority().getName());
@@ -136,11 +131,6 @@ public class ProjectResource {
             projectLightDTO.setId(pe.getId());
             projectLightDTO.setDescription(pe.getDescription());
 
-            //estimateDTO = new EstimateDTO();
-            //estimateDTO.setId(pe.getEstimate().getId());
-            //estimateDTO.setName(pe.getEstimate().getName());
-            //projectLightDTO.setEstimate(estimateDTO);
-
             priorityDTO = new PriorityDTO();
             priorityDTO.setId(pe.getPriority().getId());
             priorityDTO.setName(pe.getPriority().getName());
@@ -158,11 +148,6 @@ public class ProjectResource {
             ProjectLightDTO projectLightDTO = new ProjectLightDTO();
             projectLightDTO.setId(pe.getId());
             projectLightDTO.setDescription(pe.getDescription());
-
-            //estimateDTO = new EstimateDTO();
-            //estimateDTO.setId(pe.getEstimate().getId());
-            //estimateDTO.setName(pe.getEstimate().getName());
-            //projectLightDTO.setEstimate(estimateDTO);
 
             priorityDTO = new PriorityDTO();
             priorityDTO.setId(pe.getPriority().getId());
@@ -287,10 +272,6 @@ public class ProjectResource {
             ProjectEntity pe = new ProjectEntity();
             pe.setId(p.getId());
             pe.setDescription(p.getDescription());
-
-            //estimateEntity = new EstimateEntity();
-            //estimateEntity.setId(p.getEstimate().getId());
-            //pe.setEstimate(estimateEntity);
 
             priorityEntity = new PriorityEntity();
             priorityEntity.setId(p.getPriority().getId());
