@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 
 /**
- * Bugfix (potential memory leak in Apache Tomcat), taken from
+ * Bug fix (potential memory leak in Apache Tomcat), taken from
  * http://stackoverflow.com/questions/11872316/tomcat-guice-jdbc-memory-leak
  *
  * Created by Steffen on 17-11-2016.

@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <title>View statuses</title>
     <link rel="stylesheet" type="text/css" href="style/project.css">
-    <style>
-            #json {
-                display: block;
-            }
-
-    </style>
     <script>
    			window.addEventListener("load", initialise, false);
 
@@ -66,7 +60,6 @@
 					if(table.rows[r].cells[2] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						sessionStorage.setItem("pid", id);
 						window.location.href = "view_status.html";
 						return;
@@ -87,44 +80,6 @@
         </tr>
     </table>
     <p><a href="index.html">Home</a></p>
-    <script>
-			var url = "rest/statuses";
-
-			//window.addEventListener("load", init, false);
-
-			function handleRequest(evt) {
-				if (evt.target.readyState == 4 ) {
-					if(evt.target.status==200) {
-						var jsArray = JSON.parse(evt.target.responseText);
-	    		        myFunction(jsArray);
-					}
-					else {
-						alert("Unexpected response status " + evt.target.status);
-					}
-				}
-			}
-
-			function myFunction(jsArray) {
-			    for(i = 0; i < jsArray.length; i++) {
-					var id = jsArray[i].id;
-					var name = jsArray[i].name;
-					var row = document.getElementById("datatable").insertRow(i+1);
-					var cell_id = row.insertCell(0);
-					var cell_name = row.insertCell(1);
-					cell_id.innerHTML = ""+id;
-					cell_name.innerHTML = ""+name;
-			    }
-			}
-
-			function init(evt) {
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("GET", url, true);
-				xmlhttp.addEventListener("readystatechange",handleRequest,false);
-				xmlhttp.setRequestHeader("Accept", "application/json");
-				xmlhttp.send();
-			}
-
-    </script>
 </section>
 </body>
 </html>

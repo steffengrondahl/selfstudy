@@ -238,9 +238,6 @@ public class JsonExporter {
             }
             jsonGenerator.writeEnd(); // end of array with linkable projects
 
-
-
-
             jsonGenerator.writeEnd(); // end of object
 
             jsonGenerator.close();
@@ -377,11 +374,6 @@ public class JsonExporter {
                 jsonGenerator.write("id", projectEntity.getId());
                 jsonGenerator.write("description", projectEntity.getDescription());
 
-                //jsonGenerator.writeStartObject("priority");
-                //jsonGenerator.write("id", projectEntity.getPriority().getId());
-                //jsonGenerator.write("name", projectEntity.getPriority().getName());
-                //jsonGenerator.writeEnd();
-
                 jsonGenerator.writeStartObject("status");
                 jsonGenerator.write("id", projectEntity.getStatus().getId());
                 jsonGenerator.write("name", projectEntity.getStatus().getName());
@@ -456,11 +448,6 @@ public class JsonExporter {
                 jsonGenerator.write("id", projectEntity.getPriority().getId());
                 jsonGenerator.write("name", projectEntity.getPriority().getName());
                 jsonGenerator.writeEnd();
-
-                //jsonGenerator.writeStartObject("status");
-                //jsonGenerator.write("id", projectEntity.getStatus().getId());
-                //jsonGenerator.write("name", projectEntity.getStatus().getName());
-                //jsonGenerator.writeEnd();
 
                 jsonGenerator.writeEnd();
             }

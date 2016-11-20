@@ -39,7 +39,6 @@
 	    		        viewProjects();
 					}
 					else {
-						//alert("Unexpected response status " + evt.target.status);
                         sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
 						window.location.href = "error.html";
 					}
@@ -130,7 +129,6 @@
 					if(table.rows[r].cells[4] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						sessionStorage.setItem("pid", id);
 						window.location.href = "view_project.html";
 						return;
@@ -147,7 +145,6 @@
 					if(table.rows[r].cells[5] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						sessionStorage.setItem("pid", id);
 						window.location.href = "edit_project.html";
 						return;
@@ -164,7 +161,6 @@
 					if(table.rows[r].cells[6] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						sessionStorage.setItem("pid", id);
 						window.location.href = "remove_project.html";
 						return;
@@ -173,7 +169,6 @@
 			}
 
 			function create(evt) {
-			    //alert("Create ...");
 				window.location.href = "create_project.html";
 			}
 

@@ -19,9 +19,7 @@
 			function initialise(evt) {
 			    var id = sessionStorage.getItem("pid");
 			    sessionStorage.removeItem("pid");
-			    //alert("Fetching project with id " + id);
 			    fetchProject(id);
-			    //alert("Fetching estimates, priorities and statuses");
 			    document.getElementById("save").addEventListener("click", save, false);
 			    document.getElementById("add").addEventListener("click", addDependency, false);
 			    document.getElementById("addHyperlink").addEventListener("click", addHyperlink, false);
@@ -31,7 +29,6 @@
 			function fetchProject(id) {
 			    var url = "rest/projects";
 				var queryUrl = url + "/" + id;
-				//alert("queryUrl " + queryUrl);
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("GET", queryUrl, true);
 				httpRequest.addEventListener("readystatechange", handleFetch, false);
@@ -42,7 +39,6 @@
 			function handleFetch(evt) {
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
-    				    //alert("Got 200 OK");
     					projectObject = JSON.parse(evt.target.responseText);
     			        viewProject();
     				}
@@ -62,7 +58,6 @@
 				document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
 		        // fetch variables
 				var id = projectObject.id;
-				//alert("id: " + id);
 				var description = projectObject.description;
 				var goals = projectObject.goals;
 				if(goals == null) {
@@ -74,21 +69,12 @@
 				}
 				var start = projectObject.start;
 				var deadline = projectObject.deadline;
-				//alert("deadline: " + deadline);
-				//var estimate_id = projectObject.estimate.id;
-				//var estimate_name = projectObject.estimate.name;
-				//var priority_id = projectObject.priority.id;
-				//var priority_name = projectObject.priority.name;
-				//var status_id = projectObject.status.id;
-				//var status_name = projectObject.status.name;
 				// set values
     			document.getElementById("project_id").value = id;
     			document.getElementById("description").value = description;
     			document.getElementById("goals").value = goals;
     			document.getElementById("actions").value = actions;
     			document.getElementById("start").value = start;
-    			//alert("Deadline: " + deadline);
-    			//document.getElementById("deadline").value = ""; //deadline;
     			document.getElementById("deadline").value = deadline;
 
                 buildPresupposed();
@@ -172,7 +158,6 @@
 			    clearHyperlinks();
     			// build table elements
     			for(i=0; i<projectObject.hyperlinks.length; i++) {
-    			    //alert("Create hyperlink " + i);
     			    // create table
     				var row = document.getElementById("hyperlinks").insertRow(i+1);
 	    			var cell_id = row.insertCell(0);
@@ -180,13 +165,6 @@
 				    var cell_remove = row.insertCell(2);
 				    // fill table
     				cell_id.innerHTML = "" + projectObject.hyperlinks[i].id;
-    				//cell_id.style.display = "none";
-    				//var input = document.createElement("input");
-    				//input.type = "text";
-    				//input.maxLength = 255;
-    				//input.size = 32;
-    				//input.value = projectObject.hyperlinks[i].url;
-	    			//cell_url.appendChild(input);
 	    			cell_url.innerHTML = projectObject.hyperlinks[i].url;
 		    		var button = document.createElement("button");
 		    		button.innerHTML = "Remove";
@@ -261,7 +239,6 @@
     			if (evt.target.readyState == 4 ) {
     				if(evt.target.status == 200) {
     				    var selectedIndex = 0;
-    				    //alert("projectObject.estimate.id " + projectObject.estimate.id);
     			        var estimateSelect = document.getElementById("estimate");
     					var estimateArray = JSON.parse(evt.target.responseText);
         			    for(i = 0; i < estimateArray.length; i++) {
@@ -273,7 +250,6 @@
 							option.innerHTML = estimateArray[i].name;
 							estimateSelect.appendChild(option);
         			    }
-        			    //alert("Setting selected index" + selectedIndex);
         			    estimateSelect.selectedIndex = selectedIndex;
     				}
     				else if(evt.target.status == 404) {
@@ -345,7 +321,6 @@
 
 			function addDependency(evt) {
 				var id = document.getElementById("linkable").value;
-				//alert("Index " + index);
 				// find element by name
 				var moveElement = null;
 				for(i=0; i<projectObject.linkable.length; i++) {
@@ -358,8 +333,6 @@
 				if(moveElement == null) {
 					return;
 				}
-				//alert(i);
-				//alert(copyElement.name);
 				projectObject.presupposed.push(moveElement);
 				projectObject.presupposed.sort(function(a, b) {return a.status.id - b.status.id});
 				buildLinkable();
@@ -368,23 +341,16 @@
 
 
 			function removeDependency(evt) {
-                //alert("Removing dependency ...");
 				var table = document.getElementById("presupposed");
 				var cell = evt.target.parentNode;
-				//alert(cell);
 				var id = "";
 				for(i=0; i<table.rows.length; i++) {
 					var row = table.rows[i];
-					//alert("row " + row);
 					if(row.cells[4] == cell) {
-						//alert("Found it !");
 						id = row.cells[0].innerHTML;
-						//id = row.cells[0].childNodes[0].value;
-						//alert("(from hidden) " + another_id);
 						break;
 					}
 				}
-				//alert(id);
 				if(id == "") {
 					return;
 				}
@@ -399,8 +365,6 @@
 				if(moveElement == null) {
 					return;
 				}
-				//alert(i);
-				//alert(copyElement.name);
 				projectObject.linkable.push(moveElement);
 				projectObject.linkable.sort(function(a, b) {return a.id - b.id});
 				buildLinkable();
@@ -420,16 +384,11 @@
             function removeHyperlink(evt) {
 				var table = document.getElementById("hyperlinks");
 				var cell = evt.target.parentNode;
-				//alert(cell);
 				var id = "";
 				for(i=0; i<table.rows.length; i++) {
 					var row = table.rows[i];
-					//alert("row " + row);
 					if(row.cells[2] == cell) {
-						//alert("Found it !");
 						id = row.cells[0].innerHTML;
-						//id = row.cells[0].childNodes[0].value;
-						//alert("(from hidden) " + another_id);
 						break;
 					}
 				}
@@ -445,18 +404,13 @@
 
 
 			function save(evt) {
-			    //alert("Saving ...");
-			    // TODO: Decorate projectObject with fields, send to rest service and on success show project list
                 // fetch data
                 var description = document.getElementById("description").value;
-                //alert("description = " + description);
 				var goals = document.getElementById("goals").value;
-				//alert("goals = " + goals);
 				var actions = document.getElementById("actions").value;
 				var start = document.getElementById("start").value;
 				var deadline = document.getElementById("deadline").value;
 				var estimate_id = document.getElementById("estimate").value;
-				//alert("estimate_id = " + estimate_id);
 				var priority_id = document.getElementById("priority").value;
 				var status_id = document.getElementById("status").value;
 				// update project object
@@ -465,31 +419,14 @@
                 projectObject.actions = actions;
                 projectObject.start = start;
                 projectObject.deadline = deadline;
-                //var estimateObject = new Object();
-                //estimateObject.id = estimate_id;
-                //estimateObject.name = "";
-                //projectObject.estimate = estimateObject;
                 projectObject.estimate.id = estimate_id;
-                //var priorityObject = new Object();
-                //priorityObject.id = priority_id
-                //priorityObject.name = "";
-                //projectObject.priority = priorityObject;
                 projectObject.priority.id = priority_id;
-                //var statusObject = new Object();
-                //statusObject.id = status_id;
-                //statusObject.name = "";
-                //projectObject.status = statusObject;
                 projectObject.status.id = status_id;
-                //projectObject.presupposed = new Array();
-                //projectObject.subsequent = new Array();
-                //projectObject.linkable = new Array();
-                //projectObject.type = "projectDTO"; // Is this needed?
 
                 // write JSON data for debugging
                 document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
                 // Send to server and view result
    				var url = "rest/projects/" + projectObject.id;
-   				//alert("PUT to url: " + url);
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("PUT", url, true);
 				httpRequest.addEventListener("readystatechange",handleUpdatedProject,false);
@@ -498,9 +435,7 @@
 			}
 
             function handleUpdatedProject(evt) {
-                //alert(evt.target.readyState);
                 if (evt.target.readyState == 4 ) {
-                    //alert("Updating project, " + evt.target.status);
                     if(evt.target.status==201) {
                         var location = evt.target.getResponseHeader("Location");
 						var index = location.lastIndexOf("/");
@@ -513,9 +448,7 @@
 						window.location.href = "view_project.html";
 					}
 				    else {
-                        //alert("Unexpected response status " + evt.target.status);
                         sessionStorage.setItem("error", "Unexpected response status " + evt.target.status );
-                        //sessionStorage.setItem("error", "Unexpected response status " + evt.target.status + "(" + JSON.stringify(projectObject, null, 2) + ")");
 						window.location.href = "error.html";
 				    }
 				}

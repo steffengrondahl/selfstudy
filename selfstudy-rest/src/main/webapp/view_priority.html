@@ -15,7 +15,6 @@
 			function initialise(evt) {
 			    var id = sessionStorage.getItem("pid");
 			    sessionStorage.removeItem("pid");
-			    //sessionStorage.clear();
 			    fetchPriority(id);
 			}
 
@@ -50,7 +49,6 @@
 				document.getElementById("json").innerHTML= JSON.stringify(priorityObject, null, 2);
 		        // fetch variables
 				var id = priorityObject.id;
-				//alert("id: " + id);
 				var name = priorityObject.name;
 				// set values
     			document.getElementById("priority_id").value = id;
@@ -100,7 +98,6 @@
 					if(table.rows[r].cells[3] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						sessionStorage.setItem("pid", id);
 						window.location.href = "view_project.html";
 						return;

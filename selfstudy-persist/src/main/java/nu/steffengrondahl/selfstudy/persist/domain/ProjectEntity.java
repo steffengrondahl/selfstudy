@@ -50,18 +50,21 @@ public class ProjectEntity {
 
     // name="estimate_fk" is the name for the column in project table
     // holding the foreign key to (column id) in table estimate
+    // No reason to cascade as EstimateEntity should not change
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "estimate_fk", nullable = false)
     private EstimateEntity estimate;
 
     // name="priority_fk" is the name for the column in project table
     // holding the foreign key to (column id) in table priority
+    // No reason to cascade as PriorityEntity should not change
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "priority_fk", nullable = false)
     private PriorityEntity priority;
 
     // name="status_fk" is the name for the column in project table
     // holding the foreign key to (column id) in table status
+    // No reason to cascade as StatusEntity should not change
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "status_fk", nullable = false)
     private StatusEntity status;
@@ -70,9 +73,11 @@ public class ProjectEntity {
     // one to many relation. It's value should match the name for field for this
     // entity (i.e. for HyperlinkEntity) in the owner Entity (i.e. in
     // ProjectEntity).
+    // Hyperlink are cascaded for all actions and removed when deleted from project
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HyperlinkEntity> hyperlinks = new ArrayList<>();
 
+    // Unidirectional mapping and not cascaded as ProjectEntity might not be decorated (has lazy fetching)
     @JoinTable(name = "dependency", joinColumns = {
             @JoinColumn(name = "subsequent", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "presupposed", referencedColumnName = "id", nullable = false)})
@@ -80,9 +85,7 @@ public class ProjectEntity {
     @OrderBy("status ASC")
     private List<ProjectEntity> presupposed = new ArrayList<ProjectEntity>();
 
-    //@ManyToMany(mappedBy = "presupposed", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    //private List<ProjectEntity> subsequent = new ArrayList<ProjectEntity>();
-
+    // Transient list of ProjectEntities that might be added to presupposed list.
     @Transient
     private List<ProjectEntity> linkable = new ArrayList<ProjectEntity>();
 
@@ -181,14 +184,6 @@ public class ProjectEntity {
     public void setPresupposed(List<ProjectEntity> presupposed) {
         this.presupposed = presupposed;
     }
-
-    //public List<ProjectEntity> getSubsequent() {
-    //    return subsequent;
-    //}
-
-    //public void setSubsequent(List<ProjectEntity> subsequent) {
-    //    this.subsequent = subsequent;
-    //}
 
     public List<ProjectEntity> getLinkable() {
         return linkable;

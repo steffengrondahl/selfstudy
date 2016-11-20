@@ -82,9 +82,6 @@ public class ProjectEntityDAO implements GenericEntityDAO<ProjectEntity> {
             for (ProjectEntity presupposed : project.getPresupposed()) {
                 allProjects.remove(presupposed);
             }
-            //for (ProjectEntity subsequent : project.getSubsequent()) {
-            //    allProjects.remove(subsequent);
-            //}
 
             project.setLinkable(allProjects);
         }

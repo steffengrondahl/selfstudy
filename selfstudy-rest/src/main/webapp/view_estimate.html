@@ -16,7 +16,6 @@
 			function initialise(evt) {
 			    var id = sessionStorage.getItem("pid");
 			    sessionStorage.removeItem("pid");
-			    //sessionStorage.clear();
 			    fetchEstimate(id);
 			}
 
@@ -51,7 +50,6 @@
 				document.getElementById("json").innerHTML= JSON.stringify(estimateObject, null, 2);
 		        // fetch variables
 				var id = estimateObject.id;
-				//alert("id: " + id);
 				var name = estimateObject.name;
 				// set values
     			document.getElementById("estimate_id").value = id;
@@ -125,7 +123,6 @@
 					if(table.rows[r].cells[4] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						sessionStorage.setItem("pid", id);
 						window.location.href = "view_project.html";
 						return;
@@ -153,56 +150,6 @@
     </table>
     <p><a href="index.html">Home</a></p>
     <pre id="json">&nbsp;</pre>
-    <script>
-			var url = "rest/estimates";
-
-			//document.getElementById("fetch").addEventListener("click",submitQuery,false);
-
-			function submitQuery(evt) {
-				clearAll();
-				var id = document.getElementById("id").value;
-				var queryUrl = url + "/" + id;
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("GET", queryUrl, true);
-				xmlhttp.addEventListener("readystatechange",handleRequest,false);
-				xmlhttp.setRequestHeader("Accept", "application/json");
-				xmlhttp.send();
-			}
-
-			function handleRequest(evt) {
-    			if (evt.target.readyState == 4 ) {
-    				if(evt.target.status == 200) {
-    					var jsObject = JSON.parse(evt.target.responseText);
-    			        myFunction(jsObject);
-    				}
-    				else if(evt.target.status == 404) {
-    					alert("Notification does not exist");
-    				}
-    				else {
-    					alert("Unexpected response status " + evt.target.status);    				}
-    			}
-			}
-
-			function myFunction(jsObject) {
-				clearAll();
-				var id = jsObject.id;
-				var name = jsObject.name;
-				//alert(JSON.stringify(jsObject));
-				var row = document.getElementById("datatable").insertRow(1);
-				var cell_id = row.insertCell(0);
-				var cell_name = row.insertCell(1);
-				cell_id.innerHTML = "" + id;
-				cell_name.innerHTML = "" + name;
-			}
-
-			function clearAll() {
-				var rows = parseInt(document.getElementById("datatable").rows.length - 1);
-				while(rows > 0) {
-					document.getElementById("datatable").deleteRow(rows--);
-				}
-			}
-
-    </script>
 </section>
 </body>
 </html>

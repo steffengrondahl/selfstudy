@@ -4,11 +4,6 @@
     <meta charset="UTF-8">
     <title>View priorities</title>
     <link rel="stylesheet" type="text/css" href="style/project.css">
-    <style>
-            #json {
-                display: block;
-            }
-    </style>
     <script>
    			window.addEventListener("load", initialise, false);
 
@@ -32,7 +27,6 @@
 	    		        viewPriorities(priorityArray);
 					}
 					else {
-						//alert("Unexpected response status " + evt.target.status);
     					sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
 						window.location.href = "error.html";
 					}
@@ -65,7 +59,6 @@
 					if(table.rows[r].cells[2] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						sessionStorage.setItem("pid", id);
 						window.location.href = "view_priority.html";
 						return;

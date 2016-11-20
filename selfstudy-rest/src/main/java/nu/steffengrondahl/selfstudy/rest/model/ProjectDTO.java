@@ -17,11 +17,11 @@ public class ProjectDTO extends ProjectLightDTO {
 
     private String deadline;
 
+    private EstimateDTO estimate;
+
     private List<HyperlinkDTO> hyperlinks = new ArrayList<>();
 
     private List<ProjectLightDTO> presupposed = new ArrayList<>();
-
-    //private List<ProjectLightDTO> subsequent = new ArrayList<>();
 
     private List<ProjectLightDTO> linkable = new ArrayList<>();
 
@@ -61,6 +61,14 @@ public class ProjectDTO extends ProjectLightDTO {
         this.deadline = deadline;
     }
 
+    public EstimateDTO getEstimate() {
+        return estimate;
+    }
+
+    public void setEstimate(EstimateDTO estimate) {
+        this.estimate = estimate;
+    }
+
     public List<HyperlinkDTO> getHyperlinks() {
         return hyperlinks;
     }
@@ -76,14 +84,6 @@ public class ProjectDTO extends ProjectLightDTO {
     public void setPresupposed(List<ProjectLightDTO> presupposed) {
         this.presupposed = presupposed;
     }
-
-    //public List<ProjectLightDTO> getSubsequent() {
-    //    return subsequent;
-    //}
-
-    //public void setSubsequent(List<ProjectLightDTO> subsequent) {
-    //    this.subsequent = subsequent;
-    //}
 
     public List<ProjectLightDTO> getLinkable() {
         return linkable;

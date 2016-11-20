@@ -117,17 +117,13 @@
 			}
 
             function create(evt) {
-                //alert("Create ...");
                 // fetch data
                 var description = document.getElementById("description").value;
-                //alert("description = " + description);
 				var goals = document.getElementById("goals").value;
-				//alert("goals = " + goals);
 				var actions = document.getElementById("actions").value;
 				var start = document.getElementById("start").value;
 				var deadline = document.getElementById("deadline").value;
 				var estimate_id = document.getElementById("estimate").value;
-				//alert("estimate_id = " + estimate_id);
 				var priority_id = document.getElementById("priority").value;
 				var status_id = document.getElementById("status").value;
 				// build project object
@@ -139,26 +135,18 @@
                 projectObject.deadline = deadline;
                 var estimateObject = new Object();
                 estimateObject.id = estimate_id;
-                //estimateObject.name = "";
                 projectObject.estimate = estimateObject;
                 var priorityObject = new Object();
                 priorityObject.id = priority_id
-                //priorityObject.name = "";
                 projectObject.priority = priorityObject;
                 var statusObject = new Object();
                 statusObject.id = status_id;
-                //statusObject.name = "";
                 projectObject.status = statusObject;
-                //projectObject.presupposed = new Array();
-                //projectObject.subsequent = new Array();
-                //projectObject.linkable = new Array();
-                //projectObject.type = "projectDTO"; // Is this needed?
 
                 // write JSON data for debugging
                 document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
                 // Send to server and view result
    				var url = "rest/projects";
-   				//alert("url: " + url);
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("POST", url, true);
 				httpRequest.addEventListener("readystatechange",handleCreatedProject,false);
@@ -167,26 +155,20 @@
             }
 
             function handleCreatedProject(evt) {
-                //alert(evt.target.readyState);
                 if (evt.target.readyState == 4 ) {
 					if(evt.target.status==201) {
 						var location = evt.target.getResponseHeader("Location");
-						//var search = "/rest/projects/";
 						var index = location.lastIndexOf("/");
 						var id = location.substring(parseInt(index + 1));
 						sessionStorage.setItem("pid", id);
 						window.location.href = "view_project.html";
-						//alert("Id for new project: " + id);
-    					//document.getElementById("result").innerHTML = location;
 					}
 				    else {
-                        //alert("Unexpected response status " + evt.target.status);
                         sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
 						window.location.href = "error.html";
 				    }
 				}
             }
-
 
     </script>
 </head>

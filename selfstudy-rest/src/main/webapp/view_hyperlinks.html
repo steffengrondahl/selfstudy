@@ -37,7 +37,6 @@
 	    		        viewHyperlinks();
 					}
 					else {
-						//alert("Unexpected response status " + evt.target.status);
                         sessionStorage.setItem("error", "Unexpected response status " + evt.target.status);
 						window.location.href = "error.html";
 					}
@@ -135,11 +134,8 @@
 					if(table.rows[r].cells[4] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						var url = table.rows[r].cells[1].childNodes[0].value;
-						//alert(url);
 						var projectId = table.rows[r].cells[2].innerHTML;
-						//alert(projectId);
 						// Create hyperlinkObject;
 						var hyperlinkObject = new Object();
 						hyperlinkObject.id = id;
@@ -149,7 +145,6 @@
 				        hyperlinkObject.project = projectObject;
 				        // Send to server and view result
    				        var url = "rest/hyperlinks/" + id;
-           				//alert("PUT to url: " + url);
 		        		var httpRequest = new XMLHttpRequest();
         				httpRequest.open("PUT", url, true);
 		        		httpRequest.addEventListener("readystatechange",handleUpdateHyperlink,false);
@@ -161,19 +156,14 @@
 			}
 
 			function handleUpdateHyperlink(evt) {
-                //alert(evt.target.readyState);
                 if (evt.target.readyState == 4 ) {
-                    //alert("Updating project, " + evt.target.status);
                     if(evt.target.status==201) {
-                        //var location = evt.target.getResponseHeader("Location");
-                        //alert("location " + location);
 						window.location.href = "view_hyperlinks.html";
                     }
 					else if(evt.target.status==204) {
 						window.location.href = "view_hyperlinks.html";
 					}
 				    else {
-                        //alert("Unexpected response status " + evt.target.status);
                         sessionStorage.setItem("error", "Unexpected response status " + evt.target.status );
 						window.location.href = "error.html";
 				    }
@@ -189,10 +179,8 @@
 					if(table.rows[r].cells[5] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 				        // Send to server and view result
    				        var url = "rest/hyperlinks/" + id;
-           				//alert("DELETE to url: " + url);
 		        		var httpRequest = new XMLHttpRequest();
         				httpRequest.open("DELETE", url, true);
 		        		httpRequest.addEventListener("readystatechange",handleDeleteHyperlink,false);
@@ -203,14 +191,11 @@
 			}
 
 			function handleDeleteHyperlink(evt) {
-                //alert(evt.target.readyState);
 			    if (evt.target.readyState == 4 ) {
-                    //alert("Deleting hyperlink, " + evt.target.status);
                     if(evt.target.status==204) {
 						window.location.href = "view_hyperlinks.html";
                     }
 				    else {
-                        //alert("Unexpected response status " + evt.target.status);
                         sessionStorage.setItem("error", "Unexpected response status " + evt.target.status );
 						window.location.href = "error.html";
 				    }
@@ -218,12 +203,9 @@
 			}
 
 			function create(evt) {
-			    //alert("Create ...");
 			    // TODO: fetch project id
 			    var url = document.getElementById("url").value;
-			    //alert("url " + url);
 			    var projectId = document.getElementById("project").value;
-			    //alert("project id " + projectId);
 				// create hyperlinkObject;
 				var hyperlinkObject = new Object();
 				hyperlinkObject.url = url;
@@ -232,7 +214,6 @@
 				hyperlinkObject.project = projectObject;
 				// Send to server and view result
    				var url = "rest/hyperlinks";
-   				//alert("POST to url: " + url);
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.open("POST", url, true);
 				httpRequest.addEventListener("readystatechange",handleCreateHyperlink,false);
@@ -241,19 +222,11 @@
 			}
 
 			function handleCreateHyperlink(evt) {
-                //alert(evt.target.readyState);
 			    if (evt.target.readyState == 4 ) {
-                    //alert("Creating hyperlink, " + evt.target.status);
                     if(evt.target.status==201) {
-                        //var location = evt.target.getResponseHeader("Location");
-                        //alert("location " + location);
-						//var index = location.lastIndexOf("/");
-						//var id = location.substring(parseInt(index + 1));
-						//sessionStorage.setItem("pid", id);
 						window.location.href = "view_hyperlinks.html";
                     }
 				    else {
-                        //alert("Unexpected response status " + evt.target.status);
                         sessionStorage.setItem("error", "Unexpected response status " + evt.target.status );
 						window.location.href = "error.html";
 				    }

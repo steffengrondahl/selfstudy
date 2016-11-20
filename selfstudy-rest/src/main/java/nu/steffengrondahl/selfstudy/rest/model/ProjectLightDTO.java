@@ -9,8 +9,6 @@ public class ProjectLightDTO {
 
     private String description;
 
-    private EstimateDTO estimate;
-
     private PriorityDTO priority;
 
     private StatusDTO status;
@@ -33,14 +31,6 @@ public class ProjectLightDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public EstimateDTO getEstimate() {
-        return estimate;
-    }
-
-    public void setEstimate(EstimateDTO estimate) {
-        this.estimate = estimate;
     }
 
     public PriorityDTO getPriority() {

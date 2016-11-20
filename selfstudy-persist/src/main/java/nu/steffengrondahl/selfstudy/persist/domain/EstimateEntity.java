@@ -29,18 +29,14 @@ public class EstimateEntity implements Comparable<EstimateEntity> {
     // one to many relation. It's value should match the name for field for this
     // entity (i.e. for EstimateEntity) in the owner Entity (i.e. in
     // ProjectEntity).
-    // We are not cascading because this class should not be changed run-time.
+    // Cascading only on delete, which should never happen.
+    // Nor should persist nor merge be cascaded, as ProjectEntity might not be fully decorated (has lazy fetching).
     @OneToMany(mappedBy = "estimate", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("priority DESC")
     private List<ProjectEntity> projects = new ArrayList<ProjectEntity>();
 
     public EstimateEntity() {
 
-    }
-
-    public EstimateEntity(Integer id, String name) {
-        this.id = id;
-        this.name = name;
     }
 
     public Integer getId() {

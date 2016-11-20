@@ -52,7 +52,6 @@
 				document.getElementById("json").innerHTML= JSON.stringify(projectObject, null, 2);
 		        // fetch variables
 				var id = projectObject.id;
-				//alert("id: " + id);
 				var description = projectObject.description;
 				var goals = projectObject.goals;
 				if(goals == null) {
@@ -64,7 +63,6 @@
 				}
 				var start = projectObject.start;
 				var deadline = projectObject.deadline;
-				//alert("deadline: " + deadline);
 				var estimate_name = projectObject.estimate.name;
 				var priority_id = projectObject.priority.id;
 				var priority_name = projectObject.priority.name;
@@ -76,8 +74,6 @@
     			document.getElementById("goals").value = goals;
     			document.getElementById("actions").value = actions;
     			document.getElementById("start").value = start;
-    			//alert("Deadline: " + deadline);
-    			//document.getElementById("deadline").value = ""; //deadline;
     			document.getElementById("deadline").value = deadline;
     			document.getElementById("estimate").innerHTML = estimate_name;
     			document.getElementById("priority").innerHTML = priority_name;
@@ -206,7 +202,6 @@
 					if(table.rows[r].cells[4] == selectedCell) {
 						var id_cell = table.rows[r].cells[0];
 						var id = parseInt(id_cell.innerHTML);
-						//alert(id);
 						sessionStorage.setItem("pid", id);
 						window.location.href = "view_project.html";
 						return;

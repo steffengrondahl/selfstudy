@@ -57,9 +57,6 @@ public class ProjectTest {
         subsequent.getPresupposed().add(presupposed);
         // the project is now detached, so it has to be updated (i.e. merge to
         // persistence)
-        // the subsequent project will be updated as the many-to-many relation
-        // has cascaded set for update
-        //dao.update(presupposed);
 
         // With unidirectional many-to-many the subsequent project is the one to persist (and merge)
         dao.update(subsequent);
@@ -152,8 +149,6 @@ public class ProjectTest {
         }
         // the project is now detached, so it has to be updated (i.e. merge to
         // persistence)
-        // the subsequent project will be updated as the many-to-many relation
-        // has cascaded set for update
         dao.update(subsequent);
 
         ProjectEntity project = dao.find(subsequent.getId(), true);

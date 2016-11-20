@@ -15,7 +15,7 @@ import java.util.List;
  * Created by Steffen on 28-10-2016.
  */
 @Entity
-@Table(name="status")
+@Table(name = "status")
 public class StatusEntity implements Comparable<StatusEntity> {
 
     @Id
@@ -29,18 +29,14 @@ public class StatusEntity implements Comparable<StatusEntity> {
     // one to many relation. It's value should match the name for field for this
     // entity (i.e. for StatusEntity) in the owner Entity (i.e. in
     // ProjectEntity).
-    // We are not cascading because this class should not be changed run-time.
+    // Cascading only on delete, which should never happen.
+    // Nor should persist nor merge be cascaded, as ProjectEntity might not be fully decorated (has lazy fetching).
     @OneToMany(mappedBy = "status", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("priority DESC")
     private List<ProjectEntity> projects = new ArrayList<ProjectEntity>();
 
     public StatusEntity() {
 
-    }
-
-    public StatusEntity(Integer id, String name) {
-        this.id = id;
-        this.name = name;
     }
 
     public Integer getId() {
@@ -68,20 +64,20 @@ public class StatusEntity implements Comparable<StatusEntity> {
     }
 
     public int compareTo(StatusEntity o) {
-        if(o.getId() == null) {
-            if(this.getId() == null)
+        if (o.getId() == null) {
+            if (this.getId() == null)
                 return 0;
             else
                 return 1;
         }
-        if(this.getId() == null)
+        if (this.getId() == null)
             return -1;
         return this.getId() - o.getId();
     }
 
     @Override
     public int hashCode() {
-        if(this.getId() == null)
+        if (this.getId() == null)
             return 0;
         return this.getId();
     }
