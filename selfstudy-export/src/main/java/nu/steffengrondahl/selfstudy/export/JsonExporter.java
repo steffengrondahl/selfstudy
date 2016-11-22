@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,7 +39,12 @@ import java.util.Map;
  * Created by Steffen Grøndahl
  */
 public class JsonExporter {
+
+    private static final Charset UTF8 = Charset.forName("UTF-8");
+
     private Path directory;
+
+    private JsonGeneratorFactory factory;
 
     public JsonExporter() throws IOException {
         File rootDir = new File(".");
@@ -54,34 +60,35 @@ public class JsonExporter {
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             rootDir = chooser.getSelectedFile();
             directory = rootDir.toPath();
-            validate(directory.toString());
+            initialize();
         } else {
             throw new IOException("No directory selected");
         }
     }
 
-    public JsonExporter(String dir) throws IOException {
-        directory = Paths.get(dir);
-        validate(dir);
+    public JsonExporter(Path directory) throws IOException {
+        this.directory = directory;
+        initialize();
     }
 
-    private void validate(String dir) throws IOException {
+    private void initialize() throws IOException {
         boolean isRegularWritableDir = Files.isDirectory(directory) & Files.isReadable(directory) & Files.isWritable(directory);
         if (!isRegularWritableDir) {
-            throw new IOException("Unable to write to directory, " + dir);
+            throw new IOException("Unable to write to directory, " + directory.toString());
         }
+        Map<String, Object> properties = new HashMap<>(1);
+        properties.put(JsonGenerator.PRETTY_PRINTING, true);
+        factory = Json.createGeneratorFactory(properties);
+
+        System.out.printf("Using directory %s%n", directory.toString());
     }
 
     public List<Integer> exportProjects() throws Exception {
         List<Integer> idList = new ArrayList<>();
 
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
-
-        // Build json array with all projects and save to selected file
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "projects.json")) {
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+        Path filePath = directory.resolve("projects.json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
 
             jsonGenerator.writeStartArray();
 
@@ -121,17 +128,14 @@ public class JsonExporter {
 
     public void exportProject(Integer id) throws Exception {
 
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
-
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "project" + id + ".json")) {
+        Path filePath = directory.resolve("project"+id+".json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
             // Write json file for each project
 
             ProjectEntityDAO dao = new ProjectEntityDAO();
             ProjectEntity projectEntity = dao.find(id, true);
 
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
             jsonGenerator.writeStartObject();
 
             jsonGenerator.write("id", projectEntity.getId());
@@ -247,13 +251,9 @@ public class JsonExporter {
     public List<Integer> exportEstimates() throws Exception {
         List<Integer> idList = new ArrayList<>();
 
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
-
-        // Build json array with all projects and save to selected file
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "estimates.json")) {
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+        Path filePath = directory.resolve("estimates.json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
 
             jsonGenerator.writeStartArray();
 
@@ -276,17 +276,14 @@ public class JsonExporter {
     }
 
     public void exportEstimate(Integer id) throws Exception {
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
 
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "estimate" + id + ".json")) {
-            // Write json file for each project
+        Path filePath = directory.resolve("estimate"+id+".json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
 
             EstimateEntityDAO dao = new EstimateEntityDAO();
             EstimateEntity estimateEntity = dao.find(id, true);
 
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
             jsonGenerator.writeStartObject();
 
             jsonGenerator.write("id", estimateEntity.getId());
@@ -322,13 +319,9 @@ public class JsonExporter {
     public List<Integer> exportPriorities() throws Exception {
         List<Integer> idList = new ArrayList<>();
 
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
-
-        // Build json array with all projects and save to selected file
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "priorities.json")) {
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+        Path filePath = directory.resolve("priorities.json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
 
             jsonGenerator.writeStartArray();
 
@@ -351,17 +344,14 @@ public class JsonExporter {
     }
 
     public void exportPriority(Integer id) throws Exception {
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
 
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "priority" + id + ".json")) {
-            // Write json file for each project
+        Path filePath = directory.resolve("priority"+id+".json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
 
             PriorityEntityDAO dao = new PriorityEntityDAO();
             PriorityEntity priorityEntity = dao.find(id, true);
 
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
             jsonGenerator.writeStartObject();
 
             jsonGenerator.write("id", priorityEntity.getId());
@@ -392,13 +382,10 @@ public class JsonExporter {
     public List<Integer> exportStatuses() throws Exception {
         List<Integer> idList = new ArrayList<>();
 
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
 
-        // Build json array with all projects and save to selected file
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "statuses.json")) {
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+        Path filePath = directory.resolve("statuses.json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
 
             jsonGenerator.writeStartArray();
 
@@ -421,17 +408,14 @@ public class JsonExporter {
     }
 
     public void exportStatus(Integer id) throws Exception {
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
 
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "status" + id + ".json")) {
-            // Write json file for each project
+        Path filePath = directory.resolve("status"+id+".json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
 
             StatusEntityDAO dao = new StatusEntityDAO();
             StatusEntity statusEntity = dao.find(id, true);
 
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
             jsonGenerator.writeStartObject();
 
             jsonGenerator.write("id", statusEntity.getId());
@@ -460,13 +444,10 @@ public class JsonExporter {
     }
 
     public void exportHyperlinks() throws Exception {
-        Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonGeneratorFactory factory = Json.createGeneratorFactory(properties);
 
-        // Build json array with all projects and save to selected file
-        try (OutputStream fos = new FileOutputStream(directory.toAbsolutePath() + File.separator + "hyperlinks.json")) {
-            JsonGenerator jsonGenerator = factory.createGenerator(fos, Charset.forName("UTF-8"));
+        Path filePath = directory.resolve("hyperlinks.json");
+        try (OutputStream fos = Files.newOutputStream(filePath)) {
+            JsonGenerator jsonGenerator = factory.createGenerator(fos, UTF8);
 
             jsonGenerator.writeStartArray();
 
@@ -514,7 +495,7 @@ public class JsonExporter {
         try {
             JsonExporter jsonExporter;
             if (args.length > 0) {
-                jsonExporter = new JsonExporter(args[0]);
+                jsonExporter = new JsonExporter(Paths.get(args[0]));
             } else {
                 jsonExporter = new JsonExporter();
             }
