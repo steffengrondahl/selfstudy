@@ -19,6 +19,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -173,16 +174,18 @@ public class ProjectResource {
         projectEntity.setGoals(projectDTO.getGoals());
         projectEntity.setActions(projectDTO.getActions());
 
-        LocalDate start = null;
+        LocalDate start;
         try {
             start = LocalDate.parse(projectDTO.getStart(), DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
+            start = null;
         }
         projectEntity.setStart(start);
-        LocalDate deadline = null;
+        LocalDate deadline;
         try {
             deadline = LocalDate.parse(projectDTO.getDeadline(), DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
+            deadline = null;
         }
         projectEntity.setDeadline(deadline);
 
@@ -294,5 +297,10 @@ public class ProjectResource {
             URI uri = uriInfo.getAbsolutePathBuilder().path(Integer.toString(projectId)).build();
             return Response.created(uri).build();
         }
+    }
+
+    @OPTIONS
+    public Response getSupportedOperations() {
+        return Response.noContent().header("Allow", "GET, POST, PUT, DELETE").build();
     }
 }

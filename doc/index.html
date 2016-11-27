@@ -1,29 +1,65 @@
 <!DOCTYPE html>
 <html la="us_en">
-    <head charset="UTF-8">
-        <title>Self study project</title>
-        <meta name="author" content="Steffen Grøndahl" >
-    </head>
-    <body>
-        <h1>Self study project</h1>
-        <p>This is a simple self study project with two objectives:</p>
-        <ul>
-            <li>Providing hands on experience with Java Persistence API (JPA) and Hibernate</li>
-            <li>Creating a simple project management tool for managing self study projects</li>
-        </ul>
-        <h2>Background</h2>
-        <p>... blah blah</p>
-        <h2>Project overview</h2>
-        <p>The project contains 3 main components:</p>
-        <ol>
-            <li>A database schema with 6 tables</li>
-            <li>A Java module providing the persistent interface to the database (selfstudy-persist)</li>
-            <li>A Java ReSTful module using the persistence module (selfstudy-rest)</li>
-        </ol>
-        <p>Beside a simple export tool makes data available in json format.</p>
-        <p>The database schema table creation is described in projectdb.sql script</p>
-        <p>This Java project is implemented using Maven as project and build management tool, and the two Java modules are implemented as Maven sub projects.</p>
+<head charset="UTF-8">
+    <title>Self study project</title>
+    <meta name="author" content="Steffen Grøndahl">
+    <style>
+			body {
+				font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+				font-size: 16px;
+				color: #0000aa;
+				margin: 8px;
+				padding: 0;
+			}
+			table {
+				border: 1px solid #0000aa;
+				border-collapse: collapse;
+			}
+			th, td {
+				border: 1px solid #0000aa;
+				padding: 4px;
+				text-align: left;
+				min-width: 78px;
+			}
+			pre {
+				background-color: #555555;
+				color: #ffffff;
+				font-family: "Lucida Console", Monaco, monospace;
+				/*white-space: pre;*/
+				white-space: pre-wrap;
+				padding: 8px;
+				margin: 8px;
+			}
 
-
-    </body>
+    </style>
+</head>
+<body>
+<h1>Self study project</h1>
+<p>This is a simple self study project with two objectives:</p>
+<ul>
+    <li>Providing hands on experience with Java Persistence API (JPA) and Hibernate</li>
+    <li>Creating a simple project management tool for managing self study projects</li>
+</ul>
+<p>Besides, this project have given me more experience in using IntelliJ and Git and
+    implementing a ReSTful webapp with Jersey.
+<h2>Background</h2>
+<p>Being unemployed for a couple of months in late summer/early autumn 2016, I realized
+    I better upgrade my knowledge in several fields related to Java development. I made a spreadsheet
+    with all relevant self study projects (like Spring, Hibernate, NoSQL). After starting looking into
+    Java Persistence API (JPA) and Hibernate, I decided to convert the spreadsheet to a simple
+    JPA application with a ReSTful webapp as front end. This is the result.</p>
+<h2>Project overview</h2>
+<p>The project contains 3 main components:</p>
+<ol>
+    <li>A database schema with 6 tables</li>
+    <li>A Java module providing the persistent interface to the database (selfstudy-persist)</li>
+    <li>A Java ReSTful module using the persistence module (selfstudy-rest)</li>
+</ol>
+<p>Besides, a simple export tool makes data available in json format (selfstudy-export).</p>
+<p>The database schema table creation is described in projectdb.sql script (in directory db).</p>
+<p>This Java project is implemented using Maven as project and build management tool, and the three
+    Java modules are implemented as Maven sub projects.</p>
+<h2>Live demo</h2>
+<p>A read-only demo is found at <a href="http://selfstudy.steffengrondahl.nu">selfstudy.steffengrondahl.nu</a>.</p>
+</body>
 </html>

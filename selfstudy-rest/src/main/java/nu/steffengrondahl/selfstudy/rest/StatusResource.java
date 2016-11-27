@@ -10,10 +10,12 @@ import nu.steffengrondahl.selfstudy.rest.model.StatusDTO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class StatusResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<StatusDTO> readList() {
-        List<StatusDTO> list = new ArrayList<StatusDTO>();
+        List<StatusDTO> list = new ArrayList<>();
         StatusEntityDAO dao = new StatusEntityDAO();
         List<StatusEntity> resultList = dao.query(QuerySpecificationFactory.queryAll());
         for(StatusEntity se : resultList) {
@@ -72,6 +74,11 @@ public class StatusResource {
         statusDTO.setProjects(projects);
 
         return statusDTO;
+    }
+
+    @OPTIONS
+    public Response getSupportedOperations() {
+        return Response.noContent().header("Allow", "GET").build();
     }
 
 }
