@@ -11,7 +11,7 @@
     <packaging>war</packaging>
 
     <name>SelfStudy</name>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/steffengrondahl/selfstudy</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,13 +45,17 @@
         <finalName>SelfstudyWebApp</finalName>
         <plugins>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.17</version>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.4.0.v20161208</version>
                 <configuration>
-                    <scanIntervalSeconds>0</scanIntervalSeconds>
-                    <stopPort>9999</stopPort>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webApp>
+                        <contextPath>/SelfstudyWebApp</contextPath>
+                    </webApp>
+                    <stopPort>9966</stopPort>
                     <stopKey>stop</stopKey>
+                    <stopWait>1</stopWait>
                 </configuration>
             </plugin>
         </plugins>

@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>selfstudy-export</name>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/steffengrondahl/selfstudy</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
