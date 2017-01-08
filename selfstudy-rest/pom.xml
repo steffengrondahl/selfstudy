@@ -56,9 +56,8 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.4.0.v20161208</version>
                 <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webApp>
-                        <contextPath>/SelfstudyWebApp</contextPath>
+                        <contextPath>/SelfStudyWebApp</contextPath>
                     </webApp>
                     <stopPort>9966</stopPort>
                     <stopKey>stop</stopKey>
