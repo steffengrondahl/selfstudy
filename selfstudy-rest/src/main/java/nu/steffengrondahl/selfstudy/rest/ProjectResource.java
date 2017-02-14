@@ -13,6 +13,7 @@ import nu.steffengrondahl.selfstudy.rest.model.PriorityDTO;
 import nu.steffengrondahl.selfstudy.rest.model.ProjectDTO;
 import nu.steffengrondahl.selfstudy.rest.model.ProjectLightDTO;
 import nu.steffengrondahl.selfstudy.rest.model.StatusDTO;
+import org.glassfish.jersey.server.JSONP;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -25,6 +26,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by Steffen on 30-10-2016.
  */
 @Path("/projects")
@@ -48,8 +51,9 @@ public class ProjectResource {
     public ProjectResource() {
     }
 
+    @JSONP(queryParam = "callback")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({"application/javascript", MediaType.APPLICATION_JSON})
     public List<ProjectLightDTO> readList() {
         List<ProjectLightDTO> list = new ArrayList<ProjectLightDTO>();
 
@@ -75,6 +79,16 @@ public class ProjectResource {
 
         return list;
     }
+
+
+    @JSONP(queryParam = "callback")
+    @GET
+    @Path("/jsonp")
+    @Produces("application/javascript")
+    public List<ProjectLightDTO> readListJsonp() {
+        return readList();
+    }
+
 
     @GET
     @Path("{id: \\d+}")
@@ -164,6 +178,14 @@ public class ProjectResource {
         }
 
         return projectDTO; //projectDAO.read(id);
+    }
+
+    @JSONP(queryParam = "callback")
+    @GET
+    @Path("{id: \\d+}/jsonp")
+    @Produces("application/javascript")
+    public ProjectDTO readJsonp(@PathParam("id") int id) {
+        return read(id);
     }
 
     @POST
@@ -303,4 +325,39 @@ public class ProjectResource {
     public Response getSupportedOperations() {
         return Response.noContent().header("Allow", "GET, POST, PUT, DELETE").build();
     }
+
+    /*
+    @JSONP(queryParam = "callback")
+    @GET
+    @Path("/dummy/{id: \\d+}")
+    @Produces({MediaType.APPLICATION_JSON, "application/javascript"})
+    public ProjectDTO dummy(@PathParam("id") int id) {
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(id);
+        projectDTO.setDescription("Dummy project");
+        projectDTO.setGoals("Test JSONP in Jersey ReST");
+        projectDTO.setActions("Test this with browser: Is JSON data (project) encapsulated in callback method if called with '?callback=myFunction?'\nIs raw JSON returned if no query parameter is given? ");
+        LocalDate start = LocalDate.of(2017, 2, 10);
+        projectDTO.setStart(DateTimeFormatter.ISO_LOCAL_DATE.format(start));
+        LocalDate deadline = LocalDate.of(2017,2 ,12);
+        projectDTO.setDeadline(DateTimeFormatter.ISO_LOCAL_DATE.format(deadline));
+
+        PriorityDTO priorityDTO = new PriorityDTO();
+        priorityDTO.setId(5);
+        priorityDTO.setName("Very high");
+        projectDTO.setPriority(priorityDTO);
+
+        EstimateDTO estimateDTO = new EstimateDTO();
+        estimateDTO.setId(1);
+        estimateDTO.setName("Hours");
+        projectDTO.setEstimate(estimateDTO);
+
+        StatusDTO statusDTO = new StatusDTO();
+        statusDTO.setId(2);
+        statusDTO.setName("Started");
+        projectDTO.setStatus(statusDTO);
+
+        return projectDTO;
+    }
+    */
 }

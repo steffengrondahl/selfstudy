@@ -10,7 +10,7 @@
     <artifactId>selfstudy-rest</artifactId>
     <packaging>war</packaging>
 
-    <name>SelfStudyWebApp</name>
+    <name>selfstudy-rest</name>
     <url>https://github.com/steffengrondahl/selfstudy</url>
 
     <properties>

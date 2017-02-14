@@ -1,0 +1,24 @@
+<h2>List projects</h2>
+
+{{ message }}
+<br><br>
+<table>
+    <tr>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>&nbsp;</td>
+    </tr>
+    <tr ng-repeat="p in projects | orderBy : pSorting">
+        <td>{{ p.description }}</td>
+        <td class="priority-{{p.priority.id}}">{{p.priority.name}}</td>
+        <td class="status-{{p.status.id}}">{{ p.status.name }}</td>
+        <td><a href="#!ViewProject/{{ p.id }}">View</a></td>
+    </tr>
+</table>
+<p>Sort by</p>
+<ul style="list-style: none">
+    <li><input type="radio" style="cursor: pointer" id="id" name="sorting" ng-model="pSorting" ng-value="'id'" checked><label style="cursor: pointer" for="id">Id</label></li>
+    <li><input type="radio" style="cursor: pointer" id="priority" name="sorting" ng-model="pSorting" ng-value="'-priority.id'"><label style="cursor: pointer" for="priority">Priority</label></li>
+    <li><input type="radio" style="cursor: pointer" id="status" name="sorting" ng-model="pSorting" ng-value="'status.id'"><label style="cursor: pointer" for="status">Status</label></li>
+</ul>

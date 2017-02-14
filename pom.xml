@@ -9,6 +9,7 @@
         <module>selfstudy-persist</module>
         <module>selfstudy-rest</module>
         <module>selfstudy-export</module>
+        <module>selfstudy-web</module>
     </modules>
     <packaging>pom</packaging>
 

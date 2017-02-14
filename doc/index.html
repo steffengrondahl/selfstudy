@@ -35,13 +35,13 @@
 </head>
 <body>
 <h1>Self study project</h1>
-<p>This is a simple self study project with two objectives:</p>
+<p>This is a simple self study project with two main objectives:</p>
 <ul>
     <li>Providing hands on experience with Java Persistence API (JPA) and Hibernate</li>
     <li>Creating a simple project management tool for managing self study projects</li>
 </ul>
 <p>Besides, this project have given me more experience in using IntelliJ and Git and
-    implementing a ReSTful webapp with Jersey.
+    implementing a ReSTful webapp with Jersey, JSONP and AngularJS.
 <h2>Background</h2>
 <p>Being unemployed for a couple of months in late summer/early autumn 2016, I realized
     I better upgrade my knowledge in several fields related to Java development. I made a spreadsheet
@@ -49,11 +49,13 @@
     Java Persistence API (JPA) and Hibernate, I decided to convert the spreadsheet to a simple
     JPA application with a ReSTful webapp as front end. This is the result.</p>
 <h2>Project overview</h2>
-<p>The project contains 3 main components:</p>
+<p>The project contains 4 main components:</p>
 <ol>
     <li>A database schema with 6 tables</li>
     <li>A Java module providing the persistent interface to the database (selfstudy-persist)</li>
-    <li>A Java ReSTful module using the persistence module (selfstudy-rest)</li>
+    <li>A Java ReSTful module using the persistence module (selfstudy-rest). This modules also include
+    a simple webapp for CRUD actions.</li>
+    <li>A single page application written in AngularJS, fetching data with JSONP (selfstudy-web)</li>
 </ol>
 <p>Besides, a simple export tool makes data available in json format (selfstudy-export).</p>
 <p>The database schema table creation is described in projectdb.sql script (in directory db).</p>

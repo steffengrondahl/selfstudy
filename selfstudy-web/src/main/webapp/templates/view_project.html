@@ -1,0 +1,60 @@
+<h2>View project</h2>
+{{ message }}
+<br>
+<b>Description:</b><br>
+<i>{{ project.description }}</i><br>
+<br>
+<b>Goals:</b>
+<textarea readonly maxlength="2048" >{{ project.goals }}</textarea>
+<br><br>
+<b>Actions:</b><br>
+<textarea readonly maxlength="2048" >{{ project.actions }}</textarea>
+<br><br>
+<table>
+    <tr>
+        <td><b>Start</b></td>
+        <td>{{ project.start }}</td>
+    </tr>
+    <tr>
+        <td><b>Deadline</b></td>
+        <td>{{ project.deadline }}</td>
+    </tr>
+    <tr>
+        <td><b>Estimate</b></td>
+        <td>{{ project.estimate.name }}</td>
+    </tr>
+    <tr>
+        <td><b>Priority</b></td>
+        <td class="priority-{{project.priority.id}}">{{ project.priority.name }}</td>
+    </tr>
+    <tr>
+        <td><b>Status</b></td>
+        <td class="status-{{project.status.id}}">{{ project.status.name }}</td>
+    </tr>
+</table>
+<br>
+<b>Presupposed projects:</b>
+<br><br>
+<table>
+    <tr>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>&nbsp;</th>
+    </tr>
+    <tr ng-repeat="p in project.presupposed">
+        <td>{{ p.description }}</td>
+        <td class="priority-{{p.priority.id}}">{{ p.priority.name }}</td>
+        <td class="status-{{p.status.id}}">{{ p.status.name }}</td>
+        <td><a href="#!ViewProject/{{ p.id }}">view</a></td>
+    </tr>
+</table>
+<br>
+<b>Hyperlinks:</b>
+<ul ng-repeat="h in project.hyperlinks">
+    <li><a href="{{h.url}}" target="_blank">{{h.url}}</a></li>
+</ul>
+<br>
+<hr>
+<br>
+<a href="#!ListProjects">List projects</a>
